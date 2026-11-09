@@ -6,6 +6,8 @@
     <!-- connect-src must cover whatever getDynamicAPIBaseURL() derives at runtime: it builds
          registrar.<apex-hostname>, so the wildcard keeps apex, www and staging subdomains working.
          If this app is ever served from a different domain, add that domain's registrar here.
+         Keep the connect-src text byte for byte as it is: the nginx config of the onion mirror
+         rewrites it with sub_filter by exact match, and an edited string would no longer match.
          The script-src hash pins the single inline script element further down (the locked-state
          header helper). Changing it by even one character - whitespace included - makes the
          browser block it and log a CSP error on every load, so re-pin it in the same change; this

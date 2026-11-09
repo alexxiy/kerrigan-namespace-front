@@ -1,5 +1,7 @@
 # Kerrigan NameSpace: website and web app
 
+[![Verify live site](https://github.com/alexxiy/kerrigan-namespace-front/actions/workflows/verify-live.yml/badge.svg)](https://github.com/alexxiy/kerrigan-namespace-front/actions/workflows/verify-live.yml)
+
 The website and web app of [Kerrigan NameSpace](https://kerrigan-name.space): short, readable names for Kerrigan addresses, on a registry anyone can rebuild from the Kerrigan blockchain.
 
 - Live: https://kerrigan-name.space (the app is at https://kerrigan-name.space/app)
