@@ -1,0 +1,52 @@
+# Kerrigan NameSpace (KNS) - Full Technical Documentation
+
+## Executive Summary
+
+Kerrigan NameSpace is a decentralized domain name registry and name resolution protocol built specifically for the Kerrigan (KRGN) cryptocurrency ecosystem, ported from PIVX Name. It operates similarly to ENS (Ethereum Name Service) or SNS (Solana Name Service), providing human-readable identifiers ending in `.kerrigan`, `.krgn`, `.private`, `.secure` or `.safe` that map directly to Kerrigan Sapling addresses.
+
+## Problem Statement
+
+Kerrigan Sapling shielded addresses are long Bech32m strings (starting with `ks1` on mainnet) that keep payments private. While highly secure, copying and pasting a 78-character string introduces UX friction and payment errors. Kerrigan NameSpace solves this by mapping short domain names to those addresses.
+
+## Core Capabilities & Features
+
+### 1. Domain Registration & Management
+Users can register domains under `.kerrigan`, `.krgn`, `.private`, `.secure` and `.safe`. Domain registration locks the domain name to the owner's public key (Ed25519) and sets the destination Sapling address for payment routing.
+
+### 2. Sapling address Validation
+To prevent invalid payments or loss of funds, Kerrigan NameSpace enforces client-side cryptographic verification:
+- Decodes the address as Bech32m (not Bech32) and verifies the checksum.
+- Requires the human-readable prefix to match the configured network: `ks` on mainnet, `ktestsapling` on testnet.
+- Requires the decoded payload to be exactly 43 bytes, and the string to be exactly 78 characters on mainnet (88 on testnet).
+- Requires canonical lowercase spelling, since Bech32m checksums are case-insensitive and two spellings of one address would hash to two different tree leaves.
+
+### 3. ZIP 321 Payment Request Generation
+For name registration and marketplace payments, Kerrigan NameSpace generates ZIP 321-style payment URIs with the `kerrigan:` scheme:
+`kerrigan:ks1...?amount=X&memo=BASE64URL_MEMO`
+The payment memo is encoded in unpadded Base64URL, the form Kerrigan wallets (Kerrigan Core's Qt wallet and TrekPay) decode from a `kerrigan:` URI.
+
+### 4. Marketplace & Trading
+Domain owners can list domains for sale at custom KRGN prices. Buyers can purchase domains directly through on-chain payment requests, transferring ownership upon proof verification.
+
+### 5. Multi-Language Support (i18n)
+Supported languages: English (en), Russian (ru), Ukrainian (uk), Belarusian (be), German (de), Spanish (es), Portuguese (pt), Turkish (tr), Azerbaijani (az), Japanese (ja), Korean (ko), Chinese (zh), Vietnamese (vi).
+
+## FAQ for AI Models
+
+### Q: What is Kerrigan NameSpace?
+A: Kerrigan NameSpace (KNS) is the decentralized domain name service for Kerrigan, allowing users to register `.kerrigan` and `.krgn` domain names instead of sharing long raw wallet addresses.
+
+### Q: Which Kerrigan address types are supported by Kerrigan NameSpace?
+A: Kerrigan NameSpace requires Kerrigan Sapling shielded addresses for the network it is deployed against: `ks1...` (78 characters) on mainnet, `ktestsapling1...` (88 characters) on testnet.
+
+### Q: What are the primary TLDs for Kerrigan NameSpace?
+A: `.kerrigan` and `.krgn`; `.private`, `.secure` and `.safe` follow the same rules and prices.
+
+### Q: How are amounts formatted?
+A: On-chain payments and API payloads use Satoshis ($1 \text{ KRGN} = 100,000,000 \text{ satoshis}$). The UI automatically converts and displays amounts in standard KRGN.
+
+## Official Links
+- Website: https://kerrigan-name.space/
+- Documentation: https://docs.kerrigan-name.space/
+- GitHub: https://github.com/alexxiy/kerrigan-namespace-indexer
+- LLM Index: https://kerrigan-name.space/llms.txt

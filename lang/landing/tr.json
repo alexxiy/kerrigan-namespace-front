@@ -1,0 +1,151 @@
+{
+    "compare": {
+        "eyebrow": "Kendin dene",
+        "lede2": "Şimdi asıl önemli kısım. Aşağıda iki adres var; ya birebir aynılar ya da ortada bir yerde tek bir karakterle ayrılıyorlar. İstediğiniz kadar bakın — çoğu kişi ilk dördü ve son dördü kontrol eder, yani yetmiş sekiz karakterin sekizini.",
+        "title": "Kimse <em>78</em> karakterin hepsini okumaz"
+    },
+    "cta": {
+        "body": "Sıra yok, davet yok, rezervasyon listesi yok. İlk isteyen alır.",
+        "button": "Uygulamayı aç",
+        "title": "Hâlâ boşken bir isim kapın"
+    },
+    "different": {
+        "c1_body": "Bekleme listesi, sıra, referans merdiveni ya da içeridekilere ayrılmış premium isim bloğu yok. Kayıt defteri boş açılır. Kaydedilmemiş her isim ilk isteyenindir ve “ilk” olmayı blok yüksekliği ile sıra belirler — biz değil.",
+        "c1_title": "Ön kayıt yok",
+        "c2_body": "Protokolde son kullanma tarihi, yıllık ücret ya da kaçırabileceğiniz bir kontrol penceresi yoktur. Kayıt bir kezdir. Bir isim, yalnızca devretmek veya satmak için bir komut imzaladığınızda kontrolünüzden çıkar — onu geri almak için ne bizde ne başkasında bir mekanizma vardır.",
+        "c2_title": "Yenileme yok. Sizde kalır.",
+        "c3_body": "Bir isim Ed25519 açık anahtarınıza bağlıdır ve her değişiklik kendi imzaladığınız bir komuttur. Anahtarlarınızı asla saklamayız ve sizin adınıza bir ismi asla taşımayız. Sistemde, sizin yetki vermediğiniz hiçbir şeyi biz işletemeyiz.",
+        "c3_title": "Anahtarlarınız, isminiz",
+        "c4_body": "Bir ismi kendi fiyatınızla satışa koyun, listeden kaldırın veya listelenmiş birini satın alın. Satış geliri, sabit <b>%5</b> hizmet ücreti düşülerek bakiyenize geçer; yarışı kaybeden bir teklif kaybolmak yerine bakiyenize döner. Sahiplik, diğer her şey gibi imzalı bir zincir üstü komutla el değiştirir.",
+        "c4_title": "Gerçek bir pazar yeri",
+        "c5_body": "<code>.kerrigan</code>, <code>.krgn</code>, <code>.private</code>, <code>.secure</code> ve <code>.safe</code>. Aynı protokol, aynı fiyatlar, aynı garantiler — size en iyi geleni seçin.",
+        "c5_title": "Beş bölge, tek kural kitabı",
+        "c6_body": "Cüzdan değiştirdiğinizde isminizin arkasındaki adresi değiştirin. İsmi bilen herkes doğru yere ödemeye devam eder, kimseye haber vermeniz gerekmez. Eski adres yalnızca cevap olmaktan çıkar.",
+        "c6_title": "İstediğiniz yere, istediğiniz zaman yöneltin",
+        "eyebrow": "Farkı ne",
+        "title": "İlk günden açık"
+    },
+    "faq": {
+        "a1": "İsminizi açık anahtarınıza ve bir hedef adrese bağlayan bir kayıt. Onu yalnızca o anahtarla imzalanmış bir komut değiştirebilir. Kaydın tüm geçmişi zincir üstünde olduğu ve görüntüleme anahtarı herkese açık olduğu için, hak iddianızı üçüncü bir taraf bize sormadan doğrulayabilir.",
+        "a2": "Komut geçmişi Kerrigan blok zincirinde ve onu yorumlayan yazılım açık kaynak; dolayısıyla bir Kerrigan düğümü ve yayımlanmış görüntüleme anahtarı olan herkes kayıt defterini yeniden kurabilir. Çözümleme bizsiz de sürebilir. Tasarımın komutları kontrol ettiğimiz bir veritabanı yerine zincire koymasının sebebi tam olarak budur.",
+        "a3": "Komutlar korumalı işlemler olarak taşınır, bu yüzden tutarlar ve adresler açık deftere çıkmaz. Bir isim, birinin size ulaşma yoludur; bakiyenize veya geçmişinize açılan bir pencere değil — banka ekstresinden çok, bir e-posta adresi yayımlamaya benzer.",
+        "a4": "Etiketler küçük harf <code>a–z</code>, rakamlar ve tirelerle sınırlıdır; Unicode tanımlayıcıları vuran homograf oyunları burada mümkün değildir. Bir isim yine de bir başkasına <em>benzeyebilir</em> — ama tamamını okuyacak kadar kısadır, yerini aldığı adres için bu geçerli değildir.",
+        "a5": "Bir indeksleyici düğümü çalıştırın. Yayımlanmış görüntüleme anahtarıyla Kerrigan'ı tarar, her komutu yeniden oynatır, durum kökünü bağımsız olarak hesaplar ve zincire çapalanmış kökle karşılaştırır. Belgelerde adres, anahtar ve tek komutluk bir Docker imajı var.",
+        "a6": "Uygulanmak yerine reddedilir — geçersiz bir komut kayıt defterini asla bozamaz, zincir üstü kanıtın dayattığı şey tam olarak budur. Ödeme size atfedilebiliyorsa bakiyenize döner; komut ödeyeni belirlemeyi imkânsız kılacak kadar bozuksa dönemez. Uygulama, siz göndermeden önce komutları doğrular.",
+        "eyebrow": "Sorular",
+        "q1": "Tam olarak neye sahip oluyorum?",
+        "q2": "Siz ortadan kaybolursanız ne olur?",
+        "q3": "İsim kullanmak Kerrigan gizliliğini zayıflatır mı?",
+        "q4": "Bir isim bir başkasınınkine benzeyebilir mi?",
+        "q5": "Kayıt defterini kendim nasıl denetlerim?",
+        "q6": "Kuralları çiğneyen bir komut gönderirsem ne olur?",
+        "title": "Sık sorulanlar"
+    },
+    "footer": {
+        "app": "Web uygulaması",
+        "docs": "Belgeler",
+        "security": "Güvenlik",
+        "indexer": "İndeksleyici çalıştır",
+        "legal": "Kerrigan project veya Kerrigan Network development team ile bağlantılı değildir.",
+        "note": "Kerrigan korumalı adresleri için açık ve doğrulanabilir bir isim servisi.",
+        "source": "Kaynak kodu"
+    },
+    "game": {
+        "again": "Bir tane daha",
+        "correct": "<b>Doğru</b> — ve {n}sn sürdü. Şimdi bunu her ödemede, telefonda, acele içinde yaptığınızı düşünün.",
+        "diff": "Farklılar",
+        "reveal_lede": "Şimdi aynı kontrol, isimlerle:",
+        "reveal_note": "Aynı soru, yaklaşık bir saniyede cevaplanıyor — çünkü tamamını aklınızda tutabiliyorsunuz. Mesele tam olarak bu.",
+        "same": "Aynılar",
+        "tag_name_notes": "Notlarınızdaki isim",
+        "tag_name_paying": "Ödeme yapacağınız isim",
+        "tag_notes": "Notlarınızdaki adres",
+        "tag_paying": "Ödeme yapacağınız adres",
+        "wrong_diff": "<b>Pek değil.</b> Ortadaki bir karakter farklıydı — yukarıda vurgulandı.",
+        "wrong_same": "<b>Pek değil.</b> Aynılardı. Emin olamamak normal sonuçtur; biçim zaten insanlar için tasarlanmadı."
+    },
+    "hero": {
+        "cta_register": "İsim kaydet",
+        "cta_verify": "Nasıl doğrularsınız",
+        "eyebrow": "Yakında Kerrigan ana ağında",
+        "fact_custody": "Anahtarlarınızın saklanması <b>yok</b>",
+        "fact_prereg": "Ön kayıt <b>yok</b>",
+        "fact_renew": "Yenileme <b>yok</b>, hiç",
+        "lede": "Kerrigan NameSpace, kısa ve okunabilir bir ismi korumalı adresinize eşler. İsim korumalı bir işlemle kaydedilir, yani kayıt Kerrigan blok zincirinin kendisinde yaşar — ve herkes ondan tüm kayıt defterini yeniden kurup işletmecinin kurallara uyduğunu denetleyebilir.",
+        "title": "Adresiniz 78&nbsp;karakter.<br><span class=\"hl\">İsminiz sekiz.</span>"
+    },
+    "meta": {
+        "description": "Kerrigan korumalı adresiniz için okunabilir bir isim kaydedin. Ön kayıt yok, yenileme yok, saklama yok. Her isim Kerrigan blok zincirinde yaşar ve herhangi bir üçüncü taraf tüm kayıt defterini ondan yeniden üretebilir.",
+        "title": "Kerrigan NameSpace — adres yerine isim, herkesçe doğrulanabilir"
+    },
+    "nav": {
+        "different": "Farkı ne",
+        "faq": "SSS",
+        "open_app": "Uygulamayı aç",
+        "pricing": "Fiyatlar",
+        "problem": "Sorun",
+        "roadmap": "Yol haritası",
+        "skip": "İçeriğe geç",
+        "trust": "Güven modeli"
+    },
+    "panel": {
+        "check_free": "Boş mu diye bakın →",
+        "counter": "Kontrol edilecek <b>{n}</b> karakter",
+        "err_charset": "Yalnızca a–z, 0–9 ve tire.",
+        "err_hyphen_dbl": "Çift tire olmaz.",
+        "err_hyphen_edge": "Tire ile başlayamaz veya bitemez.",
+        "hint": "Küçük harfler, rakamlar ve tireler. Alfabenin tamamı bu — arkasına saklanacak benzer görünümlü Unicode yok.",
+        "mode_address": "Ham adres",
+        "mode_name": "Kerrigan ismi",
+        "pay_to": "Şuraya öde",
+        "placeholder": "isminiz",
+        "price": "{len} karakterlik bir isim tek seferde <b>{price} KRGN</b> karşılığında kaydedilir.",
+        "send": "KRGN gönder",
+        "try_own": "Kendinizinkini deneyin"
+    },
+    "pricing": {
+        "caption": "İsim uzunluğuna göre KRGN cinsinden kayıt ve güncelleme fiyatları",
+        "col_len": "İsim uzunluğu",
+        "col_reg": "Kayıt (tek sefer)",
+        "col_upd": "Adres güncelleme",
+        "eyebrow": "Fiyatlar",
+        "fineprint": "Uzunluk, noktadan önceki kısmı sayar. Pazar yeri satışlarında %5 hizmet ücreti vardır. Fiyatlar protokol sabitleridir; her bölge ve her kayıt sahibi için aynıdır.",
+        "lede": "Kısa isimler daha pahalıdır çünkü sayıları azdır. Kayıt tek seferlik bir ödemedir — ikinci sütun, ismi sonradan farklı bir adrese yöneltmenin maliyetidir ve bunu istediğiniz sıklıkta yapabilirsiniz.",
+        "len_max": "7 veya daha fazla",
+        "len_n": "{n} karakter",
+        "len_one": "1 karakter",
+        "title": "Uzunluğa göre fiyat. Bir kez ödenir."
+    },
+    "roadmap": {
+        "eyebrow": "Sırada ne var",
+        "lede": "Protokol önemli olan anlamda tamamlanmış durumda: isimler çalışıyor ve kayıt defteri herkes tarafından doğrulanabiliyor. Bundan sonrası, onları kullanmayı kolaylaştırmakla ilgili.",
+        "r1_body": "Blok gezgini size işlemleri gösterir. Bu ise isimleri gösterecek: her kayıt, her adres değişikliği, her sahiplik devri, her ilan ve her satış — kendi düğümünüzü çalıştırmadan takip edebileceğiniz, aranabilir tek bir geçmiş hâlinde.",
+        "r1_tag": "Geliştiriliyor",
+        "r1_title": "Bir isim gezgini",
+        "r2_body": "İsmin bütün amacı, adrese hiç dokunmamanız. Bu ancak cüzdanınız isimleri kendisi çözdüğünde tam olarak doğru olur; sıradaki emek oraya gidiyor. Bir Kerrigan cüzdanı geliştiriyorsanız, bunu sizin etrafınızdan dolaşarak değil sizinle birlikte yapmayı tercih ederiz.",
+        "r2_link": "Cüzdan ekipleri — bizimle konuşun →",
+        "r2_tag": "Sıradaki",
+        "r2_title": "Zaten kullandığınız cüzdanların içinde",
+        "r3_body": "Bu ikisinden sonrası bilinçli olarak yazılmadı. Neyin eksik olduğunu, neyin yolunuza çıktığını ya da bulmayı bekleyip bulamadığınızı bize söyleyin — bundan sonrasının sırasını belirleyen tam olarak bu.",
+        "r3_link": "Bize bir özellik isteği gönderin →",
+        "r3_tag": "Her zaman",
+        "r3_title": "Sizin istekleriniz belirliyor",
+        "title": "Buradan sonrası"
+    },
+    "trust": {
+        "callout_body": "Özellik <b>sahtekârlığı görünür kılmaktır</b>, sahtekârlığı önlemek değil. Kötü bir yığın zincire ulaşıp sonradan yalanlanabilir; buradaki hiçbir şey onun yayımlanmasını baştan engelleyemez. Tasarımın garanti ettiği şey gizlenemeyeceği — ve bunu öğrenmek için hiçbir zaman bizim iş birliğimize ihtiyacınız olmadığıdır.",
+        "callout_link": "Tam güven modelini okuyun →",
+        "callout_title": "Bunun ne olduğu konusunda dürüst olmak",
+        "eyebrow": "Güven modeli",
+        "lede": "Çoğu isim servisi bir veritabanına inanmanızı ister. Bu servis, inanmayı gereksiz kılacak şekilde tasarlandı: kayıt defterini değiştiren her komut korumalı bir Kerrigan işlemidir ve onları okumak için gereken anahtar yayımlanmıştır.",
+        "s1_body": "Bir ismi kaydetmek, güncellemek, satışa koymak veya satın almak, protokol adresine gönderilen korumalı bir nottur. Tutar ödemedir, şifreli memo ise imzalı komut — hepsi tek işlemde. Böylece niyet ile ödeme birbirinden ayrılamaz, sıraları değiştirilemez ya da sonradan uydurulamaz.",
+        "s1_title": "Komut zincir üstünde yaşar",
+        "s2_body": "Kayıt operatörü protokol adresini <em>ve</em> görüntüleme anahtarını yayımlar. Herkes bununla zinciri tarayıp genesis'ten bu yana verilmiş her komutu, blok zincirinin sabitlediği tam sırayla geri getirebilir.",
+        "s2_title": "Okuma anahtarı herkese açık",
+        "s3_body": "Bu akışı açık kaynaklı indeksleyiciden geçirin, kayıt defteri durumunu kendiniz, bağımsız olarak türetin. Yayımlanmış Docker imajıyla tek komutta çalıştırın ya da kaynağı okuyup kendinizinkini yazın.",
+        "s3_title": "Cevabı herkes yeniden hesaplayabilir",
+        "s4_body": "Durum kökü, geçiş kurallarına uyulduğunu gösteren bir sıfır bilgi kanıtıyla zincire çapalanır. İşletmeci ödenmiş bir komutu sansürlese, bir devir uydursa ya da geçmişi yeniden sıralasa, her bağımsız indeksleyici farklı bir kök hesaplar ve onu yalanlar — izin ya da özel erişim gerekmeden.",
+        "s4_title": "Anlaşmazlık herkese açıktır",
+        "title": "Bize güvenmek zorunda değilsiniz. Kontrol edebilirsiniz."
+    }
+}

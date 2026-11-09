@@ -1,0 +1,56 @@
+/* security.html, on top of landing.css. A file of its own rather than an addition to
+ * landing.css: index.html links landing.css with no ?v=, so a returning visitor's cached copy
+ * would not have these rules. */
+
+.sec-hero { padding: clamp(46px, 7vw, 84px) 0 clamp(24px, 3.5vw, 40px); }
+.sec-hero .lede { max-width: 66ch; }
+
+.prose { color: var(--muted); max-width: 68ch; }
+.prose b, .section-lede b, .fineprint b { color: var(--text); }
+.prose code, .section-lede code, .fineprint code, .callout code, .howto p code {
+  color: var(--accent-200); font-size: .9em; overflow-wrap: anywhere;
+}
+
+.sec-table { width: 100%; border-collapse: collapse; min-width: 680px; }
+.sec-table th, .sec-table td {
+  padding: 12px 16px; text-align: left; vertical-align: top;
+  border-bottom: 1px solid var(--line); font-size: .9rem; line-height: 1.5;
+}
+.sec-table thead th {
+  font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--dim); font-weight: 700;
+}
+.sec-table tbody tr:last-child td { border-bottom: 0; }
+.sec-table td { color: var(--muted); }
+.sec-table td:first-child { color: var(--text); white-space: nowrap; }
+.sec-table td.sent { color: var(--text); }
+.sec-table code { color: var(--accent-200); font-size: .86em; }
+.sec-table tr.host th {
+  font-family: var(--mono); font-size: .8rem; font-weight: 600; color: var(--accent);
+  background: rgba(255,255,255,.03); padding-top: 10px; padding-bottom: 10px;
+}
+
+.howto {
+  counter-reset: howto; list-style: none; padding: 0; margin: 30px 0 0;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px;
+}
+.howto > li { counter-increment: howto; position: relative; min-width: 0; border-radius: var(--radius); padding: 20px 22px 20px 64px; }
+.howto > li::before {
+  content: counter(howto, decimal-leading-zero); position: absolute; left: 22px; top: 23px;
+  font-family: var(--mono); font-size: .78rem; letter-spacing: .1em; color: var(--accent);
+}
+.howto h3 { margin-bottom: .45em; }
+.howto p { color: var(--muted); font-size: .94rem; margin: 0 0 .75rem; }
+.howto p:last-child, .howto pre:last-child { margin-bottom: 0; }
+.howto a, .prose a, .fineprint a, .section-lede a, .callout a { overflow-wrap: anywhere; }
+
+pre.cmd {
+  margin: 0 0 .75rem; padding: 12px 14px; border-radius: var(--radius-sm); overflow-x: auto;
+  background: rgba(0,0,0,.38); border: 1px solid var(--line);
+  font-size: .84rem; line-height: 1.6; color: var(--text);
+}
+pre.cmd code { font-family: var(--mono); white-space: pre; }
+
+@media (max-width: 560px) {
+  .howto > li { padding: 18px 16px; }
+  .howto > li::before { position: static; display: block; margin-bottom: 6px; }
+}

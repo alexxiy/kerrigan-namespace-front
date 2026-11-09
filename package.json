@@ -1,0 +1,14 @@
+{
+  "name": "kerrigan-name-front",
+  "version": "1.0.8",
+  "description": "Frontend for the Kerrigan NameSpace (kerrigan-name.space)",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -i ./css/tailwind.input.css -o ./css/tailwind.css",
+    "watch:css": "tailwindcss -i ./css/tailwind.input.css -o ./css/tailwind.css --watch",
+    "set-version": "node scripts/set-version.mjs"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}

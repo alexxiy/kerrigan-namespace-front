@@ -1,0 +1,151 @@
+{
+    "compare": {
+        "eyebrow": "Try it yourself",
+        "lede2": "Now the part that matters. Two addresses below, either identical or differing by a single character somewhere in the middle. Take as long as you like — most people check the first four and the last four, which is eight characters out of seventy-eight.",
+        "title": "Nobody reads all <em>78</em> characters"
+    },
+    "cta": {
+        "body": "No queue, no invite, no reservation list. Whoever asks first, gets it.",
+        "button": "Open the app",
+        "title": "Pick a name while it's still unclaimed"
+    },
+    "different": {
+        "c1_body": "There is no waitlist, no queue, no referral ladder and no reserved block of premium names held back for insiders. The registry starts empty. Every unregistered name is available to whoever asks for it first, and \"first\" is decided by block height and position — not by us.",
+        "c1_title": "No pre-registration",
+        "c2_body": "There is no expiry date in the protocol, no annual fee and no check-in window you can miss. Registration is once. A name leaves your control only when you sign a command transferring or selling it — there is no mechanism, for us or anyone, to reclaim it.",
+        "c2_title": "No renewals. It stays yours.",
+        "c3_body": "A name is bound to your Ed25519 public key, and every change is a command you sign yourself. We never hold your keys and never move a name on your behalf. Nothing in the system can be operated by us that you did not authorise.",
+        "c3_title": "Your keys, your name",
+        "c4_body": "List a name for sale at your price, unlist it, or buy one that's listed. Sale proceeds credit your balance net of a flat <b>5%</b> service fee, and a bid that loses a race is returned to your balance rather than lost. Ownership changes hands as a signed, on-chain command like everything else.",
+        "c4_title": "A real marketplace",
+        "c5_body": "<code>.kerrigan</code>, <code>.krgn</code>, <code>.private</code>, <code>.secure</code> and <code>.safe</code>. Same protocol, same pricing, same guarantees — pick the one that reads best for you.",
+        "c5_title": "Five zones, one rulebook",
+        "c6_body": "Change the address behind your name whenever you rotate wallets. Everyone who knows the name keeps paying the right place, and nobody has to be told. The old address simply stops being the answer.",
+        "c6_title": "Point it anywhere, any time",
+        "eyebrow": "What's different",
+        "title": "Open from day one"
+    },
+    "faq": {
+        "a1": "A record in the registry binding your name to your public key and a target address. Only a command signed by that key can change it. Because the record's whole history is on-chain and the viewing key is public, your claim to it is something a third party can verify without asking us.",
+        "a2": "The command history is in the Kerrigan blockchain and the software that interprets it is open source, so the registry can be reconstructed by anyone with a Kerrigan node and the published viewing key. Resolution can continue without us. That is the reason the design puts the commands on-chain rather than in a database we control.",
+        "a3": "Commands travel as shielded transactions, so amounts and addresses stay off the public ledger. A name is a way for someone to reach you, not a window into your balance or your history — closer to publishing an email address than a bank statement.",
+        "a4": "Labels are restricted to lowercase <code>a–z</code>, digits and hyphens, so the homograph tricks that plague Unicode identifiers aren't possible here. A name can still be <em>similar</em> to another — but it's short enough to read in full, which is not true of the address it replaces.",
+        "a5": "Run an indexer node. It scans Kerrigan with the published viewing key, replays every command, computes the state root independently and compares it against the root anchored on-chain. The documentation has the address, the key and a one-command Docker image.",
+        "a6": "It is rejected rather than applied — an invalid command can never corrupt the registry, which is what the on-chain proof enforces. Where the payment can be attributed to you, it is returned to your balance; where the command is malformed past the point of identifying a payer, it cannot be. The app validates commands before you send one.",
+        "eyebrow": "Questions",
+        "q1": "What exactly do I own?",
+        "q2": "What happens if you disappear?",
+        "q3": "Does using a name weaken Kerrigan privacy?",
+        "q4": "Can a name look like someone else's?",
+        "q5": "How do I check the registry myself?",
+        "q6": "What if I send a command that breaks the rules?",
+        "title": "Frequently asked"
+    },
+    "footer": {
+        "app": "Web app",
+        "docs": "Documentation",
+        "security": "Security",
+        "indexer": "Run an indexer",
+        "legal": "Not affiliated with the Kerrigan project or the Kerrigan Network development team.",
+        "note": "An open, verifiable name service for Kerrigan shielded addresses.",
+        "source": "Source code"
+    },
+    "game": {
+        "again": "Try another",
+        "correct": "<b>Correct</b> — and it took you {n}s. Now imagine doing that for every payment, on a phone, in a hurry.",
+        "diff": "They differ",
+        "reveal_lede": "Now the same check, with names:",
+        "reveal_note": "Same question, answered in about a second — because you can hold the whole thing in your head. That is the entire point.",
+        "same": "They're identical",
+        "tag_name_notes": "Name in your notes",
+        "tag_name_paying": "Name you're about to pay",
+        "tag_notes": "Address in your notes",
+        "tag_paying": "Address you're about to pay",
+        "wrong_diff": "<b>Not quite.</b> One character in the middle was different — it is highlighted above.",
+        "wrong_same": "<b>Not quite.</b> They were identical. Being unsure is the normal outcome; the format simply is not built for people."
+    },
+    "hero": {
+        "cta_register": "Register a name",
+        "cta_verify": "How you can verify it",
+        "eyebrow": "Coming to Kerrigan mainnet",
+        "fact_custody": "<b>No</b> custody of your keys",
+        "fact_prereg": "<b>No</b> pre-registration",
+        "fact_renew": "<b>No</b> renewals, ever",
+        "lede": "Kerrigan NameSpace maps a short, readable name onto your shielded address. The name is registered by a shielded transaction, so the record lives in the Kerrigan blockchain itself — and anybody can rebuild the entire registry from it and check the operator kept the rules.",
+        "title": "Your address is 78&nbsp;characters.<br><span class=\"hl\">Your name is eight.</span>"
+    },
+    "meta": {
+        "description": "Register a human-readable name for your Kerrigan shielded address. No pre-registration, no renewals, no custody. Every name lives in the Kerrigan blockchain and any third party can reproduce the whole registry from it.",
+        "title": "Kerrigan NameSpace — names instead of addresses, provable by anyone"
+    },
+    "nav": {
+        "different": "What's different",
+        "faq": "FAQ",
+        "open_app": "Open the app",
+        "pricing": "Pricing",
+        "problem": "The problem",
+        "skip": "Skip to content",
+        "trust": "Trust model",
+        "roadmap": "Roadmap"
+    },
+    "panel": {
+        "check_free": "Check if it's free →",
+        "counter": "<b>{n}</b> characters to check",
+        "err_charset": "Only a–z, 0–9 and hyphens.",
+        "err_hyphen_dbl": "No doubled hyphens.",
+        "err_hyphen_edge": "Cannot start or end with a hyphen.",
+        "hint": "Lowercase letters, digits and hyphens. That's the whole alphabet — no lookalike Unicode to hide behind.",
+        "mode_address": "Raw address",
+        "mode_name": "Kerrigan name",
+        "pay_to": "Pay to",
+        "placeholder": "yourname",
+        "price": "A {len}-character name registers for <b>{price} KRGN</b>, once.",
+        "send": "Send KRGN",
+        "try_own": "Try your own"
+    },
+    "pricing": {
+        "caption": "Registration and update prices in KRGN by name length",
+        "col_len": "Name length",
+        "col_reg": "Register (once)",
+        "col_upd": "Update address",
+        "eyebrow": "Pricing",
+        "fineprint": "Length counts the part before the dot. Marketplace sales carry a 5% service fee. Prices are protocol constants, identical for every zone and every registrant.",
+        "lede": "Shorter names cost more because there are fewer of them. Registration is a one-time payment — the second column is what it costs to later re-point the name at a different address, which you can do as often as you like.",
+        "len_max": "7 or more",
+        "len_n": "{n} characters",
+        "len_one": "1 character",
+        "title": "Priced by length. Paid once."
+    },
+    "roadmap": {
+        "eyebrow": "What's next",
+        "title": "Where this goes from here",
+        "lede": "The protocol is finished in the sense that matters — names work, and the registry can be verified by anyone. What follows is about making them easier to use.",
+        "r1_tag": "In development",
+        "r1_title": "A names explorer",
+        "r1_body": "A block explorer shows you transactions. This one will show you names: every registration, every address change, every transfer of ownership, every listing and sale — laid out as one searchable history you can follow without running a node yourself.",
+        "r2_tag": "Coming next",
+        "r2_title": "Built into the wallets you already use",
+        "r2_body": "The point of a name is that you never touch the address. That is only fully true once your wallet resolves names itself, so it is where the effort goes next. If you build a Kerrigan wallet, we would rather do this with you than around you.",
+        "r2_link": "Wallet teams — talk to us →",
+        "r3_tag": "Always",
+        "r3_title": "Shaped by what you ask for",
+        "r3_body": "Past those two, the roadmap is deliberately unwritten. Tell us what is missing, what gets in your way, or what you expected to find and did not — that is what decides the order of everything after this.",
+        "r3_link": "Send us a feature request →"
+    },
+    "trust": {
+        "callout_body": "The property is <b>fraud-evident</b>, not fraud-preventing. A bad batch can reach the chain and be contradicted afterwards; nothing here can stop it being published in the first place. What the design guarantees is that it cannot be hidden — and that you never needed our cooperation to find out.",
+        "callout_link": "Read the full trust model →",
+        "callout_title": "Being honest about what this is",
+        "eyebrow": "Trust model",
+        "lede": "Most name services ask you to believe a database. This one is designed so that believing is unnecessary: every command that ever changed the registry is a shielded Kerrigan transaction, and the key needed to read them is published.",
+        "s1_body": "Registering, updating, listing or buying a name is a shielded note sent to the protocol address. The amount is the payment and the encrypted memo is the signed command, in one transaction — so intent and payment can't be separated, reordered or invented after the fact.",
+        "s1_title": "The command lives on-chain",
+        "s2_body": "The registrar publishes the protocol address <em>and</em> its viewing key. Anyone can scan the chain with it and recover every command ever issued, from genesis, in the exact order the blockchain fixed.",
+        "s2_title": "The reading key is public",
+        "s3_body": "Feed that stream through the open-source indexer and you derive the registry state yourself, independently. Run it in one command with the published Docker image, or read the source and build your own.",
+        "s3_title": "Anyone can recompute the answer",
+        "s4_body": "The state root is anchored on-chain with a zero-knowledge proof that the transition rules were followed. If the operator ever censored a paid command, invented a transfer or reordered history, every independent indexer computes a different root and contradicts it — without permission or special access.",
+        "s4_title": "Disagreement is public",
+        "title": "You don't have to trust us. You can check."
+    }
+}

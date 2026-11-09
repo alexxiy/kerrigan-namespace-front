@@ -1,0 +1,358 @@
+html {
+    background-color: #000000;
+    min-height: 100%;
+}
+
+/* iOS Safari auto-zooms the viewport whenever a form control with a font-size below 16px
+   receives focus, and since we deliberately allow pinch-zoom the user is left zoomed in and
+   has to pinch back out. Force 16px on small screens so the auth, search and payment inputs
+   behave. !important is required: Tailwind's text-sm/text-xs utilities are class selectors
+   and would otherwise win over these element selectors regardless of load order. */
+@media (max-width: 767px) {
+    input,
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* Kerrigan's own page (kerrigan.network): black, lit by a faint purple glow from the top left
+   and a fainter green one from the bottom right - the logo's two colours - under a sparse
+   lattice of purple dots, all pinned so the glow stays put while the page scrolls. */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #000000;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cg fill='%23bd81fb' fill-opacity='.09'%3E%3Ccircle cx='0' cy='0' r='.8'/%3E%3Ccircle cx='32' cy='0' r='.8'/%3E%3Ccircle cx='0' cy='32' r='.8'/%3E%3Ccircle cx='32' cy='32' r='.8'/%3E%3Ccircle cx='16' cy='16' r='.8'/%3E%3C/g%3E%3C/svg%3E"),
+                radial-gradient(ellipse at 18% 8%, rgba(131, 65, 237, 0.16) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 95%, rgba(67, 222, 120, 0.07) 0%, transparent 55%),
+                #000000;
+    background-attachment: fixed;
+    color: #ffffff;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Glassmorphism Utilities */
+/* Tinted with the logo's purple rather than white, and edged with purple hairlines, as
+   kerrigan.network's cards are: white glass reads grey on a black page. */
+.glass {
+    background: rgba(20, 8, 40, 0.55);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(131, 65, 237, 0.32);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    transform: translateZ(0);
+}
+
+.glass-panel {
+    background: linear-gradient(135deg, rgba(131, 65, 237, 0.10) 0%, rgba(20, 8, 40, 0.55) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(131, 65, 237, 0.32);
+    border-top: 1px solid rgba(131, 65, 237, 0.55);
+    border-left: 1px solid rgba(131, 65, 237, 0.55);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), 0 0 40px rgba(131, 65, 237, 0.08);
+    transform: translateZ(0);
+}
+
+/* iOS-style Opaque Glass for Dropdown */
+.glass-dropdown {
+    background: rgba(20, 8, 40, 0.85); 
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border: 1px solid rgba(131, 65, 237, 0.32);
+    border-top: 1px solid rgba(131, 65, 237, 0.55);
+    border-left: 1px solid rgba(131, 65, 237, 0.55);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    transform: translateZ(0);
+}
+
+/* Kerrigan's header rule: a purple line with a hairline of the logo's green beneath it.
+   The background and shadow here are the at-the-top state; app.js swaps them on scroll, so
+   keep the two in step. */
+#headerBg {
+    background: rgba(0, 0, 0, 0.55);
+    border-bottom-color: #8341ed;
+    box-shadow: 0 1px 0 rgba(67, 222, 120, 0.3);
+}
+
+/* Material Design Input */
+.material-input-group {
+    position: relative;
+    width: 100%;
+}
+
+.material-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: none;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 1rem 4rem 0.5rem 1rem;
+    color: white;
+    font-size: 1.125rem;
+    transition: all 0.3s ease;
+    border-radius: 8px 8px 0 0;
+}
+
+.material-input:focus {
+    outline: none;
+    border-bottom: 2px solid #a05ff4;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.material-input:focus + .material-label,
+.material-input:not(:placeholder-shown) + .material-label {
+    transform: translateY(-1rem) scale(0.8);
+    color: #cba8fb;
+}
+
+.material-label {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    max-width: calc(100% - 4.5rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: rgba(255, 255, 255, 0.6);
+    pointer-events: none;
+    transition: all 0.3s ease;
+    transform-origin: left top;
+}
+
+/* Material Ripple Effect */
+.btn-ripple {
+    position: relative;
+    overflow: hidden;
+    transform: translate3d(0, 0, 0);
+}
+
+.btn-ripple:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform .5s, opacity 1s;
+}
+
+.btn-ripple:active:after {
+    transform: scale(0, 0);
+    opacity: .3;
+    transition: 0s;
+}
+
+/* Animation utilities */
+.fade-in-up {
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-250 { animation-delay: 250ms; }
+.delay-300 { animation-delay: 300ms; }
+
+/* Loader */
+.loader {
+    border: 2px solid rgba(255,255,255,0.2);
+    border-left-color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Custom Scrollbar - Standard Syntax */
+.custom-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(0, 0, 0, 0.1);
+}
+
+/* Custom Scrollbar - Webkit Fallback */
+.custom-scroll::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+}
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(160, 95, 244, 0.5);
+}
+
+/* Modal Transitions */
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up-fade {
+    animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Marketplace Card & Pagination Hover States */
+.market-card {
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, border-color 0.2s ease;
+}
+.market-card:hover {
+    transform: translateY(-2px);
+    background: rgba(131, 65, 237, 0.12);
+    border-color: rgba(131, 65, 237, 0.5);
+}
+
+.pagination-btn {
+    transition: all 0.2s ease;
+}
+.pagination-btn:not(:disabled):hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.pagination-btn.active {
+    background: #6b21a8; /* purple-700: white text needs >=4.5:1 contrast, purple-500 was only 2.15:1 */
+    color: #ffffff;
+    border-color: rgba(160, 95, 244, 0.5);
+    box-shadow: 0 4px 12px rgba(160, 95, 244, 0.3);
+}
+
+/* Domain Badge Accent colors */
+.badge-zone-kerrigan { background: rgba(131, 65, 237, 0.2); border: 1px solid rgba(131, 65, 237, 0.3); color: #cba8fb; }
+.badge-zone-krgn { background: rgba(67, 222, 120, 0.2); border: 1px solid rgba(67, 222, 120, 0.3); color: #b4f2c9; }
+.badge-zone-private { background: rgba(236, 72, 153, 0.2); border: 1px solid rgba(236, 72, 153, 0.3); color: #fbcfe8; }
+.badge-zone-secure { background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.3); color: #bfdbfe; }
+.badge-zone-safe { background: rgba(20, 184, 166, 0.2); border: 1px solid rgba(20, 184, 166, 0.3); color: #99f6e4; }
+/* A zone the registrar serves that has no colour of its own yet */
+.badge-zone-default { background: rgba(148, 163, 184, 0.2); border: 1px solid rgba(148, 163, 184, 0.3); color: #e2e8f0; }
+
+/* List filters (marketplace, my names): the toggle beside the search field, its glass panel
+   and the choice chips inside it. The chosen chip and the open toggle are marked by their
+   aria state, so what is styled is what assistive tech is told. Purple glass with purple
+   hairlines, as .glass-panel; the dot carries the logo's green. */
+.list-filter-btn {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.list-filter-btn:hover {
+    background: rgba(131, 65, 237, 0.15);
+    border-color: rgba(131, 65, 237, 0.45);
+}
+.list-filter-btn[aria-expanded="true"] {
+    background: linear-gradient(135deg, rgba(160, 95, 244, 0.35) 0%, rgba(88, 36, 168, 0.35) 100%);
+    border-color: rgba(189, 129, 251, 0.5);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(131, 65, 237, 0.3);
+}
+/* Shown while any filter differs from the defaults, so a filtered list is never mistaken for the whole one */
+.list-filter-dot {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #43de78 0%, #a05ff4 100%);
+    box-shadow: 0 0 0 2px #000000, 0 0 8px rgba(67, 222, 120, 0.7);
+}
+.list-filter-panel {
+    background: linear-gradient(135deg, rgba(131, 65, 237, 0.10) 0%, rgba(20, 8, 40, 0.55) 100%);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(131, 65, 237, 0.32);
+    border-top-color: rgba(131, 65, 237, 0.55);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 40px rgba(131, 65, 237, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    animation: listFilterPanelIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes listFilterPanelIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.list-filter-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(203, 168, 251, 0.65);
+}
+.list-filter-chip {
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #dccafc;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(131, 65, 237, 0.25);
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.list-filter-chip:hover {
+    background: rgba(131, 65, 237, 0.15);
+    border-color: rgba(131, 65, 237, 0.5);
+    color: #ffffff;
+}
+.list-filter-chip:active {
+    transform: scale(0.96);
+}
+.list-filter-chip[aria-pressed="true"] {
+    color: #ffffff;
+    background: linear-gradient(135deg, #6c2fd0 0%, #5824a8 100%); /* purple-700/800: white text keeps >=4.5:1 */
+    border-color: rgba(189, 129, 251, 0.6);
+    box-shadow: 0 4px 14px rgba(131, 65, 237, 0.4);
+}
+.list-filter-btn:focus-visible,
+.list-filter-chip:focus-visible,
+.list-filter-reset:focus-visible {
+    outline: 2px solid #bd81fb;
+    outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+    .list-filter-panel { animation: none; }
+    .list-filter-chip:active { transform: none; }
+}
+
+/* Onboarding slide interactive transitions */
+.onboarding-slide {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(10px);
+}
+.onboarding-slide.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+

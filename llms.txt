@@ -1,0 +1,38 @@
+# Kerrigan NameSpace (KNS)
+
+> Decentralized Domain Name Service for the Kerrigan (KRGN) Cryptocurrency Ecosystem (.kerrigan and .krgn TLDs).
+
+Kerrigan NameSpace (KNS) allows Kerrigan users to map human-readable domain names (such as `alice.kerrigan` or `bob.krgn`) to Kerrigan Sapling addresses, enabling simple, private, and cryptographic name resolution across Kerrigan wallets and decentralized applications. It is a port of PIVX Name to the Kerrigan chain.
+
+## Key Features
+
+- **Human-Readable Kerrigan Handles**: Replace long Kerrigan Sapling addresses with short `.kerrigan` or `.krgn` domain names.
+- **Sapling Integration**: Validates and binds domain names to Kerrigan Sapling shielded addresses (`ks1...` on mainnet, `ktestsapling1...` on testnet).
+- **ZK-Prover State Roots**: Built with zero-knowledge proof verification (SP1 zkVM guest prover) to batch-validate domain ownership and state root transitions on Kerrigan.
+- **Decentralized Marketplace**: Buy, sell, transfer, and update domain names with native KRGN payments (denominated in satoshis).
+- **Client-Side Privacy**: Cryptographic keys and seed phrases are stored encrypted locally in browser storage using Ed25519 signatures.
+
+## Supported Top-Level Domains (TLDs)
+
+- `.kerrigan` (Primary Kerrigan NameSpace TLD)
+- `.krgn` (Compact KRGN currency TLD)
+- `.private`
+- `.secure`
+- `.safe`
+
+## Address Validation & Cryptography
+
+- **Supported Address Type**: Kerrigan Sapling shielded addresses — `ks1...` on mainnet, `ktestsapling1...` on testnet.
+- **Address Requirements**: Target addresses must be Kerrigan Sapling shielded addresses: Bech32m-encoded (BIP 350, not Bech32), with the network's human-readable prefix (`ks` mainnet / `ktestsapling` testnet), a 43-byte payload (11-byte diversifier + 32-byte `pk_d`), and canonical lowercase spelling. The same rules are enforced by the indexer and by the zero-knowledge circuit.
+- **Length Constraint**: Exactly 78 characters on mainnet, 88 on testnet.
+
+## Technical Specifications
+
+- **Frontend Architecture**: Modern Vanilla JS SPA with responsive glassmorphism design, multi-language i18n support (13 languages), base64url ZIP 321 memo encoding in `kerrigan:` payment URIs, and responsive QR code generation.
+- **Base Currency Unit**: Satoshis ($1 \text{ KRGN} = 10^8 \text{ satoshis}$).
+
+## Official Links & Resources
+
+- **Website**: https://kerrigan-name.space/
+- **GitHub Repository**: https://github.com/alexxiy/kerrigan-namespace-indexer
+- **Documentation / Rules**: https://docs.kerrigan-name.space/

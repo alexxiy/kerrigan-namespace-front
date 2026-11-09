@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Everything this page loads is same-origin: landing.js, its catalogues under /lang/landing/
+     and /version.json, local fonts and images. No inline script runs (the JSON-LD block is data,
+     not script) and nothing uses inline styles, so neither needs an exception. Keep it that way:
+     a new inline <script> or style="" attribute will be blocked here, not silently allowed. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+<title data-i18n="meta.title">Kerrigan NameSpace — names instead of addresses, provable by anyone</title>
+<meta name="description" data-i18n-meta="meta.description" content="Register a human-readable name for your Kerrigan shielded address. No pre-registration, no renewals, no custody. Every name lives in the Kerrigan blockchain and any third party can reproduce the whole registry from it.">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="canonical" href="https://kerrigan-name.space/">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kerrigan-name.space/">
+<meta property="og:site_name" content="Kerrigan NameSpace">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Kerrigan NameSpace — names instead of addresses">
+<meta property="og:description" content="A name is easier to check than a 78-character shielded address. And the registry that holds it can be rebuilt by anyone, from the chain.">
+<meta property="og:image" content="https://kerrigan-name.space/images/og-image.png">
+<meta property="og:image:secure_url" content="https://kerrigan-name.space/images/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Kerrigan NameSpace - a readable name for your Kerrigan shielded address">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Kerrigan NameSpace — names instead of addresses">
+<meta name="twitter:description" content="A name is easier to check than a 78-character shielded address. And the registry that holds it can be rebuilt by anyone, from the chain.">
+<meta name="twitter:image" content="https://kerrigan-name.space/images/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://kerrigan-name.space/#organization",
+      "name": "Kerrigan NameSpace",
+      "url": "https://kerrigan-name.space/",
+      "logo": "https://kerrigan-name.space/images/android-chrome-512x512.png",
+      "sameAs": ["https://github.com/alexxiy/kerrigan-namespace-indexer", "https://t.me/alexxiy_lounge"]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://kerrigan-name.space/#website",
+      "url": "https://kerrigan-name.space/",
+      "name": "Kerrigan NameSpace",
+      "description": "Human-readable names for Kerrigan shielded addresses, on a registry anyone can verify.",
+      "publisher": { "@id": "https://kerrigan-name.space/#organization" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "WebApplication",
+      "name": "Kerrigan NameSpace App",
+      "url": "https://kerrigan-name.space/app",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "publisher": { "@id": "https://kerrigan-name.space/#organization" },
+      "offers": {
+        "@type": "Offer",
+        "price": "90",
+        "priceCurrency": "KRGN",
+        "description": "One-time registration from 90 KRGN. No renewals."
+      }
+    }
+  ]
+}
+</script>
+<!-- No third-party requests anywhere on this page: no CDN, no web font, no analytics. A page
+     arguing that you should not have to trust anyone should not quietly hand every visitor
+     to Google. Inter is self-hosted from css/fonts. -->
+<link rel="stylesheet" href="/css/landing.css">
+</head>
+<body>
+
+<a class="skip" href="#main" data-i18n="nav.skip">Skip to content</a>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="71 88 392 375" xmlns="http://www.w3.org/2000/svg"><g transform="translate(52.17 45.41) scale(5.7054)"><path fill="#8341ed" d="M59.17,36.38h-12.04l13.39-13.39c.37-.37.57-.86.58-1.38l.04-8.54c0-.52-.21-1.03-.58-1.4l-3.51-3.51c-.77-.77-2.02-.77-2.78,0l-22.06,22.06L10.13,8.16c-.77-.77-2.02-.77-2.78,0l-3.47,3.47c-.37.37-.58.87-.58,1.39v8.59c0,.53.2,1.02.58,1.39l13.38,13.38H5.27c-1.09,0-1.97.88-1.97,1.97v4.9c0,.53.2,1.02.58,1.39l6.07,6.07c.37.37.87.58,1.39.58h8.09v1.1c0,.53.2,1.02.58,1.39l3.47,3.47c.77.77,2.02.77,2.78,0l5.93-5.93,5.93,5.93c.77.77,2.02.77,2.78,0l3.51-3.51c.37-.37.58-.88.58-1.4v-1.04s8.09,0,8.09,0c.53,0,1.02-.2,1.39-.58l6.07-6.07c.37-.37.58-.87.58-1.39v-4.9c0-1.09-.88-1.97-1.97-1.97Z"/><path fill="#43de78" d="M24.13,15.45l7.98,8.02,8.01-8.01c.94-.94.28-2.56-1.06-2.56h-13.87c-1.33,0-2,1.61-1.06,2.55Z"/></g><g transform="translate(296.4, 296.4) scale(0.84)"><circle cx="90" cy="90" r="100" fill="#43de78" stroke="#ffffff" stroke-width="16"/><circle cx="50" cy="90" r="20" fill="#1a0a2e"/><circle cx="130" cy="60" r="20" fill="#1a0a2e"/><circle cx="110" cy="130" r="20" fill="#1a0a2e"/><line x1="50" y1="90" x2="130" y2="60" stroke="#1a0a2e" stroke-width="12"/><line x1="50" y1="90" x2="110" y2="130" stroke="#1a0a2e" stroke-width="12"/><line x1="130" y1="60" x2="110" y2="130" stroke="#1a0a2e" stroke-width="12"/></g></svg></span>
+      <span>Kerrigan-Name<b>.Space</b></span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#compare"   data-i18n="nav.problem">The problem</a>
+      <a href="#trust"     data-i18n="nav.trust">Trust model</a>
+      <a href="#different" data-i18n="nav.different">What's different</a>
+      <a href="#pricing"   data-i18n="nav.pricing">Pricing</a>
+      <a href="#roadmap"  data-i18n="nav.roadmap">Roadmap</a>
+      <a href="#faq"       data-i18n="nav.faq">FAQ</a>
+    </nav>
+
+    <div class="lang-picker">
+      <svg class="lang-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/>
+      </svg>
+      <select id="langSelect" aria-label="Language">
+        <option value="en">English</option>
+        <option value="de">Deutsch</option>
+        <option value="es">Español</option>
+        <option value="pt">Português</option>
+        <option value="tr">Türkçe</option>
+        <option value="az">Azərbaycan</option>
+        <option value="ru">Русский</option>
+        <option value="be">Беларуская</option>
+        <option value="uk">Українська</option>
+        <option value="vi">Tiếng Việt</option>
+        <option value="zh">中文</option>
+        <option value="ko">한국어</option>
+        <option value="ja">日本語</option>
+      </select>
+    </div>
+
+    <a class="btn btn-sm" href="/app" data-i18n="nav.open_app">Open the app</a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ───────────────────────────── HERO ───────────────────────────── -->
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow" data-i18n="hero.eyebrow">Coming to Kerrigan mainnet</p>
+      <h1 data-i18n-html="hero.title">Your address is 78&nbsp;characters.<br><span class="hl">Your name is eight.</span></h1>
+      <p class="lede" data-i18n="hero.lede">
+        Kerrigan NameSpace maps a short, readable name onto your shielded address.
+        The name is registered by a shielded transaction, so the record lives in the Kerrigan
+        blockchain itself — and anybody can rebuild the entire registry from it and check
+        the operator kept the rules.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-lg" href="/app" data-i18n="hero.cta_register">Register a name</a>
+        <a class="btn btn-lg btn-ghost" href="#trust" data-i18n="hero.cta_verify">How you can verify it</a>
+      </div>
+      <ul class="hero-facts">
+        <li data-i18n-html="hero.fact_prereg"><b>No</b> pre-registration</li>
+        <li data-i18n-html="hero.fact_renew"><b>No</b> renewals, ever</li>
+        <li data-i18n-html="hero.fact_custody"><b>No</b> custody of your keys</li>
+      </ul>
+    </div>
+
+    <!-- Interactive: the transformer -->
+    <div class="hero-demo">
+      <div class="panel glass" id="transformer">
+        <div class="panel-head">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="panel-title" data-i18n="panel.send">Send KRGN</span>
+        </div>
+        <div class="panel-body">
+          <label class="field-label" for="nameInput" data-i18n="panel.pay_to">Pay to</label>
+
+          <div class="pay-field" id="payField">
+            <code class="addr" id="addrText"></code>
+            <code class="name" id="nameText" hidden></code>
+          </div>
+
+
+          <div class="switch-row">
+            <div class="switch" role="tablist" aria-label="Recipient format">
+              <button role="tab" aria-selected="true"  class="on" data-mode="address" data-i18n="panel.mode_address">Raw address</button>
+              <button role="tab" aria-selected="false"                data-mode="name" data-i18n="panel.mode_name">Kerrigan name</button>
+            </div>
+            <span class="counter" id="counter"></span>
+          </div>
+
+          <label class="field-label" for="nameInput" data-i18n="panel.try_own">Try your own</label>
+          <div class="name-builder">
+            <input id="nameInput" type="text" inputmode="latin" autocomplete="off"
+                   spellcheck="false" maxlength="32" placeholder="yourname"
+                   data-i18n-placeholder="panel.placeholder" aria-describedby="nameHint">
+            <select id="zoneSelect" aria-label="Name zone">
+              <option value="kerrigan">.kerrigan</option>
+              <option value="krgn">.krgn</option>
+              <option value="private">.private</option>
+              <option value="secure">.secure</option>
+              <option value="safe">.safe</option>
+            </select>
+          </div>
+          <p class="hint" id="nameHint" data-i18n="panel.hint">Lowercase letters, digits and hyphens. That's the whole alphabet — no lookalike Unicode to hide behind.</p>
+          <p class="price-line" id="priceLine" hidden></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────── INTERACTIVE: SPOT IT ─────────────────────── -->
+<section id="compare" class="section">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="compare.eyebrow">Try it yourself</p>
+    <h2 data-i18n-html="compare.title">Nobody reads all <em>78</em> characters</h2>
+    <p class="section-lede" data-i18n="compare.lede2">
+      Now the part that matters. Two addresses below, either identical or differing by a
+      single character somewhere in the middle. Take as long as you like — most people check
+      the first four and the last four, which is eight characters out of seventy-eight.
+    </p>
+
+    <div class="game" id="game">
+      <div class="game-pair">
+        <div class="game-row glass">
+          <span class="game-tag" data-i18n="game.tag_notes">Address in your notes</span>
+          <code class="addr addr-game" id="gameA"></code>
+        </div>
+        <div class="game-row glass">
+          <span class="game-tag" data-i18n="game.tag_paying">Address you're about to pay</span>
+          <code class="addr addr-game" id="gameB"></code>
+        </div>
+      </div>
+
+      <div class="game-controls">
+        <button class="btn" data-answer="same" data-i18n="game.same">They're identical</button>
+        <button class="btn" data-answer="diff" data-i18n="game.diff">They differ</button>
+        <button class="btn btn-ghost" id="gameNew" hidden data-i18n="game.again">Try another</button>
+      </div>
+
+      <p class="game-result" id="gameResult" role="status" aria-live="polite"></p>
+
+      <div class="game-reveal" id="gameReveal" hidden>
+        <p class="reveal-lede" data-i18n="game.reveal_lede">Now the same check, with names:</p>
+        <div class="game-pair">
+          <div class="game-row glass">
+            <span class="game-tag" data-i18n="game.tag_name_notes">Name in your notes</span>
+            <code class="name name-game" id="gameNameA"></code>
+          </div>
+          <div class="game-row glass">
+            <span class="game-tag" data-i18n="game.tag_name_paying">Name you're about to pay</span>
+            <code class="name name-game" id="gameNameB"></code>
+          </div>
+        </div>
+        <p class="reveal-note" data-i18n="game.reveal_note">
+          Same question, answered in about a second — because you can hold the whole
+          thing in your head. That is the entire point.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────────── TRUST ───────────────────────────── -->
+<section id="trust" class="section section-alt">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="trust.eyebrow">Trust model</p>
+    <h2 data-i18n="trust.title">You don't have to trust us. You can check.</h2>
+    <p class="section-lede" data-i18n="trust.lede">
+      Most name services ask you to believe a database. This one is designed so that
+      believing is unnecessary: every command that ever changed the registry is a shielded
+      Kerrigan transaction, and the key needed to read them is published.
+    </p>
+
+    <div class="steps">
+      <div class="step glass">
+        <span class="step-n">01</span>
+        <h3 data-i18n="trust.s1_title">The command lives on-chain</h3>
+        <p data-i18n="trust.s1_body">
+          Registering, updating, listing or buying a name is a shielded note sent to the
+          protocol address. The amount is the payment and the encrypted memo is the signed
+          command, in one transaction — so intent and payment can't be separated, reordered
+          or invented after the fact.
+        </p>
+      </div>
+      <div class="step glass">
+        <span class="step-n">02</span>
+        <h3 data-i18n="trust.s2_title">The reading key is public</h3>
+        <p data-i18n-html="trust.s2_body">
+          The registrar publishes the protocol address <em>and</em> its viewing key. Anyone
+          can scan the chain with it and recover every command ever issued, from genesis, in
+          the exact order the blockchain fixed.
+        </p>
+      </div>
+      <div class="step glass">
+        <span class="step-n">03</span>
+        <h3 data-i18n="trust.s3_title">Anyone can recompute the answer</h3>
+        <p data-i18n="trust.s3_body">
+          Feed that stream through the open-source indexer and you derive the registry state
+          yourself, independently. Run it in one command with the published Docker image, or
+          read the source and build your own.
+        </p>
+      </div>
+      <div class="step glass">
+        <span class="step-n">04</span>
+        <h3 data-i18n="trust.s4_title">Disagreement is public</h3>
+        <p data-i18n="trust.s4_body">
+          The state root is anchored on-chain with a zero-knowledge proof that the transition
+          rules were followed. If the operator ever censored a paid command, invented a
+          transfer or reordered history, every independent indexer computes a different root
+          and contradicts it — without permission or special access.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <h3 data-i18n="trust.callout_title">Being honest about what this is</h3>
+      <p data-i18n-html="trust.callout_body">
+        The property is <b>fraud-evident</b>, not fraud-preventing. A bad batch can reach the
+        chain and be contradicted afterwards; nothing here can stop it being published in the
+        first place. What the design guarantees is that it cannot be hidden — and that you
+        never needed our cooperation to find out.
+      </p>
+      <a class="link" href="https://docs.kerrigan-name.space" data-i18n="trust.callout_link">Read the full trust model →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── DIFFERENT ─────────────────────────── -->
+<section id="different" class="section">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="different.eyebrow">What's different</p>
+    <h2 data-i18n="different.title">Open from day one</h2>
+
+    <div class="cards">
+      <article class="card glass">
+        <h3 data-i18n="different.c1_title">No pre-registration</h3>
+        <p data-i18n="different.c1_body">
+          There is no waitlist, no queue, no referral ladder and no reserved block of premium
+          names held back for insiders. The registry starts empty. Every unregistered name is
+          available to whoever asks for it first, and "first" is decided by block height and
+          position — not by us.
+        </p>
+      </article>
+
+      <article class="card glass">
+        <h3 data-i18n="different.c2_title">No renewals. It stays yours.</h3>
+        <p data-i18n="different.c2_body">
+          There is no expiry date in the protocol, no annual fee and no check-in window you
+          can miss. Registration is once. A name leaves your control only when you sign a
+          command transferring or selling it — there is no mechanism, for us or anyone, to
+          reclaim it.
+        </p>
+      </article>
+
+      <article class="card glass">
+        <h3 data-i18n="different.c3_title">Your keys, your name</h3>
+        <p data-i18n="different.c3_body">
+          A name is bound to your Ed25519 public key, and every change is a command you sign
+          yourself. We never hold your keys and never move a name on your behalf. Nothing in
+          the system can be operated by us that you did not authorise.
+        </p>
+      </article>
+
+      <article class="card glass">
+        <h3 data-i18n="different.c4_title">A real marketplace</h3>
+        <p data-i18n-html="different.c4_body">
+          List a name for sale at your price, unlist it, or buy one that's listed. Sale
+          proceeds credit your balance net of a flat <b>5%</b> service fee, and a bid that
+          loses a race is returned to your balance rather than lost. Ownership changes hands
+          as a signed, on-chain command like everything else.
+        </p>
+      </article>
+
+      <article class="card glass">
+        <h3 data-i18n="different.c5_title">Five zones, one rulebook</h3>
+        <p data-i18n-html="different.c5_body">
+          <code>.kerrigan</code>, <code>.krgn</code>, <code>.private</code>, <code>.secure</code> and
+          <code>.safe</code>. Same protocol, same pricing, same guarantees — pick the one
+          that reads best for you.
+        </p>
+      </article>
+
+      <article class="card glass">
+        <h3 data-i18n="different.c6_title">Point it anywhere, any time</h3>
+        <p data-i18n="different.c6_body">
+          Change the address behind your name whenever you rotate wallets. Everyone who knows
+          the name keeps paying the right place, and nobody has to be told. The old address
+          simply stops being the answer.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── PRICING ─────────────────────────── -->
+<section id="pricing" class="section section-alt">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="pricing.eyebrow">Pricing</p>
+    <h2 data-i18n="pricing.title">Priced by length. Paid once.</h2>
+    <p class="section-lede" data-i18n="pricing.lede">
+      Shorter names cost more because there are fewer of them. Registration is a one-time
+      payment — the second column is what it costs to later re-point the name at a different
+      address, which you can do as often as you like.
+    </p>
+
+    <div class="table-scroll glass">
+      <table class="price-table">
+        <caption class="sr-only" data-i18n="pricing.caption">Registration and update prices in KRGN by name length</caption>
+        <thead>
+          <tr>
+            <th scope="col" data-i18n="pricing.col_len">Name length</th>
+            <th scope="col" data-i18n="pricing.col_reg">Register (once)</th>
+            <th scope="col" data-i18n="pricing.col_upd">Update address</th>
+          </tr>
+        </thead>
+        <tbody id="priceRows"></tbody>
+      </table>
+    </div>
+    <p class="fineprint" data-i18n="pricing.fineprint">
+      Length counts the part before the dot. Marketplace sales carry a 5% service fee.
+      Prices are protocol constants, identical for every zone and every registrant.
+    </p>
+  </div>
+</section>
+
+<!-- ─────────────────────────── ROADMAP ─────────────────────────── -->
+<section id="roadmap" class="section">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="roadmap.eyebrow">What's next</p>
+    <h2 data-i18n="roadmap.title">Where this goes from here</h2>
+    <p class="section-lede" data-i18n="roadmap.lede">
+      The protocol is finished in the sense that matters — names work, and the
+      registry can be verified by anyone. What follows is about making them easier to use.
+    </p>
+
+    <div class="roadmap">
+      <article class="rm-item glass">
+        <span class="rm-tag rm-now" data-i18n="roadmap.r1_tag">In development</span>
+        <h3 data-i18n="roadmap.r1_title">A names explorer</h3>
+        <p data-i18n="roadmap.r1_body">
+          A block explorer shows you transactions. This one will show you names: every
+          registration, every address change, every transfer of ownership, every listing and
+          sale — laid out as one searchable history you can follow without running a node
+          yourself.
+        </p>
+      </article>
+
+      <article class="rm-item glass">
+        <span class="rm-tag rm-next" data-i18n="roadmap.r2_tag">Coming next</span>
+        <h3 data-i18n="roadmap.r2_title">Built into the wallets you already use</h3>
+        <p data-i18n="roadmap.r2_body">
+          The point of a name is that you never touch the address. That is only fully true
+          once your wallet resolves names itself, so it is where the effort goes next. If you
+          build a Kerrigan wallet, we would rather do this with you than around you.
+        </p>
+        <a class="link" href="mailto:info@kerrigan-name.space" data-i18n="roadmap.r2_link">Wallet teams — talk to us →</a>
+      </article>
+
+      <article class="rm-item glass">
+        <span class="rm-tag rm-open" data-i18n="roadmap.r3_tag">Always</span>
+        <h3 data-i18n="roadmap.r3_title">Shaped by what you ask for</h3>
+        <p data-i18n="roadmap.r3_body">
+          Past those two, the roadmap is deliberately unwritten. Tell us what is missing, what
+          gets in your way, or what you expected to find and did not — that is what decides
+          the order of everything after this.
+        </p>
+        <a class="link" href="mailto:info@kerrigan-name.space" data-i18n="roadmap.r3_link">Send us a feature request →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── FAQ ─────────────────────────── -->
+<section id="faq" class="section">
+  <div class="wrap wrap-narrow">
+    <p class="eyebrow" data-i18n="faq.eyebrow">Questions</p>
+    <h2 data-i18n="faq.title">Frequently asked</h2>
+
+    <details class="glass">
+      <summary data-i18n="faq.q1">What exactly do I own?</summary>
+      <p data-i18n="faq.a1">
+        A record in the registry binding your name to your public key and a target address.
+        Only a command signed by that key can change it. Because the record's whole history is
+        on-chain and the viewing key is public, your claim to it is something a third party can
+        verify without asking us.
+      </p>
+    </details>
+
+    <details class="glass">
+      <summary data-i18n="faq.q2">What happens if you disappear?</summary>
+      <p data-i18n="faq.a2">
+        The command history is in the Kerrigan blockchain and the software that interprets it is
+        open source, so the registry can be reconstructed by anyone with a Kerrigan node and the
+        published viewing key. Resolution can continue without us. That is the reason the
+        design puts the commands on-chain rather than in a database we control.
+      </p>
+    </details>
+
+    <details class="glass">
+      <summary data-i18n="faq.q3">Does using a name weaken Kerrigan privacy?</summary>
+      <p data-i18n="faq.a3">
+        Commands travel as shielded transactions, so amounts and addresses stay off the public
+        ledger. A name is a way for someone to reach you, not a window into your balance or
+        your history — closer to publishing an email address than a bank statement.
+      </p>
+    </details>
+
+    <details class="glass">
+      <summary data-i18n="faq.q4">Can a name look like someone else's?</summary>
+      <p data-i18n-html="faq.a4">
+        Labels are restricted to lowercase <code>a–z</code>, digits and hyphens, so the
+        homograph tricks that plague Unicode identifiers aren't possible here. A name can still
+        be <em>similar</em> to another — but it's short enough to read in full, which is not
+        true of the address it replaces.
+      </p>
+    </details>
+
+    <details class="glass">
+      <summary data-i18n="faq.q5">How do I check the registry myself?</summary>
+      <p data-i18n="faq.a5">
+        Run an indexer node. It scans Kerrigan with the published viewing key, replays every
+        command, computes the state root independently and compares it against the root
+        anchored on-chain. The documentation has the address, the key and a one-command Docker
+        image.
+      </p>
+    </details>
+
+    <details class="glass">
+      <summary data-i18n="faq.q6">What if I send a command that breaks the rules?</summary>
+      <p data-i18n="faq.a6">
+        It is rejected rather than applied — an invalid command can never corrupt the registry,
+        which is what the on-chain proof enforces. Where the payment can be attributed to you,
+        it is returned to your balance; where the command is malformed past the point of
+        identifying a payer, it cannot be. The app validates commands before you send one.
+      </p>
+    </details>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap wrap-narrow">
+    <h2 data-i18n="cta.title">Pick a name while it's still unclaimed</h2>
+    <p data-i18n="cta.body">No queue, no invite, no reservation list. Whoever asks first, gets it.</p>
+    <a class="btn btn-lg" href="/app" data-i18n="cta.button">Open the app</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div>
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="71 88 392 375" xmlns="http://www.w3.org/2000/svg"><g transform="translate(52.17 45.41) scale(5.7054)"><path fill="#8341ed" d="M59.17,36.38h-12.04l13.39-13.39c.37-.37.57-.86.58-1.38l.04-8.54c0-.52-.21-1.03-.58-1.4l-3.51-3.51c-.77-.77-2.02-.77-2.78,0l-22.06,22.06L10.13,8.16c-.77-.77-2.02-.77-2.78,0l-3.47,3.47c-.37.37-.58.87-.58,1.39v8.59c0,.53.2,1.02.58,1.39l13.38,13.38H5.27c-1.09,0-1.97.88-1.97,1.97v4.9c0,.53.2,1.02.58,1.39l6.07,6.07c.37.37.87.58,1.39.58h8.09v1.1c0,.53.2,1.02.58,1.39l3.47,3.47c.77.77,2.02.77,2.78,0l5.93-5.93,5.93,5.93c.77.77,2.02.77,2.78,0l3.51-3.51c.37-.37.58-.88.58-1.4v-1.04s8.09,0,8.09,0c.53,0,1.02-.2,1.39-.58l6.07-6.07c.37-.37.58-.87.58-1.39v-4.9c0-1.09-.88-1.97-1.97-1.97Z"/><path fill="#43de78" d="M24.13,15.45l7.98,8.02,8.01-8.01c.94-.94.28-2.56-1.06-2.56h-13.87c-1.33,0-2,1.61-1.06,2.55Z"/></g><g transform="translate(296.4, 296.4) scale(0.84)"><circle cx="90" cy="90" r="100" fill="#43de78" stroke="#ffffff" stroke-width="16"/><circle cx="50" cy="90" r="20" fill="#1a0a2e"/><circle cx="130" cy="60" r="20" fill="#1a0a2e"/><circle cx="110" cy="130" r="20" fill="#1a0a2e"/><line x1="50" y1="90" x2="130" y2="60" stroke="#1a0a2e" stroke-width="12"/><line x1="50" y1="90" x2="110" y2="130" stroke="#1a0a2e" stroke-width="12"/><line x1="130" y1="60" x2="110" y2="130" stroke="#1a0a2e" stroke-width="12"/></g></svg></span>
+        <span>Kerrigan-Name<b>.Space</b></span>
+      </a>
+      <p class="footer-note" data-i18n="footer.note">
+        An open, verifiable name service for Kerrigan shielded addresses.
+      </p>
+    </div>
+    <nav class="footer-links" aria-label="Footer">
+      <a href="/app" data-i18n="footer.app">Web app</a>
+      <a href="https://docs.kerrigan-name.space" data-i18n="footer.docs">Documentation</a>
+      <a href="/security.html" data-i18n="footer.security">Security</a>
+      <a href="https://github.com/alexxiy/kerrigan-namespace-indexer" data-i18n="footer.source">Source code</a>
+      <a href="https://docs.kerrigan-name.space" data-i18n="footer.indexer">Run an indexer</a>
+    </nav>
+  </div>
+  <div class="wrap footer-legal">
+    <p data-i18n="footer.legal">Not affiliated with the Kerrigan project or the Kerrigan Network development team.</p>
+  </div>
+</footer>
+
+<script src="/js/landing.js"></script>
+</body>
+</html>

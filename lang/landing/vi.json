@@ -1,0 +1,151 @@
+{
+    "compare": {
+        "eyebrow": "Tự thử xem",
+        "lede2": "Giờ mới là phần quan trọng. Bên dưới là hai địa chỉ, hoặc giống hệt nhau hoặc khác đúng một ký tự ở đâu đó giữa chuỗi. Cứ thong thả — phần lớn mọi người chỉ kiểm bốn ký tự đầu và bốn ký tự cuối, tức tám trên bảy mươi tám.",
+        "title": "Không ai đọc hết <em>78</em> ký tự"
+    },
+    "cta": {
+        "body": "Không xếp hàng, không thư mời, không danh sách giữ chỗ. Ai hỏi trước thì được.",
+        "button": "Mở ứng dụng",
+        "title": "Chọn một tên khi nó còn trống"
+    },
+    "different": {
+        "c1_body": "Không có danh sách chờ, không xếp hàng, không thang giới thiệu và không có khối tên cao cấp nào giữ lại cho người trong cuộc. Sổ đăng ký bắt đầu trống rỗng. Mọi tên chưa đăng ký thuộc về người hỏi trước, và “trước” do chiều cao khối và vị trí quyết định — không phải chúng tôi.",
+        "c1_title": "Không đăng ký trước",
+        "c2_body": "Giao thức không có ngày hết hạn, không phí thường niên và không có khung thời gian điểm danh nào để bạn lỡ. Đăng ký một lần. Một cái tên chỉ rời khỏi quyền kiểm soát của bạn khi bạn ký lệnh chuyển hoặc bán — không có cơ chế nào, dù cho chúng tôi hay bất kỳ ai, để thu hồi nó.",
+        "c2_title": "Không gia hạn. Tên vẫn là của bạn.",
+        "c3_body": "Một cái tên được gắn với khóa công khai Ed25519 của bạn, và mọi thay đổi là một lệnh do chính bạn ký. Chúng tôi không bao giờ giữ khóa của bạn và không bao giờ di chuyển tên thay bạn. Không có gì trong hệ thống mà chúng tôi vận hành được nếu bạn chưa cho phép.",
+        "c3_title": "Khóa của bạn, tên của bạn",
+        "c4_body": "Rao bán một cái tên theo giá của bạn, gỡ rao, hoặc mua một cái đang được rao. Tiền bán được ghi có vào số dư sau khi trừ phí dịch vụ cố định <b>5%</b>, và một lệnh mua thua cuộc đua sẽ quay lại số dư thay vì mất đi. Quyền sở hữu đổi chủ bằng một lệnh on-chain có chữ ký, như mọi thứ khác.",
+        "c4_title": "Một chợ thực thụ",
+        "c5_body": "<code>.kerrigan</code>, <code>.krgn</code>, <code>.private</code>, <code>.secure</code> và <code>.safe</code>. Cùng giao thức, cùng giá, cùng bảo đảm — chọn cái nào nghe hợp bạn nhất.",
+        "c5_title": "Năm vùng, một bộ luật",
+        "c6_body": "Đổi địa chỉ phía sau tên mỗi khi bạn đổi ví. Ai biết tên vẫn tiếp tục trả đúng chỗ, và không cần báo cho ai. Địa chỉ cũ đơn giản là thôi không còn là câu trả lời.",
+        "c6_title": "Trỏ tới đâu cũng được, lúc nào cũng được",
+        "eyebrow": "Khác biệt ở đâu",
+        "title": "Mở từ ngày đầu tiên"
+    },
+    "faq": {
+        "a1": "Một bản ghi trong sổ đăng ký, gắn tên của bạn với khóa công khai và một địa chỉ đích. Chỉ lệnh được ký bằng khóa đó mới thay đổi được nó. Vì toàn bộ lịch sử bản ghi nằm on-chain và khóa xem là công khai, bên thứ ba có thể xác minh quyền của bạn mà không cần hỏi chúng tôi.",
+        "a2": "Lịch sử lệnh nằm trong blockchain Kerrigan và phần mềm diễn giải nó là mã nguồn mở, nên bất kỳ ai có node Kerrigan và khóa xem đã công bố đều dựng lại được sổ đăng ký. Việc phân giải có thể tiếp tục mà không cần chúng tôi. Đó chính là lý do thiết kế đặt lệnh lên chuỗi thay vì vào một cơ sở dữ liệu do chúng tôi kiểm soát.",
+        "a3": "Lệnh đi bằng giao dịch được che chắn, nên số tiền và địa chỉ không lộ ra sổ cái công khai. Một cái tên là cách để ai đó liên hệ bạn, không phải cửa sổ nhìn vào số dư hay lịch sử của bạn — gần với việc công bố một địa chỉ email hơn là sao kê ngân hàng.",
+        "a4": "Nhãn chỉ gồm chữ thường <code>a–z</code>, chữ số và dấu gạch nối, nên những trò đồng tự hình vốn hoành hành với định danh Unicode là không thể xảy ra ở đây. Một cái tên vẫn có thể <em>giống</em> cái khác — nhưng nó đủ ngắn để đọc trọn vẹn, điều không đúng với địa chỉ mà nó thay thế.",
+        "a5": "Chạy một node lập chỉ mục. Nó quét Kerrigan bằng khóa xem đã công bố, phát lại từng lệnh, tự tính gốc trạng thái một cách độc lập rồi so với gốc đã neo on-chain. Tài liệu có sẵn địa chỉ, khóa và một image Docker chạy bằng một lệnh.",
+        "a6": "Nó bị từ chối chứ không được áp dụng — một lệnh không hợp lệ không bao giờ có thể làm hỏng sổ đăng ký, đó chính là điều bằng chứng on-chain bảo đảm. Nếu khoản thanh toán quy được về bạn, nó quay lại số dư; nếu lệnh hỏng tới mức không xác định được người trả, thì không thể. Ứng dụng kiểm tra lệnh trước khi bạn gửi.",
+        "eyebrow": "Câu hỏi",
+        "q1": "Chính xác thì tôi sở hữu cái gì?",
+        "q2": "Nếu các bạn biến mất thì sao?",
+        "q3": "Dùng tên có làm yếu quyền riêng tư của Kerrigan không?",
+        "q4": "Một cái tên có thể trông giống tên người khác không?",
+        "q5": "Làm sao tôi tự kiểm tra sổ đăng ký?",
+        "q6": "Nếu tôi gửi một lệnh phá luật thì sao?",
+        "title": "Câu hỏi thường gặp"
+    },
+    "footer": {
+        "app": "Ứng dụng web",
+        "docs": "Tài liệu",
+        "security": "Bảo mật",
+        "indexer": "Chạy một indexer",
+        "legal": "Không liên kết với Kerrigan project hay Kerrigan Network development team.",
+        "note": "Một dịch vụ tên mở và kiểm chứng được cho địa chỉ được che chắn của Kerrigan.",
+        "source": "Mã nguồn"
+    },
+    "game": {
+        "again": "Thử lần nữa",
+        "correct": "<b>Chính xác</b> — và bạn mất {n} giây. Giờ hãy hình dung làm vậy với mọi khoản thanh toán, trên điện thoại, lúc vội.",
+        "diff": "Chúng khác nhau",
+        "reveal_lede": "Giờ vẫn phép kiểm đó, nhưng với tên:",
+        "reveal_note": "Cùng câu hỏi, trả lời trong khoảng một giây — vì bạn giữ được trọn vẹn nó trong đầu. Đó chính xác là điều cốt lõi.",
+        "same": "Chúng giống hệt nhau",
+        "tag_name_notes": "Tên trong ghi chú của bạn",
+        "tag_name_paying": "Tên bạn sắp trả tiền",
+        "tag_notes": "Địa chỉ trong ghi chú của bạn",
+        "tag_paying": "Địa chỉ bạn sắp trả tiền",
+        "wrong_diff": "<b>Chưa đúng.</b> Một ký tự ở giữa đã khác — nó được tô sáng phía trên.",
+        "wrong_same": "<b>Chưa đúng.</b> Chúng giống hệt nhau. Không chắc chắn là kết quả bình thường; định dạng này vốn không dành cho con người."
+    },
+    "hero": {
+        "cta_register": "Đăng ký một tên",
+        "cta_verify": "Cách bạn tự kiểm chứng",
+        "eyebrow": "Sắp ra mắt trên mainnet Kerrigan",
+        "fact_custody": "<b>Không</b> giữ khóa của bạn",
+        "fact_prereg": "<b>Không</b> đăng ký trước",
+        "fact_renew": "<b>Không</b> gia hạn, không bao giờ",
+        "lede": "Kerrigan NameSpace ánh xạ một cái tên ngắn, dễ đọc lên địa chỉ được che chắn của bạn. Tên được đăng ký bằng một giao dịch được che chắn, nên bản ghi sống ngay trong blockchain Kerrigan — và bất kỳ ai cũng dựng lại được toàn bộ sổ đăng ký từ đó và kiểm tra xem đơn vị vận hành có tuân thủ luật hay không.",
+        "title": "Địa chỉ của bạn dài 78&nbsp;ký tự.<br><span class=\"hl\">Tên của bạn là tám.</span>"
+    },
+    "meta": {
+        "description": "Đăng ký một cái tên dễ đọc cho địa chỉ được che chắn Kerrigan của bạn. Không đăng ký trước, không gia hạn, không giữ hộ khóa. Mỗi cái tên sống trong blockchain Kerrigan và bất kỳ bên thứ ba nào cũng tái tạo được toàn bộ sổ đăng ký từ đó.",
+        "title": "Kerrigan NameSpace — tên thay cho địa chỉ, ai cũng kiểm chứng được"
+    },
+    "nav": {
+        "different": "Khác biệt ở đâu",
+        "faq": "Hỏi đáp",
+        "open_app": "Mở ứng dụng",
+        "pricing": "Giá",
+        "problem": "Vấn đề",
+        "roadmap": "Lộ trình",
+        "skip": "Bỏ qua tới nội dung",
+        "trust": "Mô hình tin cậy"
+    },
+    "panel": {
+        "check_free": "Kiểm tra xem còn trống không →",
+        "counter": "<b>{n}</b> ký tự cần kiểm",
+        "err_charset": "Chỉ a–z, 0–9 và dấu gạch nối.",
+        "err_hyphen_dbl": "Không dùng hai gạch nối liền nhau.",
+        "err_hyphen_edge": "Không được bắt đầu hoặc kết thúc bằng dấu gạch nối.",
+        "hint": "Chữ thường, chữ số và dấu gạch nối. Cả bảng chữ cái chỉ có vậy — không có Unicode nhìn na ná để ẩn nấp phía sau.",
+        "mode_address": "Địa chỉ thô",
+        "mode_name": "Tên Kerrigan",
+        "pay_to": "Trả cho",
+        "placeholder": "tencuaban",
+        "price": "Tên {len} ký tự đăng ký với giá <b>{price} KRGN</b>, một lần duy nhất.",
+        "send": "Gửi KRGN",
+        "try_own": "Thử tên của bạn"
+    },
+    "pricing": {
+        "caption": "Giá đăng ký và cập nhật tính bằng KRGN theo độ dài tên",
+        "col_len": "Độ dài tên",
+        "col_reg": "Đăng ký (một lần)",
+        "col_upd": "Cập nhật địa chỉ",
+        "eyebrow": "Giá",
+        "fineprint": "Độ dài tính phần trước dấu chấm. Giao dịch trên chợ chịu phí dịch vụ 5%. Giá là hằng số của giao thức, giống nhau với mọi vùng và mọi người đăng ký.",
+        "lede": "Tên ngắn đắt hơn vì chúng ít hơn. Đăng ký là khoản trả một lần — cột thứ hai là chi phí để sau này trỏ tên sang địa chỉ khác, việc bạn có thể làm bao nhiêu lần tùy thích.",
+        "len_max": "7 trở lên",
+        "len_n": "{n} ký tự",
+        "len_one": "1 ký tự",
+        "title": "Tính giá theo độ dài. Trả một lần."
+    },
+    "roadmap": {
+        "eyebrow": "Sắp tới là gì",
+        "lede": "Giao thức đã hoàn chỉnh ở khía cạnh quan trọng nhất: tên hoạt động, và ai cũng kiểm chứng được sổ đăng ký. Những gì tiếp theo là để dùng chúng dễ hơn.",
+        "r1_body": "Trình khám phá khối cho bạn xem giao dịch. Cái này sẽ cho bạn xem tên: mọi lần đăng ký, mọi lần đổi địa chỉ, mọi lần chuyển quyền sở hữu, mọi lần rao bán và bán xong — bày ra thành một dòng lịch sử tra cứu được mà bạn theo dõi không cần tự chạy node.",
+        "r1_tag": "Đang phát triển",
+        "r1_title": "Trình khám phá tên",
+        "r2_body": "Ý nghĩa của một cái tên là bạn không bao giờ phải đụng tới địa chỉ. Điều đó chỉ đúng trọn vẹn khi chính ví của bạn phân giải được tên, nên nỗ lực tiếp theo dồn vào đó. Nếu bạn làm ví Kerrigan, chúng tôi muốn làm cùng bạn hơn là làm vòng qua bạn.",
+        "r2_link": "Các đội làm ví — hãy liên hệ →",
+        "r2_tag": "Kế tiếp",
+        "r2_title": "Tích hợp sẵn trong ví bạn đang dùng",
+        "r3_body": "Sau hai mục đó, lộ trình cố ý để trống. Hãy cho chúng tôi biết còn thiếu gì, điều gì gây vướng, hay bạn mong tìm thấy gì mà không có — chính điều đó quyết định thứ tự của mọi thứ tiếp theo.",
+        "r3_link": "Gửi yêu cầu tính năng →",
+        "r3_tag": "Luôn luôn",
+        "r3_title": "Định hình bởi những gì bạn yêu cầu",
+        "title": "Từ đây sẽ đi tới đâu"
+    },
+    "trust": {
+        "callout_body": "Tính chất ở đây là <b>phát hiện gian lận</b>, không phải ngăn chặn gian lận. Một lô sai vẫn có thể lên chuỗi rồi bị phản bác sau; không gì ở đây ngăn được nó được công bố ngay từ đầu. Điều thiết kế bảo đảm là nó không thể bị che giấu — và rằng bạn chưa bao giờ cần chúng tôi hợp tác để phát hiện ra.",
+        "callout_link": "Đọc mô hình tin cậy đầy đủ →",
+        "callout_title": "Nói thật về bản chất của nó",
+        "eyebrow": "Mô hình tin cậy",
+        "lede": "Phần lớn dịch vụ tên yêu cầu bạn tin vào một cơ sở dữ liệu. Cái này được thiết kế để việc tin là không cần thiết: mọi lệnh từng thay đổi sổ đăng ký đều là một giao dịch Kerrigan được che chắn, và khóa để đọc chúng đã được công bố.",
+        "s1_body": "Đăng ký, cập nhật, rao bán hay mua một cái tên đều là một note được che chắn gửi tới địa chỉ giao thức. Số tiền là khoản thanh toán còn memo đã mã hóa là lệnh có chữ ký, trong cùng một giao dịch — nên ý định và thanh toán không thể tách rời, sắp xếp lại hay bịa ra sau đó.",
+        "s1_title": "Lệnh sống trên chuỗi",
+        "s2_body": "Đơn vị đăng ký công bố địa chỉ giao thức <em>và</em> khóa xem của nó. Bất kỳ ai cũng có thể quét chuỗi bằng khóa đó và khôi phục mọi lệnh từng được phát ra, từ khối gốc, đúng theo thứ tự mà blockchain đã cố định.",
+        "s2_title": "Khóa đọc là công khai",
+        "s3_body": "Đưa dòng đó qua indexer mã nguồn mở và bạn tự suy ra trạng thái sổ đăng ký, một cách độc lập. Chạy bằng một lệnh với image Docker đã công bố, hoặc đọc mã nguồn và tự dựng cái của mình.",
+        "s3_title": "Ai cũng tính lại được câu trả lời",
+        "s4_body": "Gốc trạng thái được neo on-chain kèm một bằng chứng không tiết lộ rằng các luật chuyển tiếp đã được tuân thủ. Nếu đơn vị vận hành từng kiểm duyệt một lệnh đã trả tiền, bịa ra một lần chuyển nhượng hay sắp xếp lại lịch sử, mọi indexer độc lập sẽ tính ra một gốc khác và phản bác — không cần xin phép hay quyền truy cập đặc biệt.",
+        "s4_title": "Bất đồng là công khai",
+        "title": "Bạn không phải tin chúng tôi. Bạn có thể kiểm tra."
+    }
+}

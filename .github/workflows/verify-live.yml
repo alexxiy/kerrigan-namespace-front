@@ -1,0 +1,30 @@
+# Compares the live site with the release tag it says it runs (its /version.json), file by
+# file, with tools/verify.py. Runs daily and on demand; the logs are public, so anyone can
+# see the result. GitHub pauses scheduled workflows after 60 days without a commit: if that
+# happens, re-enable it in the Actions tab.
+name: Verify live site
+
+on:
+  schedule:
+    - cron: '23 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Check out the tag the site runs
+        run: |
+          version=$(curl -fsS https://kerrigan-name.space/version.json | python3 -c 'import json, sys; print(json.load(sys.stdin)["version"])')
+          echo "The site runs $version"
+          git checkout --quiet "v$version"
+
+      - name: Compare every file
+        run: python3 tools/verify.py https://kerrigan-name.space

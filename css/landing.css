@@ -1,0 +1,513 @@
+/* Kerrigan NameSpace — landing page.
+ *
+ * Design language is taken from the web app (kerrigan-name-front) rather than re-invented, so
+ * the landing and the product read as one thing: the same black base lit by the logo's
+ * purple and green, the same purple accent, the same purple-tinted glass surfaces, and the
+ * same self-hosted Inter. The black, the glows, the hairlines and the button treatment are
+ * Kerrigan's own (kerrigan.network), so the service reads as part of the Kerrigan family.
+ *
+ * The one rule specific to this page: anything a person is meant to *inspect* rather than
+ * read - an address, a name, a price - is set in monospace. The whole argument here is that
+ * addresses are unreadable and names are not, so addresses must always look like machine
+ * output. */
+
+@import url('fonts.css');
+
+:root {
+  /* Surfaces, matching the app */
+  --base:      #000000;   /* kerrigan.network's page: plain black */
+  --surface:   #140828;   /* opaque raised surface (menus); the glass tint below, solid */
+  --surface-2: #0b0416;
+  --deep:      #000000;
+  --glass:     rgba(20, 8, 40, .55);   /* kerrigan.network's card fill */
+
+  --line:      rgba(131, 65, 237, .28);   /* hairlines are the logo's purple, not white */
+  --line-lit:  rgba(131, 65, 237, .55);
+  --line-ok:   rgba(67, 222, 120, .45);
+
+  --glow:      0 0 14px rgba(131, 65, 237, .4);
+  --glow-ok:   0 0 14px rgba(67, 222, 120, .35);
+
+  --text:      #ffffff;
+  --muted:     #c4b5d8;
+  --dim:       #9a8bb0;
+
+  --accent:     #a05ff4;   /* purple-500 of tailwind.config.js's Kerrigan scale */
+  --accent-600: #8341ed;   /* Kerrigan's purple, the logo's */
+  --accent-300: #cba8fb;
+  --accent-200: #dccafc;
+
+  --ok:        #43de78;   /* Kerrigan's green, the logo's */
+  --bad:       #fb7185;
+
+  --radius:    16px;
+  --radius-sm: 10px;
+  --wrap:      1140px;
+
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sans: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; background-color: var(--base); min-height: 100%; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* The app's exact page treatment: black, lit by a faint purple glow from the top left and a
+   fainter green one from the bottom right - the logo's two colours - under a sparse lattice
+   of purple dots, all pinned so the glow stays put while the page scrolls. */
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--text);
+  background-color: var(--base);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cg fill='%23bd81fb' fill-opacity='.09'%3E%3Ccircle cx='0' cy='0' r='.8'/%3E%3Ccircle cx='32' cy='0' r='.8'/%3E%3Ccircle cx='0' cy='32' r='.8'/%3E%3Ccircle cx='32' cy='32' r='.8'/%3E%3Ccircle cx='16' cy='16' r='.8'/%3E%3C/g%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 18% 8%, rgba(131, 65, 237, .16) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 95%, rgba(67, 222, 120, .07) 0%, transparent 55%),
+    var(--base);
+  background-attachment: fixed;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--accent); color: #fff; }
+
+.wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
+.wrap-narrow { max-width: 760px; }
+
+h1, h2, h3 { line-height: 1.16; letter-spacing: -0.022em; margin: 0 0 .5em; font-weight: 700; }
+/* The lower bound is what phones actually get: 5.2vw only overtakes it past ~640px,
+   so 2.1rem was setting a 34px headline on a 320px screen. */
+h1 { font-size: clamp(1.85rem, 5.2vw, 3.5rem); }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.4rem); }
+h3 { font-size: 1.12rem; letter-spacing: -0.01em; }
+p  { margin: 0 0 1rem; }
+
+a { color: var(--accent-300); text-decoration-color: rgba(216, 180, 254, .4); text-underline-offset: 3px; }
+a:hover { color: var(--accent-200); }
+
+code { font-family: var(--mono); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 100;
+  background: var(--accent); color: #fff; padding: 10px 16px; border-radius: 0 0 8px 0; font-weight: 600;
+}
+.skip:focus { left: 0; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+/* Green, as kerrigan.network sets its section labels: the logo's second colour. */
+.eyebrow {
+  text-transform: uppercase; letter-spacing: .16em; font-size: .72rem; font-weight: 700;
+  color: var(--ok); margin: 0 0 .8rem;
+}
+
+/* ── frosted glass, lifted from the app's .glass-panel ── */
+.glass {
+  background: linear-gradient(135deg, rgba(131,65,237,.10) 0%, var(--glass) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--line);
+  border-top-color: var(--line-lit);
+  border-left-color: var(--line-lit);
+  box-shadow: 0 8px 32px rgba(0,0,0,.6);
+  transform: translateZ(0);
+}
+
+/* ── nav ── */
+/* Kerrigan's header rule: a purple line with a hairline of the logo's green beneath it. */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(0,0,0,.78);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--accent-600);
+  box-shadow: 0 1px 0 var(--line-ok), 0 6px 20px rgba(0,0,0,.6);
+}
+.nav-inner { display: flex; align-items: center; gap: 20px; height: 68px; }
+.brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  color: var(--text); text-decoration: none; font-weight: 600; font-size: 1.05rem; letter-spacing: -.01em;
+}
+.brand b { color: var(--accent); font-weight: 700; }
+/* The app's header mark: the full Kerrigan NameSpace logo - the Kerrigan icon plus the
+   DNS-node overlay, the same glyph as favicon.svg - on a dark tile ringed and lit in the
+   logo's purple, as kerrigan.network shows its mark on black, so the icon keeps its own
+   purple and green. The viewBox is the glyph's tight
+   bounding box, not favicon.svg's 500x500 frame: that frame carries its own padding for
+   the rounded rect it draws itself, and reusing it here would double up with the tile's
+   padding and leave the mark small and off-centre. */
+.brand-mark {
+  width: 30px; height: 30px; border-radius: 9px; flex: none;
+  display: inline-flex; align-items: center; justify-content: center; padding: 5px;
+  background: linear-gradient(140deg, #1d0d38, #0b0416);
+  box-shadow: 0 0 0 1px rgba(131,65,237,.6), var(--glow);
+  transition: transform .18s ease;
+}
+.brand-mark svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 1px 1px rgba(0,0,0,.28)); }
+.brand:hover .brand-mark { transform: scale(1.05); }
+/* align-items:center so a label that still ends up on two lines centres against the
+   single-line ones instead of leaving them hanging at the top of a taller row. */
+.nav-links { display: flex; align-items: center; gap: 18px; margin-left: auto; }
+
+/* Language picker. Sits in the header next to the primary action rather than being buried
+   in the footer - a visitor who cannot read the page must be able to find it without
+   reading the page. */
+.lang-picker {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 10px 5px 11px; border-radius: 999px;
+  background: var(--glass); border: 1px solid var(--line);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  transition: border-color .15s ease, background .15s ease;
+}
+.lang-picker:hover { background: rgba(131,65,237,.12); border-color: var(--line-lit); }
+.lang-picker:focus-within { border-color: rgba(160,95,244,.6); }
+.lang-icon { width: 16px; height: 16px; color: var(--accent-300); flex: none; }
+#langSelect {
+  background: transparent; border: 0; color: var(--accent-200);
+  font: inherit; font-size: .85rem; font-weight: 600;
+  padding: 2px 2px 2px 0; cursor: pointer; outline: none;
+}
+#langSelect option { background: var(--surface); color: var(--text); }
+
+/* nowrap: a nav label is a phrase, and "Модель доверия" split across two lines reads as
+   two separate menu entries. Below the breakpoint the whole nav is hidden instead. */
+.nav-links a { color: var(--muted); text-decoration: none; font-size: .93rem; white-space: nowrap; }
+.nav-links a:hover { color: var(--text); }
+
+/* ── buttons ── */
+/* Kerrigan's pair: the logo's purple, lit, for the primary action, and a green outline for
+   the secondary one. The fill is the logo purple itself (#8341ed): white on it is 5.3:1,
+   where the lighter #a05ff4 managed only 3.9:1. */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 11px 20px; border-radius: 10px; border: 1px solid var(--accent);
+  background: var(--accent-600); color: #fff; box-shadow: var(--glow);
+  font: inherit; font-weight: 600; font-size: .95rem; text-decoration: none; cursor: pointer;
+  transition: transform .12s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.btn:hover { background: #6c2fd0; color: #fff; transform: translateY(-1px); box-shadow: 0 0 22px rgba(131,65,237,.6); }
+.btn:active { transform: translateY(0); }
+.btn:disabled { opacity: .45; cursor: default; transform: none; box-shadow: none; }
+.btn-sm { padding: 8px 15px; font-size: .88rem; }
+.btn-lg { padding: 14px 26px; font-size: 1rem; }
+.btn-ghost {
+  background: rgba(67,222,120,.06); color: var(--text);
+  border-color: var(--line-ok); backdrop-filter: blur(10px); box-shadow: none;
+}
+.btn-ghost:hover { background: rgba(67,222,120,.11); border-color: var(--ok); color: var(--text); box-shadow: var(--glow-ok); }
+
+.link { color: var(--accent-300); font-weight: 600; text-decoration: none; }
+.link:hover { text-decoration: underline; }
+
+/* ── hero ── */
+.hero { padding: clamp(46px, 7vw, 92px) 0 clamp(40px, 6vw, 78px); }
+.hero-inner {
+  display: grid; gap: clamp(34px, 5vw, 60px);
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, .98fr); align-items: center;
+}
+.hl { color: var(--accent); }
+.lede { font-size: 1.09rem; color: var(--muted); max-width: 54ch; }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 26px 0 0; }
+.hero-facts {
+  display: flex; flex-wrap: wrap; gap: 10px 26px; list-style: none;
+  margin: 28px 0 0; padding: 0; font-size: .92rem; color: var(--muted);
+}
+.hero-facts b { color: var(--accent); font-weight: 700; }
+
+/* ── the wallet panel ── */
+.panel { border-radius: var(--radius); overflow: hidden; }
+.panel-head {
+  display: flex; align-items: center; gap: 7px;
+  padding: 13px 16px; border-bottom: 1px solid var(--line); background: rgba(0,0,0,.2);
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.16); flex: none; }
+.panel-title {
+  margin-left: 8px; font-size: .78rem; color: var(--dim);
+  letter-spacing: .1em; text-transform: uppercase; font-weight: 600;
+}
+.panel-body { padding: 20px; }
+
+.field-label {
+  display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .13em;
+  color: var(--dim); margin: 0 0 8px; font-weight: 600;
+}
+.pay-field {
+  background: rgba(0,0,0,.32); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 14px; min-height: 104px; display: flex; align-items: center;
+}
+.addr { font-size: .8rem; line-height: 1.55; color: var(--muted); word-break: break-all; }
+.name { font-size: 1.45rem; color: var(--accent); font-weight: 600; word-break: break-all; }
+
+/* receiver chips */
+.receivers { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+.chip {
+  border: 1px solid var(--line); background: var(--glass); color: var(--muted);
+  border-radius: 999px; padding: 6px 13px; font: inherit; font-size: .82rem; font-weight: 600;
+  cursor: pointer; transition: background .15s, color .15s, border-color .15s;
+}
+.chip:hover:not(:disabled) { background: rgba(131,65,237,.12); color: var(--text); }
+.chip[aria-pressed="true"] {
+  background: rgba(160,95,244,.16); border-color: rgba(160,95,244,.5); color: var(--accent-200);
+}
+.chip:disabled { opacity: .75; cursor: default; }
+.chip-note { font-size: .78rem; color: var(--dim); margin: 10px 0 0; }
+
+.switch-row { display: flex; align-items: center; gap: 12px; margin: 16px 0 20px; flex-wrap: wrap; }
+.switch { display: inline-flex; background: rgba(0,0,0,.32); border: 1px solid var(--line); border-radius: 10px; padding: 3px; }
+.switch button {
+  border: 0; background: transparent; color: var(--muted);
+  font: inherit; font-size: .85rem; font-weight: 600; padding: 7px 14px; border-radius: 7px;
+  cursor: pointer; transition: background .15s, color .15s;
+}
+.switch button.on { background: rgba(131,65,237,.28); color: var(--text); }
+.counter { font-family: var(--mono); font-size: .78rem; color: var(--dim); margin-left: auto; }
+.counter b { color: var(--accent); font-size: .95rem; }
+
+.name-builder { display: flex; gap: 8px; }
+.name-builder input, .name-builder select {
+  background: rgba(0,0,0,.32); border: 1px solid var(--line); color: var(--text);
+  border-radius: var(--radius-sm); padding: 11px 13px; font: inherit; font-size: .95rem; min-width: 0;
+}
+.name-builder input { flex: 1; font-family: var(--mono); }
+.name-builder input::placeholder { color: var(--dim); }
+.name-builder select { flex: none; font-family: var(--mono); cursor: pointer; }
+.name-builder input:focus, .name-builder select:focus { border-color: rgba(160,95,244,.6); outline: none; }
+
+.hint { font-size: .79rem; color: var(--dim); margin: 10px 0 0; }
+.price-line { font-size: .88rem; color: var(--muted); margin: 10px 0 0; }
+.price-line b { color: var(--accent); }
+.price-line.invalid { color: var(--bad); }
+
+/* ── sections ── */
+.section { padding: clamp(54px, 7.5vw, 100px) 0; }
+.section-alt { background: rgba(20,8,40,.35); border-block: 1px solid var(--line); }
+.section-lede { color: var(--muted); max-width: 66ch; font-size: 1.02rem; }
+
+/* ── growth ladder (multi-receiver) ── */
+.ladder { display: grid; gap: 12px; margin-top: 30px; }
+.rung {
+  display: grid; grid-template-columns: 210px 1fr auto; gap: 18px; align-items: center;
+  padding: 16px 18px; border-radius: var(--radius-sm);
+  background: var(--glass); border: 1px solid var(--line);
+}
+.rung-what { font-weight: 600; font-size: .95rem; }
+.rung-what small { display: block; color: var(--dim); font-weight: 400; font-size: .78rem; margin-top: 2px; }
+.bar { height: 10px; border-radius: 999px; background: rgba(131,65,237,.12); overflow: hidden; }
+.bar span {
+  display: block; height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-600), var(--accent-300));
+}
+.rung-len { font-family: var(--mono); font-size: .95rem; color: var(--accent); font-weight: 600; white-space: nowrap; }
+.rung.is-name { background: rgba(160,95,244,.1); border-color: rgba(160,95,244,.42); }
+.rung.is-name .bar span { background: var(--ok); }
+.rung.is-name .rung-len { color: var(--ok); }
+
+/* ── game ── */
+.game { margin-top: 32px; }
+.game-pair { display: grid; gap: 14px; }
+.game-row { border-radius: var(--radius-sm); padding: 14px 16px; background: var(--glass); border: 1px solid var(--line); }
+.game-tag {
+  display: block; font-size: .7rem; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--dim); margin-bottom: 8px; font-weight: 600;
+}
+.addr-game { display: block; }
+.game-row.correct { border-color: rgba(67,222,120,.55); }
+.game-row.wrong   { border-color: rgba(251,113,133,.55); }
+mark.diff { background: var(--bad); color: #2b0a11; border-radius: 3px; padding: 0 2px; font-weight: 700; }
+.game-controls { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 0; }
+.game-result { margin: 16px 0 0; font-size: .98rem; min-height: 1.6em; color: var(--muted); }
+.game-result b { color: var(--accent); }
+.game-result.good b { color: var(--ok); }
+.game-result.bad  b { color: var(--bad); }
+.game-reveal { margin-top: 28px; padding-top: 24px; border-top: 1px dashed var(--line); }
+.reveal-lede { color: var(--muted); font-size: .95rem; }
+.name-game { display: block; font-size: 1.25rem; }
+.reveal-note { color: var(--muted); margin-top: 16px; max-width: 62ch; }
+
+/* ── steps / cards ── */
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; margin-top: 36px; }
+.step { border-radius: var(--radius); padding: 22px; }
+.step-n { font-family: var(--mono); font-size: .78rem; color: var(--accent); letter-spacing: .1em; display: block; margin-bottom: 10px; }
+.step p { color: var(--muted); font-size: .94rem; margin: 0; }
+
+.callout {
+  margin-top: 30px; padding: 24px; border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(160,95,244,.14) 0%, rgba(160,95,244,.03) 100%);
+  border: 1px solid rgba(160,95,244,.34);
+  border-top-color: rgba(160,95,244,.5); border-left-color: rgba(160,95,244,.5);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+}
+.callout p { color: var(--muted); margin-bottom: .8rem; }
+.callout b { color: var(--text); }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; margin-top: 36px; }
+.card { border-radius: var(--radius); padding: 24px; transition: border-color .18s ease, transform .18s ease; }
+.card:hover { border-top-color: rgba(160,95,244,.55); border-left-color: rgba(160,95,244,.55); transform: translateY(-2px); }
+.card p { color: var(--muted); font-size: .94rem; margin: 0; }
+.card code { color: var(--accent-200); font-size: .88em; }
+
+/* ── roadmap ── */
+.roadmap { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; margin-top: 36px; }
+.rm-item { border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; }
+.rm-item p { color: var(--muted); font-size: .94rem; margin: 0 0 16px; }
+.rm-item .link { margin-top: auto; align-self: flex-start; }
+.rm-tag {
+  display: inline-flex; align-items: center; gap: 6px; align-self: flex-start;
+  font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 999px; margin-bottom: 12px;
+}
+/* A dot before the label so the stage is legible without relying on colour alone. */
+.rm-tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.rm-now  { color: var(--accent-200); background: rgba(160,95,244,.16); border: 1px solid rgba(160,95,244,.4); }
+.rm-next { color: #7dd3fc;         background: rgba(56,189,248,.14);  border: 1px solid rgba(56,189,248,.35); }
+.rm-open { color: var(--ok);       background: rgba(67,222,120,.13);  border: 1px solid rgba(67,222,120,.32); }
+
+/* ── pricing ── */
+.table-scroll { overflow-x: auto; margin-top: 32px; border-radius: var(--radius); }
+.price-table { width: 100%; border-collapse: collapse; min-width: 460px; }
+.price-table th, .price-table td { padding: 14px 20px; text-align: left; border-bottom: 1px solid var(--line); }
+.price-table thead th {
+  font-size: .72rem; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--dim); font-weight: 700; background: rgba(131,65,237,.08);
+}
+.price-table tbody tr:last-child td { border-bottom: 0; }
+.price-table td { color: var(--muted); font-family: var(--mono); font-size: .93rem; }
+.price-table td:first-child { color: var(--text); }
+.price-table td.reg { color: var(--accent); font-weight: 600; }
+.fineprint { color: var(--dim); font-size: .85rem; margin-top: 14px; }
+
+/* ── faq ── */
+details { border-radius: var(--radius-sm); padding: 0 20px; margin-bottom: 10px; }
+details[open] { border-top-color: rgba(160,95,244,.45); border-left-color: rgba(160,95,244,.45); }
+summary {
+  cursor: pointer; padding: 17px 0; font-weight: 600; list-style: none;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; color: var(--accent); font-size: 1.3rem; line-height: 1; flex: none; transition: transform .18s ease; }
+details[open] summary::after { transform: rotate(45deg); }
+details p { color: var(--muted); font-size: .95rem; padding-bottom: 18px; margin: 0; max-width: 68ch; }
+details code { color: var(--accent-200); }
+
+/* ── cta + footer ── */
+.cta { padding: clamp(54px, 7.5vw, 92px) 0; text-align: center; background: rgba(20,8,40,.35); border-top: 1px solid var(--line); }
+.cta p { color: var(--muted); margin-bottom: 26px; }
+
+.footer { border-top: 1px solid var(--line); padding: 44px 0 30px; }
+.footer-inner { display: flex; flex-wrap: wrap; gap: 28px; justify-content: space-between; }
+.footer-note { color: var(--dim); font-size: .88rem; margin: 12px 0 0; max-width: 40ch; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+.footer-links a { color: var(--muted); text-decoration: none; font-size: .92rem; }
+.footer-links a:hover { color: var(--accent-300); }
+.footer-legal { margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line); }
+.footer-legal p { color: var(--dim); font-size: .8rem; margin: 0; }
+
+/* ── responsive ──────────────────────────────────────────────────────────
+ *
+ * Tiers, and what each one is actually for:
+ *   1024  the section links stop fitting alongside the picker and the CTA
+ *    880  hero goes single column; the ladder drops its bar to its own row
+ *    620  cards/steps/roadmap collapse to one column
+ *    560  tighter gutters, stacked controls, touch-sized hit areas
+ *    400  the brand wordmark yields to the mark alone
+ *
+ * The header was the real mobile failure: a <select> is sized by its WIDEST
+ * option, so the language picker measured 162px because of "Беларуская" - and
+ * brand + picker + CTA + gaps needed ~450px inside 339px at 375. Capping the
+ * select is what fixes it; everything else is polish. */
+
+/* Belt and braces. The overflow sources are fixed below, but a single long
+   unbroken string in a translation should degrade to a clipped edge rather than
+   set the whole document scrolling sideways. */
+body { overflow-x: clip; }
+
+/* Sized by content, not by the longest option in the list. */
+#langSelect {
+  max-width: 8.5rem;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 1120px) {
+  /* Section links go first: the picker and the primary action matter more, and
+     every section is still reachable by scrolling.
+     Re-measured after the Roadmap link was added, which is what pushed this over:
+     the widest languages (es/ru/be/uk) need 1060px of header content, and .wrap
+     caps content at 1092px, so the nav fits from a 1108px viewport up. 1120 leaves
+     a small margin for a future label rather than sitting on the exact boundary. */
+  .nav-links { display: none; }
+  .lang-picker { margin-left: auto; }
+}
+
+@media (max-width: 880px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .rung { grid-template-columns: minmax(0, 1fr) auto; }
+  .rung .bar { grid-column: 1 / -1; order: 3; }
+}
+
+@media (max-width: 620px) {
+  .cards, .steps, .roadmap { grid-template-columns: 1fr; }
+  .footer-inner { flex-direction: column; gap: 22px; }
+}
+
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .wrap { padding: 0 18px; }
+  /* Wrap rather than overflow. The call-to-action label is translated, and
+     "Открыть приложение" is nearly twice the width of "Open the app" - a header
+     tuned to the English string breaks in Russian and Ukrainian. Wrapping keeps
+     any language usable instead of pushing the page sideways. */
+  .nav-inner { gap: 10px; height: auto; min-height: 62px; flex-wrap: wrap; padding-block: 8px; }
+  /* The wordmark is the cheapest thing to drop, and the mark still links home. */
+  .brand > span:last-child { display: none; }
+  #langSelect { max-width: 6.5rem; }
+  .lang-icon { width: 15px; height: 15px; }
+  .lang-picker { padding: 4px 8px 4px 9px; }
+  .btn-sm { padding: 8px 12px; }
+
+  .game-controls .btn { flex: 1 1 100%; }
+  .name-builder { flex-wrap: wrap; }
+  .name-builder input { flex: 1 1 100%; }
+  .hero-cta .btn { flex: 1 1 100%; }
+
+  /* Long values get more room to breathe when the column is this narrow. */
+  .addr { font-size: .76rem; }
+  .rung-len { font-size: .85rem; }
+  .rung-what { font-size: .9rem; }
+  .panel-body, .card, .step, .rm-item, .callout { padding: 18px; }
+
+  /* iOS zooms the viewport when a control under 16px takes focus. */
+  input, select { font-size: 16px !important; }
+
+  /* Comfortable targets by viewport as well as by pointer type. A 560px-wide
+     window is a phone often enough that waiting for `pointer: coarse` to be
+     reported leaves real users poking at 35px chips. */
+  .chip, .switch button { min-height: 42px; }
+  #langSelect { min-height: 32px; }
+}
+
+@media (max-width: 400px) {
+  /* Give the call to action the room the picker was taking. */
+  #langSelect { max-width: 5rem; }
+  h1 { font-size: clamp(1.6rem, 8vw, 2rem); }
+  .lede, .section-lede { font-size: 1rem; }
+}
+
+/* Touch devices: bring every control up to a comfortable target regardless of
+   viewport width, since a large tablet is still finger-driven. */
+@media (hover: none) and (pointer: coarse) {
+  .btn, .chip, .switch button { min-height: 44px; }
+  #langSelect { min-height: 34px; }
+  .name-builder input, .name-builder select { min-height: 44px; }
+  /* Inline links inside prose get vertical padding rather than a min-height, so
+     they do not disturb the line box they sit in. */
+  .link, .footer-links a, .nav-links a { padding-block: 8px; display: inline-block; }
+  summary { padding: 20px 0; }
+}

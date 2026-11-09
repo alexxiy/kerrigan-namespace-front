@@ -1,0 +1,151 @@
+{
+    "compare": {
+        "eyebrow": "Pruébalo tú mismo",
+        "lede2": "Ahora la parte que importa. Abajo hay dos direcciones, idénticas o distintas en un solo carácter en algún punto del medio. Tómate el tiempo que quieras: la mayoría revisa los primeros cuatro y los últimos cuatro, ocho caracteres de setenta y ocho.",
+        "title": "Nadie lee los <em>78</em> caracteres"
+    },
+    "cta": {
+        "body": "Sin cola, sin invitación, sin lista de reservas. Quien lo pide primero, se lo lleva.",
+        "button": "Abrir la app",
+        "title": "Elige un nombre mientras siga libre"
+    },
+    "different": {
+        "c1_body": "No hay lista de espera, ni cola, ni escalera de referidos, ni un bloque reservado de nombres premium guardado para los de dentro. El registro empieza vacío. Cada nombre libre es de quien lo pida primero, y «primero» lo deciden la altura del bloque y la posición, no nosotros.",
+        "c1_title": "Sin registro previo",
+        "c2_body": "No hay fecha de caducidad en el protocolo, ni cuota anual, ni ventana de confirmación que puedas perder. El registro es una sola vez. Un nombre sale de tu control solo cuando firmas un comando para transferirlo o venderlo: no existe mecanismo, ni para nosotros ni para nadie, para reclamarlo.",
+        "c2_title": "Sin renovaciones. Sigue siendo tuyo.",
+        "c3_body": "Un nombre está ligado a tu clave pública Ed25519, y cada cambio es un comando que firmas tú. Nunca custodiamos tus claves ni movemos un nombre en tu nombre. Nada del sistema podemos operarlo nosotros sin que tú lo hayas autorizado.",
+        "c3_title": "Tus claves, tu nombre",
+        "c4_body": "Pon un nombre a la venta a tu precio, retíralo o compra uno listado. Los ingresos por venta se abonan a tu saldo tras una comisión de servicio fija del <b>5 %</b>, y una puja que pierde la carrera vuelve a tu saldo en lugar de perderse. La propiedad cambia de manos como un comando firmado en cadena, igual que todo lo demás.",
+        "c4_title": "Un mercado de verdad",
+        "c5_body": "<code>.kerrigan</code>, <code>.krgn</code>, <code>.private</code>, <code>.secure</code> y <code>.safe</code>. Mismo protocolo, mismos precios, mismas garantías: elige la que mejor te suene.",
+        "c5_title": "Cinco zonas, un mismo reglamento",
+        "c6_body": "Cambia la dirección detrás de tu nombre cada vez que cambies de cartera. Todos los que conocen el nombre siguen pagando al sitio correcto y no hay que avisar a nadie. La dirección antigua simplemente deja de ser la respuesta.",
+        "c6_title": "Apúntalo a donde quieras, cuando quieras",
+        "eyebrow": "Qué lo diferencia",
+        "title": "Abierto desde el primer día"
+    },
+    "faq": {
+        "a1": "Un registro que vincula tu nombre con tu clave pública y una dirección de destino. Solo un comando firmado con esa clave puede cambiarlo. Como todo el historial del registro está en cadena y la clave de visualización es pública, un tercero puede verificar tu titularidad sin preguntarnos.",
+        "a2": "El historial de comandos está en la blockchain de Kerrigan y el software que lo interpreta es de código abierto, así que cualquiera con un nodo Kerrigan y la clave de visualización publicada puede reconstruir el registro. La resolución puede continuar sin nosotros. Por eso el diseño pone los comandos en cadena y no en una base de datos que controlamos.",
+        "a3": "Los comandos viajan como transacciones blindadas, así que los importes y las direcciones no aparecen en el libro público. Un nombre es una forma de que te alcancen, no una ventana a tu saldo ni a tu historial: se parece más a publicar un correo electrónico que un extracto bancario.",
+        "a4": "Las etiquetas se limitan a minúsculas <code>a–z</code>, dígitos y guiones, así que los trucos de homógrafos que plagan los identificadores Unicode no son posibles aquí. Un nombre puede seguir siendo <em>parecido</em> a otro, pero es lo bastante corto para leerlo entero, cosa que no ocurre con la dirección a la que sustituye.",
+        "a5": "Ejecuta un nodo indexador. Escanea Kerrigan con la clave de visualización publicada, reproduce cada comando, calcula la raíz de estado de forma independiente y la compara con la raíz anclada en cadena. La documentación tiene la dirección, la clave y una imagen Docker de un solo comando.",
+        "a6": "Se rechaza en lugar de aplicarse: un comando inválido nunca puede corromper el registro, y eso es lo que impone la prueba en cadena. Cuando el pago se te puede atribuir, vuelve a tu saldo; cuando el comando está tan malformado que no se identifica al pagador, no puede volver. La app valida los comandos antes de que envíes ninguno.",
+        "eyebrow": "Preguntas",
+        "q1": "¿Qué poseo exactamente?",
+        "q2": "¿Qué pasa si desaparecéis?",
+        "q3": "¿Usar un nombre debilita la privacidad de Kerrigan?",
+        "q4": "¿Puede un nombre parecerse al de otra persona?",
+        "q5": "¿Cómo compruebo el registro yo mismo?",
+        "q6": "¿Y si envío un comando que rompe las reglas?",
+        "title": "Preguntas frecuentes"
+    },
+    "footer": {
+        "app": "Aplicación web",
+        "docs": "Documentación",
+        "security": "Seguridad",
+        "indexer": "Ejecutar un indexador",
+        "legal": "Sin afiliación con Kerrigan project ni con la Kerrigan Network development team.",
+        "note": "Un servicio de nombres abierto y verificable para direcciones blindadas de Kerrigan.",
+        "source": "Código fuente"
+    },
+    "game": {
+        "again": "Otra vez",
+        "correct": "<b>Correcto</b>: y te ha llevado {n}s. Ahora imagina hacerlo en cada pago, en el móvil, con prisa.",
+        "diff": "Son distintas",
+        "reveal_lede": "Ahora la misma comprobación, con nombres:",
+        "reveal_note": "La misma pregunta, respondida en un segundo, porque puedes retener el conjunto en la cabeza. De eso se trata exactamente.",
+        "same": "Son idénticas",
+        "tag_name_notes": "Nombre en tus notas",
+        "tag_name_paying": "Nombre al que vas a pagar",
+        "tag_notes": "Dirección en tus notas",
+        "tag_paying": "Dirección a la que vas a pagar",
+        "wrong_diff": "<b>No del todo.</b> Un carácter del medio era distinto; está resaltado arriba.",
+        "wrong_same": "<b>No del todo.</b> Eran idénticas. Dudar es el resultado normal; el formato sencillamente no está hecho para personas."
+    },
+    "hero": {
+        "cta_register": "Registrar un nombre",
+        "cta_verify": "Cómo puedes verificarlo",
+        "eyebrow": "Próximamente en la mainnet de Kerrigan",
+        "fact_custody": "<b>Sin</b> custodia de tus claves",
+        "fact_prereg": "<b>Sin</b> registro previo",
+        "fact_renew": "<b>Sin</b> renovaciones, nunca",
+        "lede": "Kerrigan NameSpace asigna un nombre corto y legible a tu dirección blindada. El nombre se registra mediante una transacción blindada, así que el registro vive en la propia blockchain de Kerrigan, y cualquiera puede reconstruir el registro completo a partir de ella y comprobar que el operador cumplió las reglas.",
+        "title": "Tu dirección tiene 78&nbsp;caracteres.<br><span class=\"hl\">Tu nombre tiene ocho.</span>"
+    },
+    "meta": {
+        "description": "Registra un nombre legible para tu dirección blindada de Kerrigan. Sin registro previo, sin renovaciones, sin custodia. Cada nombre vive en la blockchain de Kerrigan y cualquier tercero puede reproducir el registro completo a partir de ella.",
+        "title": "Kerrigan NameSpace: nombres en lugar de direcciones, verificable por cualquiera"
+    },
+    "nav": {
+        "different": "Qué lo diferencia",
+        "faq": "FAQ",
+        "open_app": "Abrir la app",
+        "pricing": "Precios",
+        "problem": "El problema",
+        "roadmap": "Hoja de ruta",
+        "skip": "Saltar al contenido",
+        "trust": "Modelo de confianza"
+    },
+    "panel": {
+        "check_free": "Comprueba si está libre →",
+        "counter": "<b>{n}</b> caracteres que revisar",
+        "err_charset": "Solo a–z, 0–9 y guiones.",
+        "err_hyphen_dbl": "Sin guiones dobles.",
+        "err_hyphen_edge": "No puede empezar ni terminar con guion.",
+        "hint": "Minúsculas, dígitos y guiones. Ese es todo el alfabeto: nada de Unicode parecido tras lo que esconderse.",
+        "mode_address": "Dirección en bruto",
+        "mode_name": "Nombre Kerrigan",
+        "pay_to": "Pagar a",
+        "placeholder": "tunombre",
+        "price": "Un nombre de {len} caracteres se registra por <b>{price} KRGN</b>, una sola vez.",
+        "send": "Enviar KRGN",
+        "try_own": "Prueba el tuyo"
+    },
+    "pricing": {
+        "caption": "Precios de registro y actualización en KRGN según la longitud del nombre",
+        "col_len": "Longitud del nombre",
+        "col_reg": "Registrar (una vez)",
+        "col_upd": "Actualizar dirección",
+        "eyebrow": "Precios",
+        "fineprint": "La longitud cuenta la parte anterior al punto. Las ventas del mercado llevan una comisión de servicio del 5 %. Los precios son constantes del protocolo, idénticos para cada zona y cada registrante.",
+        "lede": "Los nombres cortos cuestan más porque hay menos. El registro es un pago único; la segunda columna es lo que cuesta reapuntar el nombre a otra dirección más adelante, algo que puedes hacer tantas veces como quieras.",
+        "len_max": "7 o más",
+        "len_n": "{n} caracteres",
+        "len_one": "1 carácter",
+        "title": "Precio por longitud. Pago único."
+    },
+    "roadmap": {
+        "eyebrow": "Lo que viene",
+        "lede": "El protocolo está terminado en el sentido que importa: los nombres funcionan y cualquiera puede verificar el registro. Lo que sigue trata de hacerlos más fáciles de usar.",
+        "r1_body": "Un explorador de bloques te muestra transacciones. Este te mostrará nombres: cada registro, cada cambio de dirección, cada cambio de propiedad, cada publicación y cada venta, dispuestos como un único historial consultable que puedes seguir sin ejecutar un nodo.",
+        "r1_tag": "En desarrollo",
+        "r1_title": "Un explorador de nombres",
+        "r2_body": "La gracia de un nombre es que nunca tocas la dirección. Eso solo es del todo cierto cuando tu propia cartera resuelve nombres, así que ahí va el siguiente esfuerzo. Si desarrollas una cartera Kerrigan, preferimos hacerlo contigo antes que a tu alrededor.",
+        "r2_link": "Equipos de carteras: hablemos →",
+        "r2_tag": "Lo siguiente",
+        "r2_title": "Integrado en las carteras que ya usas",
+        "r3_body": "Más allá de esos dos puntos, la hoja de ruta está deliberadamente en blanco. Cuéntanos qué falta, qué te estorba o qué esperabas encontrar y no estaba: eso es lo que decide el orden de todo lo demás.",
+        "r3_link": "Envíanos una petición de función →",
+        "r3_tag": "Siempre",
+        "r3_title": "Guiado por lo que nos pidáis",
+        "title": "Hacia dónde va esto a partir de aquí"
+    },
+    "trust": {
+        "callout_body": "La propiedad es <b>evidencia de fraude</b>, no prevención del fraude. Un lote incorrecto puede llegar a la cadena y ser contradicho después; nada aquí impide que llegue a publicarse. Lo que el diseño garantiza es que no se pueda ocultar, y que nunca necesitaste nuestra cooperación para descubrirlo.",
+        "callout_link": "Leer el modelo de confianza completo →",
+        "callout_title": "Siendo honestos sobre qué es esto",
+        "eyebrow": "Modelo de confianza",
+        "lede": "La mayoría de los servicios de nombres te piden creer en una base de datos. Este está diseñado para que creer sea innecesario: cada comando que alguna vez cambió el registro es una transacción blindada de Kerrigan, y la clave para leerlos está publicada.",
+        "s1_body": "Registrar, actualizar, listar o comprar un nombre es una nota blindada enviada a la dirección del protocolo. El importe es el pago y el memo cifrado es el comando firmado, en una sola transacción, así que intención y pago no se pueden separar, reordenar ni inventar después.",
+        "s1_title": "El comando vive en cadena",
+        "s2_body": "El registrador publica la dirección del protocolo <em>y</em> su clave de visualización. Cualquiera puede escanear la cadena con ella y recuperar cada comando emitido desde el génesis, en el orden exacto que fijó la blockchain.",
+        "s2_title": "La clave de lectura es pública",
+        "s3_body": "Pasa ese flujo por el indexador de código abierto y derivas el estado del registro por ti mismo, de forma independiente. Ejecútalo con un solo comando usando la imagen Docker publicada, o lee el código y crea el tuyo.",
+        "s3_title": "Cualquiera puede recalcular la respuesta",
+        "s4_body": "La raíz de estado se ancla en cadena con una prueba de conocimiento cero de que se siguieron las reglas de transición. Si el operador censurara un comando pagado, inventara una transferencia o reordenara el historial, cada indexador independiente calcularía una raíz distinta y lo contradiría, sin permiso ni acceso especial.",
+        "s4_title": "El desacuerdo es público",
+        "title": "No tienes que confiar en nosotros. Puedes comprobarlo."
+    }
+}

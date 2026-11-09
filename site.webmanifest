@@ -1,0 +1,35 @@
+{
+  "name": "Kerrigan NameSpace - Decentralized Domain Name Service",
+  "short_name": "Kerrigan NS",
+  "description": "Decentralized domain name service for the Kerrigan cryptocurrency. Register human-readable names for Kerrigan Sapling addresses.",
+  "icons": [
+    {
+      "src": "images/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "images/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "images/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "any",
+  "categories": [
+    "finance",
+    "utilities",
+    "crypto"
+  ]
+}

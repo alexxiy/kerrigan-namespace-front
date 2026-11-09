@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- connect-src must cover whatever getDynamicAPIBaseURL() derives at runtime: it builds
+         registrar.<apex-hostname>, so the wildcard keeps apex, www and staging subdomains working.
+         If this app is ever served from a different domain, add that domain's registrar here.
+         The script-src hash pins the single inline script element further down (the locked-state
+         header helper). Changing it by even one character - whitespace included - makes the
+         browser block it and log a CSP error on every load, so re-pin it in the same change; this
+         prints the value to paste (the pattern only matches a tag opening its own line, so it
+         skips this comment):
+           python3 -c "import re,hashlib,base64;b=re.search(rb'\n[ \t]*<script>(.*?)</script>',open('app.html','rb').read(),re.S).group(1);print('sha256-'+base64.b64encode(hashlib.sha256(b).digest()).decode())" -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Y9JT1Rf7kF8z27j04NhBaAF+QikVgTS166Z5LUFbm/4='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://*.kerrigan-name.space https://*.kerrigan-name.loc; object-src 'none'; base-uri 'self'; form-action 'self';">
+
+    <!-- Primary Title & SEO Meta Tags -->
+    <title data-i18n="title">Kerrigan NameSpace - Decentralized Domain Name Service for Kerrigan (.kerrigan, .krgn)</title>
+    <meta name="description" content="Kerrigan NameSpace (KNS) is the decentralized domain name service for Kerrigan cryptocurrency. Register human-readable .kerrigan and .krgn names for Sapling addresses. Fast, private, and secure name resolution.">
+    <meta name="keywords" content="Kerrigan NameSpace, KNS, Kerrigan domain, .kerrigan, .krgn, Sapling address, crypto domain, decentralized name service, privacy, Kerrigan handles, Kerrigan aliases">
+    <meta name="author" content="Kerrigan NameSpace">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://kerrigan-name.space/">
+
+    <!-- Theme & PWA App Standards -->
+    <meta name="theme-color" content="#000000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kerrigan NameSpace">
+    <meta name="application-name" content="Kerrigan NameSpace">
+    <meta name="msapplication-TileColor" content="#000000">
+
+    <!-- Open Graph / Facebook / Telegram / Discord -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kerrigan-name.space/">
+    <meta property="og:site_name" content="Kerrigan NameSpace">
+    <meta property="og:title" content="Kerrigan NameSpace - Decentralized Domain Name Service for Kerrigan">
+    <meta property="og:description" content="Register human-readable .kerrigan and .krgn domain names for your Kerrigan Sapling addresses. Secure, private, and decentralized name resolution.">
+    <meta property="og:image" content="https://kerrigan-name.space/images/og-image.png">
+    <meta property="og:image:secure_url" content="https://kerrigan-name.space/images/og-image.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Kerrigan NameSpace - Decentralized Domain Name Service for Kerrigan">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@Kerrigan NameSpace">
+    <meta name="twitter:creator" content="@Kerrigan NameSpace">
+    <meta name="twitter:title" content="Kerrigan NameSpace - Decentralized Domain Name Service for Kerrigan">
+    <meta name="twitter:description" content="Register human-readable .kerrigan and .krgn domains for Kerrigan Sapling addresses. Secure, private, and decentralized.">
+    <meta name="twitter:image" content="https://kerrigan-name.space/images/og-image.png">
+    <meta name="twitter:image:alt" content="Kerrigan NameSpace - Decentralized Domain Name Service for Kerrigan">
+
+    <!-- Favicons & App Icons for Desktop, Mac, iOS & Android -->
+    <!-- 1. Fallback for legacy browsers and direct root requests -->
+    <link rel="icon" href="favicon.ico?v=1.0.8" sizes="any">
+    <!-- 2. Standard PNG favicons for desktop browsers -->
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png?v=1.0.8">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png?v=1.0.8">
+    <!-- 3. Infinite-scaling vector icon for modern PC/Mac/Mobile browsers -->
+    <link rel="icon" href="images/favicon.svg?v=1.0.8" type="image/svg+xml">
+    <!-- 4. High-res icon for Apple iOS home screens -->
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png?v=1.0.8">
+    <!-- 5. Web Manifest linking 192x192 and 512x512 icons for Android & PWAs -->
+    <link rel="manifest" href="site.webmanifest?v=1.0.8">
+    <!-- 6. LLM / AI Search Indexing standard -->
+    <link rel="alternate" type="text/markdown" href="llms.txt" title="LLM Documentation">
+
+    <!-- EasyQRCodeJS for generating the payment QR -->
+    <script defer src="js/vendor/easy.qrcode.min.js?v=1.0.8"></script>
+    <!-- Critical preloader styles, inline and deliberately ahead of the stylesheets.
+         The loading screen is otherwise positioned and coloured only by Tailwind utilities,
+         and tailwind.css is the last of three stylesheets in this head. Firefox paints
+         during the window where style.css has applied but Tailwind has not, and the app
+         showed through: SVG icons carry no intrinsic size, so the header mark alone scaled
+         to fill the viewport (a giant white disc with the glyph knocked out of it).
+         These few properties make the loader opaque from the very first paint.
+         The background is opaque and lives only here: the loader previously used
+         bg-[#0a0414]/85 with a backdrop blur, which let the half-built app behind it show
+         through as faint panel borders and button outlines for the whole load. Owning the
+         background here means nothing bleeds through in any window - before Tailwind
+         arrives or after. The opacity-0 fade-out still works, because that is a separate
+         property. app.js removes the element when the app is ready, so this can never
+         strand it on screen. -->
+    <style>
+      .app-preloader {
+        position: fixed; inset: 0; z-index: 9999;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background: #000000;
+      }
+
+      /* The spinning arc colours only its top and right border; the other two sides were
+         falling back to Tailwind's preflight default (#e5e7eb), so the "spinner" rendered
+         as a near-white ring with a coloured arc on it. Only noticeable when the loader
+         stays up long enough to look at - i.e. a hard reload, where nothing is cached.
+         Longhands, so they never fight the border-t and border-r utilities. */
+      .app-spinner { border-bottom-color: transparent; border-left-color: transparent; }
+    </style>
+    <!-- Custom Style Sheet (fonts loaded via a separate <link> so both fetch in parallel instead of a serial @import) -->
+    <link rel="stylesheet" href="css/fonts.css?v=1.0.8">
+    <link rel="stylesheet" href="css/style.css?v=1.0.8">
+    <!-- Precompiled Tailwind utilities. Generated by the Tailwind CLI (see tailwind.config.js
+         and `npm run build:css`) rather than the browser JIT runtime, which must not ship to
+         production. Loaded last to keep the previous cascade order: the JIT used to append its
+         <style> at the end of <head>, so utilities win specificity ties against style.css. -->
+    <link rel="stylesheet" href="css/tailwind.css?v=1.0.8">
+
+    <!-- Structured Data / JSON-LD for Search Engines -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://kerrigan-name.space/#website",
+          "url": "https://kerrigan-name.space/",
+          "name": "Kerrigan NameSpace",
+          "description": "Decentralized Domain Name Service for Kerrigan",
+          "inLanguage": "en-US"
+        },
+        {
+          "@type": "WebApplication",
+          "@id": "https://kerrigan-name.space/#webapp",
+          "url": "https://kerrigan-name.space/",
+          "name": "Kerrigan NameSpace App",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "All",
+          "browserRequirements": "Requires JavaScript",
+          "description": "Decentralized domain name service for Kerrigan cryptocurrency. Register, update, and manage .kerrigan and .krgn domains for Kerrigan Sapling addresses."
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://kerrigan-name.space/#organization",
+          "name": "Kerrigan NameSpace",
+          "url": "https://kerrigan-name.space/",
+          "logo": "https://kerrigan-name.space/images/android-chrome-512x512.png",
+          "sameAs": [
+            "https://github.com/alexxiy/kerrigan-namespace-indexer"
+          ]
+        }
+      ]
+    }
+    </script>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-purple-500 selection:text-white overflow-x-hidden">
+
+    <!-- Non-JS Fallback for Search Engine Crawlers & Accessibility -->
+    <noscript>
+        <div style="padding: 2rem; text-align: center; color: #ffffff; background: #000000;">
+            <h1>Kerrigan NameSpace - Decentralized Domain Name Service for Kerrigan</h1>
+            <p>Kerrigan NameSpace allows you to register human-readable .kerrigan and .krgn domain names linked to your Kerrigan Sapling addresses.</p>
+            <p>Please enable JavaScript in your browser to use the interactive Kerrigan NameSpace application.</p>
+        </div>
+    </noscript>
+
+    <!-- App Loading Preloader (Premium Blurred Glass style) -->
+    <div id="appPreloader" class="app-preloader fixed inset-0 z-[9999] flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
+        <div class="flex flex-col items-center gap-6 relative">
+            <div class="absolute w-36 h-36 bg-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
+            <div class="relative w-16 h-16">
+                <div class="absolute inset-0 rounded-full border-4 border-purple-500/10"></div>
+                <div class="app-spinner absolute inset-0 rounded-full border-4 border-t-purple-500 border-r-purple-500 animate-spin"></div>
+            </div>
+            <span class="text-xs font-bold tracking-widest text-purple-300 uppercase animate-pulse">Loading App</span>
+        </div>
+    </div>
+
+    <!-- Decorative background elements: the page's glow is the body background in
+         css/style.css. The blurred blobs that sat here at -z-10 are gone - a negatively
+         stacked element paints beneath the body's own opaque background, so they never
+         showed and only cost a 128px blur and an endless pulse animation. -->
+
+    <!-- 1. Header -->
+    <header class="sticky top-0 z-50 px-4 sm:px-6 py-4 flex justify-between items-center transition-all duration-300" id="header">
+        <!-- Separate background layer -->
+        <div id="headerBg" class="glass absolute inset-0 -z-10 transition-all duration-300" style="border-top: none; border-left: none; border-right: none;"></div>
+        
+        <!-- Logo & Name -->
+        <a href="#" id="headerLogoLink" class="flex items-center gap-2 sm:gap-3 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1d0d38] to-[#0b0416] ring-1 ring-purple-600/60 flex items-center justify-center shadow-[0_0_14px_rgba(131,65,237,0.4)] transform group-hover:scale-105 transition-transform p-1.5">
+                <!-- width/height are presentation attributes, not CSS: they bound the mark when
+                     tailwind.css has not arrived yet (Firefox paints in that window and the
+                     glyph, sized only by w-full/h-full, otherwise fills the viewport). Any CSS
+                     rule outranks them, so Tailwind still controls the final size. -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="71 88 392 375" width="28" height="28" class="w-full h-full drop-shadow-md overflow-visible"><g transform="translate(52.17 45.41) scale(5.7054)"><path fill="#8341ed" d="M59.17,36.38h-12.04l13.39-13.39c.37-.37.57-.86.58-1.38l.04-8.54c0-.52-.21-1.03-.58-1.4l-3.51-3.51c-.77-.77-2.02-.77-2.78,0l-22.06,22.06L10.13,8.16c-.77-.77-2.02-.77-2.78,0l-3.47,3.47c-.37.37-.58.87-.58,1.39v8.59c0,.53.2,1.02.58,1.39l13.38,13.38H5.27c-1.09,0-1.97.88-1.97,1.97v4.9c0,.53.2,1.02.58,1.39l6.07,6.07c.37.37.87.58,1.39.58h8.09v1.1c0,.53.2,1.02.58,1.39l3.47,3.47c.77.77,2.02.77,2.78,0l5.93-5.93,5.93,5.93c.77.77,2.02.77,2.78,0l3.51-3.51c.37-.37.58-.88.58-1.4v-1.04s8.09,0,8.09,0c.53,0,1.02-.2,1.39-.58l6.07-6.07c.37-.37.58-.87.58-1.39v-4.9c0-1.09-.88-1.97-1.97-1.97Z"/><path fill="#43de78" d="M24.13,15.45l7.98,8.02,8.01-8.01c.94-.94.28-2.56-1.06-2.56h-13.87c-1.33,0-2,1.61-1.06,2.55Z"/></g><g transform="translate(296.4, 296.4) scale(0.84)"><circle cx="90" cy="90" r="100" fill="#43de78" stroke="#ffffff" stroke-width="16"/><circle cx="50" cy="90" r="20" fill="#1a0a2e"/><circle cx="130" cy="60" r="20" fill="#1a0a2e"/><circle cx="110" cy="130" r="20" fill="#1a0a2e"/><line x1="50" y1="90" x2="130" y2="60" stroke="#1a0a2e" stroke-width="12"/><line x1="50" y1="90" x2="110" y2="130" stroke="#1a0a2e" stroke-width="12"/><line x1="130" y1="60" x2="110" y2="130" stroke="#1a0a2e" stroke-width="12"/></g></svg>
+            </div>
+            <div class="flex items-center gap-2">
+                <span data-i18n="header.title" class="text-[15px] sm:text-xl whitespace-nowrap font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200">
+                    Kerrigan-Name.Space
+                </span>
+                
+            </div>
+        </a>
+
+        <!-- Auth Controls -->
+        <div id="authControlsGuest">
+            <button id="headerLoginBtn" data-i18n="header.login" class="glass px-4 sm:px-6 whitespace-nowrap h-10 rounded-full font-medium hover:bg-white/10 transition-colors btn-ripple flex items-center justify-center">
+                Log In
+            </button>
+        </div>
+        
+        <!-- Logged In Controls (Dropdown) -->
+        <div id="authControlsUser" class="hidden relative items-center">
+            <button id="accountMenuBtn" aria-label="Account menu" class="glass w-10 h-10 rounded-full hover:bg-white/10 transition-colors text-purple-300 hover:text-white flex-shrink-0 flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div id="accountDropdown" class="absolute top-full right-0 mt-3 w-60 glass-dropdown rounded-[24px] flex flex-col z-50 transform origin-top-right transition-all duration-200 ease-out opacity-0 invisible scale-95 shadow-2xl">
+                <button id="menuMyNamesBtn" class="flex items-center gap-4 px-5 py-4 hover:bg-white/10 active:bg-white/20 transition-colors text-left text-[15px] font-medium text-white border-b border-white/10 rounded-t-[24px]">
+                    <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                    <span data-i18n="header.my_names">My Names</span>
+                </button>
+                <button id="menuBalanceBtn" class="flex items-center gap-4 px-5 py-4 hover:bg-white/10 active:bg-white/20 transition-colors text-left text-[15px] font-medium text-white border-b border-white/10">
+                    <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                    <span data-i18n="header.my_balance">My Balance</span>
+                </button>
+                <button id="menuTransactionsBtn" class="flex items-center gap-4 px-5 py-4 hover:bg-white/10 active:bg-white/20 transition-colors text-left text-[15px] font-medium text-white border-b border-white/10">
+                    <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                    <span data-i18n="header.my_transactions">My Transactions</span>
+                </button>
+                <button id="menuChangePwdBtn" class="flex items-center gap-4 px-5 py-4 hover:bg-white/10 active:bg-white/20 transition-colors text-left text-[15px] font-medium text-white border-b border-white/10">
+                    <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+                    <span data-i18n="header.change_pwd">Change Password</span>
+                </button>
+                <button id="menuRevealSeedBtn" class="flex items-center gap-4 px-5 py-4 hover:bg-white/10 active:bg-white/20 transition-colors text-left text-[15px] font-medium text-white border-b border-white/10">
+                    <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    <span data-i18n="header.reveal_seed">Reveal Seed Phrase</span>
+                </button>
+                <button id="menuLockBtn" class="flex items-center gap-4 px-5 py-4 hover:bg-white/10 active:bg-white/20 transition-colors text-left text-[15px] font-medium text-white border-b border-white/10">
+                    <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    <span data-i18n="header.lock">Lock</span>
+                </button>
+                <button id="headerLogoutBtn" class="flex items-center gap-4 px-5 py-4 hover:bg-red-500/10 active:bg-red-500/20 transition-colors text-left text-[15px] font-medium text-red-400 rounded-b-[24px]">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                    <span data-i18n="header.logout">Log Out</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Locked Controls -->
+        <!-- Below sm, Unlock is a round icon button like the others: next to the long wordmark its label
+             doesn't fit a phone (English needs 405px, Russian 472px). sr-only keeps the label as the
+             button's name for screen readers. -->
+        <div id="authControlsLocked" class="hidden items-center gap-3">
+            <button id="headerUnlockBtn" class="glass w-10 sm:w-auto sm:px-5 h-10 rounded-full font-medium hover:bg-white/10 transition-colors flex flex-shrink-0 items-center justify-center gap-2 text-sm sm:text-base text-white">
+                <svg class="w-5 h-5 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path></svg>
+                <span data-i18n="header.unlock" class="sr-only sm:not-sr-only">Unlock</span>
+            </button>
+            <button id="headerLockedLogoutBtn" class="glass w-10 h-10 rounded-full hover:bg-red-500/20 hover:border-red-500/30 transition-colors text-red-400 flex items-center justify-center" data-i18n-title="tooltips.logout" title="Log Out">
+                <svg class="w-5 h-5 pl-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Synchronous script to immediately prevent "Log In" flicker on refresh -->
+    <script>
+        if (localStorage.getItem('kerrigan_encrypted_account')) {
+            document.getElementById('authControlsGuest').classList.add('hidden');
+            // Volatile memory is wiped on refresh, so we ALWAYS default to locked state
+            const lockedControls = document.getElementById('authControlsLocked');
+            lockedControls.classList.remove('hidden');
+            lockedControls.classList.add('flex');
+        }
+    </script>
+
+    <!-- 2. Main Body -->
+    <main class="flex-grow flex items-center justify-center px-4 py-12 md:py-24 relative z-10 w-full overflow-hidden">
+        <div class="glass-panel rounded-3xl p-5 sm:p-8 md:p-12 max-w-2xl w-full text-center fade-in-up">
+            
+            <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-purple-500/20 flex items-center justify-center border border-purple-500/30">
+                <svg class="w-10 h-10 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+            </div>
+
+            <h1 id="heroTitle" class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight fade-in-up delay-100">
+                <span data-i18n="hero.title_part1">Get Your</span> <span data-i18n="hero.title_part2" class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-500">Kerrigan Name</span>
+            </h1>
+            
+            <p id="heroSubtitle" class="text-lg md:text-xl text-purple-100/80 mb-2 leading-relaxed fade-in-up delay-200" data-i18n="hero.subtitle">
+                Register a memorable alias for your Kerrigan addresses. Make receiving payments as simple as sharing a name.
+            </p>
+            
+            <div id="onboardingLinkContainer" class="mb-10 fade-in-up delay-200">
+                <a href="#" id="openOnboardingBtn" class="text-purple-300 hover:text-purple-200 transition-colors text-sm font-semibold underline decoration-dotted underline-offset-4" data-i18n="onboarding.link_how_it_works">How it works? Click to know</a>
+            </div>
+
+            <!-- View Selector Tabs -->
+            <div id="mainViewSelector" class="flex p-1 bg-black/20 border border-white/10 rounded-2xl w-[calc(100%-2rem)] sm:w-full max-w-[340px] mx-auto mb-8 relative z-20 fade-in-up delay-250">
+                <button id="tabRegister" class="flex items-center justify-center gap-2 flex-1 py-2 px-3 rounded-xl text-xs sm:text-sm font-semibold transition-all text-white bg-purple-600 shadow-lg shadow-purple-950/30">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    <span data-i18n="tabs.register">Register</span>
+                </button>
+                <button id="tabMarketplace" class="flex items-center justify-center gap-2 flex-1 py-2 px-3 rounded-xl text-xs sm:text-sm font-semibold transition-all text-purple-200 hover:text-white hover:bg-white/5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <span data-i18n="tabs.marketplace">Marketplace</span>
+                </button>
+            </div>
+
+            <!-- Transactions Selector Tabs -->
+            <div id="transactionsViewSelector" class="hidden p-1 bg-black/20 border border-white/10 rounded-2xl w-[calc(100%-2rem)] sm:w-full max-w-[340px] mx-auto mb-8 relative z-20 fade-in-up delay-250">
+                <button id="tabIncoming" class="flex items-center justify-center gap-2 flex-1 py-2 px-3 rounded-xl text-xs sm:text-sm font-semibold transition-all text-white bg-purple-600 shadow-lg shadow-purple-950/30">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l-7 7-7-7m14-6l-7 7-7-7"></path></svg>
+                    <span data-i18n="transactions.incoming_btn">Incoming</span>
+                </button>
+                <button id="tabRefunds" class="flex items-center justify-center gap-2 flex-1 py-2 px-3 rounded-xl text-xs sm:text-sm font-semibold transition-all text-purple-200 hover:text-white hover:bg-white/5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"></path></svg>
+                    <span data-i18n="transactions.refunds_btn">Refunds</span>
+                </button>
+            </div>
+
+            <div id="registerView" class="flex flex-col gap-0 w-full animate-fade-in">
+                <div class="bg-black/20 rounded-2xl backdrop-blur-sm border border-white/5 overflow-hidden relative w-full" id="sliderWrapper">
+                
+                <!-- Fixed Slider Track: w-full with flex-nowrap to prevent child squishing -->
+                <div id="claimSliderTrack" class="flex flex-nowrap transition-transform duration-500 ease-in-out w-full items-start">
+                    
+                    <!-- Slide 1: Check Domain -->
+                    <div id="slide1" class="w-full flex-shrink-0 p-5 sm:p-6 md:p-8">
+                        <h2 class="text-xl font-semibold mb-6 text-left text-white/90" data-i18n="search.title">Claim your name</h2>
+                        
+                        <form id="registrationForm" class="flex flex-col md:flex-row gap-4 items-end w-full">
+                            <!-- Material Input -->
+                            <div class="material-input-group flex-grow w-full">
+                                <input type="text" id="kerriganName" class="material-input peer !pr-[8rem]" placeholder=" " required autocomplete="off" spellcheck="false" pattern="[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*" data-i18n-title="tooltips.pattern_letters_numbers_hyphens" title="Letters, numbers, and hyphens only (no leading, trailing, or consecutive hyphens allowed), max 64 characters total">
+                                <label for="kerriganName" class="material-label !max-w-[calc(100%-9rem)]" data-i18n="search.input_label">Enter desired name</label>
+                                <!-- Ext element for domain suffix -->
+                                <div class="absolute right-2 top-2 bg-white/5 border border-white/10 rounded-lg overflow-hidden flex items-center">
+                                    <select id="domainZone" class="bg-transparent text-purple-300 font-medium text-sm focus:outline-none cursor-pointer appearance-none py-2 pl-3 pr-8 h-full outline-none">
+                                        <option value=".kerrigan" class="bg-[#140828] text-white">.kerrigan</option>
+                                        <option value=".krgn" class="bg-[#140828] text-white">.krgn</option>
+                                        <option value=".private" class="bg-[#140828] text-white">.private</option>
+                                        <option value=".secure" class="bg-[#140828] text-white">.secure</option>
+                                        <option value=".safe" class="bg-[#140828] text-white">.safe</option>
+                                    </select>
+                                    <svg class="w-4 h-4 text-purple-300/50 absolute right-2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" id="checkBtn" class="btn-ripple w-full md:w-auto bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-400 hover:to-purple-600 text-white font-semibold py-3 px-8 rounded-xl shadow-lg shadow-purple-950/50 transition-all flex items-center justify-center min-w-[140px] h-[52px]">
+                                <span id="btnText" data-i18n="search.btn">Check</span>
+                            </button>
+                        </form>
+
+                        <!-- Result Message Container -->
+                        <div id="resultMessage" class="text-left text-sm font-medium transition-all duration-300 opacity-0 flex items-center w-full">
+                            <!-- Message injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Slide 2: Target Address -->
+                    <div id="slideAddress" class="w-full flex-shrink-0 p-5 sm:p-6 md:p-8 flex flex-col">
+                        <div class="flex items-center gap-3 mb-6">
+                            <button id="btnBackToSearchFromAddress" type="button" class="text-white/50 hover:text-white transition-colors active:scale-95 bg-white/5 p-1.5 rounded-full" data-i18n-title="tooltips.back" title="Back">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                             <h2 class="text-xl font-semibold text-left text-white/90 leading-tight" data-i18n="address.title">Provide Kerrigan destination address for the name resolution</h2>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 mb-2 w-full">
+                            <!-- Standard destination address input group -->
+                            <div id="standardAddressInputGroup" class="flex flex-col gap-1 w-full">
+                                <div class="material-input-group w-full">
+                                    <textarea id="targetAddressInput" class="material-input peer resize-none h-24 !pr-4 w-full custom-scroll" placeholder=" " required autocomplete="off" spellcheck="false"></textarea>
+                                    <label for="targetAddressInput" class="material-label !max-w-[calc(100%-2rem)] text-[14px] sm:text-base" data-i18n="address.input_label">Enter or paste your address</label>
+                                </div>
+                                <p id="addressErrorMsg" class="text-red-400 text-xs hidden text-left pl-1 mt-1 transition-opacity" data-i18n="address.error_msg">Address must be a valid Kerrigan shielded address (starts with ks1).</p>
+                            </div>
+
+                            <!-- New owner public key input group (for CHG) -->
+                            <div id="newOwnerInputGroup" class="hidden flex-col gap-1 w-full">
+                                <div class="material-input-group w-full">
+                                    <textarea id="newOwnerInput" class="material-input peer resize-none h-24 !pr-4 w-full custom-scroll" placeholder=" " required autocomplete="off" spellcheck="false"></textarea>
+                                    <label for="newOwnerInput" class="material-label !max-w-[calc(100%-2rem)] text-[14px] sm:text-base" data-i18n="address.new_owner_label">Enter or paste new owner public key (hex)</label>
+                                </div>
+                                <p id="newOwnerErrorMsg" class="text-red-400 text-xs hidden text-left pl-1 mt-1" data-i18n="address.new_owner_error">Public key must be a valid 64-character hex string.</p>
+                            </div>
+
+                            <!-- Marketplace selling price input group (for LST) -->
+                            <div id="marketplacePriceInputGroup" class="hidden flex-col gap-1 w-full">
+                                <div class="relative w-full flex items-center bg-black/40 border border-white/10 rounded-xl overflow-hidden focus-within:border-purple-500/50 transition-colors">
+                                    <input type="number" id="desiredPriceInput" min="0.00000001" max="21000000" step="0.00000001" class="w-full bg-transparent text-white px-4 py-3.5 text-sm sm:text-base focus:outline-none placeholder-purple-200/20 font-semibold" placeholder="Enter price" data-i18n-placeholder="address.price_placeholder" required autocomplete="off">
+                                    <span class="text-sm font-bold text-purple-300 pr-4 pl-2 select-none">KRGN</span>
+                                </div>
+                                <p id="priceErrorMsg" class="text-red-400 text-xs hidden text-left pl-1 mt-1" data-i18n="address.price_error">Price must be a positive number with up to 8 decimals, max 50,000,000 KRGN.</p>
+                            </div>
+                        </div>
+
+                        <button type="button" id="btnNextToPayment" disabled class="btn-ripple mt-6 w-full bg-purple-600 hover:bg-purple-500 disabled:bg-white/10 disabled:text-white/30 disabled:cursor-not-allowed text-white font-bold py-3.5 px-8 rounded-xl shadow-lg transition-all flex items-center justify-center">
+                            <span data-i18n="address.btn_next">Next</span>
+                        </button>
+                    </div>
+
+                    <!-- Slide 3: Payment -->
+                    <div id="slidePayment" class="w-full flex-shrink-0 p-5 sm:p-6 md:p-8 flex flex-col">
+                        <div class="flex items-center gap-3 mb-6">
+                            <button id="btnBackToAddress" type="button" class="text-white/50 hover:text-white transition-colors active:scale-95 bg-white/5 p-1.5 rounded-full" data-i18n-title="tooltips.back" title="Back">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            <h2 id="paymentTitle" class="text-xl font-semibold text-left text-white/90 leading-tight" data-i18n="payment.title">Make the following payment to claim the name</h2>
+                        </div>
+                        
+                        <div class="flex flex-col gap-3 w-full">
+                            <!-- Address -->
+                            <div class="relative group" id="payAddressGroup">
+                                <label class="text-[11px] text-purple-300/60 uppercase tracking-wider mb-1 block text-left font-semibold pl-1" data-i18n="payment.label_dest">Destination Address</label>
+                                <div class="flex items-start bg-black/40 border border-white/10 rounded-xl overflow-hidden p-1 pr-1.5 focus-within:border-purple-500/50 transition-colors">
+                                    <!-- Filled from /v1.0/getPaymentAddress at runtime; deliberately not hardcoded
+                                         so it cannot drift from the wallet the indexer actually scans. -->
+                                    <textarea readonly id="payAddress" placeholder="…" class="w-full bg-transparent text-white/90 px-3 py-2 text-xs focus:outline-none font-mono tracking-tight resize-none h-14 custom-scroll" style="line-height: 1.4;"></textarea>
+                                    <button type="button" data-target="payAddress" class="copy-btn p-2 hover:bg-white/10 rounded-lg transition-colors active:scale-90 flex-shrink-0 text-white/50 hover:text-white mt-1 w-9 h-9 flex items-center justify-center" data-i18n-title="tooltips.copy_address" title="Copy Address">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Amount -->
+                            <div class="relative group">
+                                <label class="text-[11px] text-purple-300/60 uppercase tracking-wider mb-1 block text-left font-semibold pl-1" data-i18n="payment.label_amount">Amount</label>
+                                <div class="flex items-center bg-black/40 border border-white/10 rounded-xl overflow-hidden p-1 pr-1.5 focus-within:border-purple-500/50 transition-colors h-12">
+                                    <input type="text" readonly value="120" class="w-full bg-transparent text-white/90 px-3 py-2 text-sm focus:outline-none font-medium" id="payAmount">
+                                    <span class="text-purple-300/60 font-semibold text-xs pr-2 select-none">KRGN</span>
+                                    <button type="button" data-target="payAmount" class="copy-btn p-2 hover:bg-white/10 rounded-lg transition-colors active:scale-90 flex-shrink-0 text-white/50 hover:text-white w-9 h-9 flex items-center justify-center" data-i18n-title="tooltips.copy_amount" title="Copy Amount">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Memo -->
+                            <div class="relative group">
+                                <div class="flex items-center justify-between mb-1 pl-1 pr-1">
+                                    <label class="text-[11px] text-purple-300/60 uppercase tracking-wider block text-left font-semibold" data-i18n="payment.label_memo">Shielded Memo</label>
+                                    <span class="text-[10px] text-purple-400/90 flex items-center gap-1 font-medium bg-purple-500/10 px-1.5 py-0.5 rounded-md">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                        <span data-i18n="payment.memo_warning">Don't forget this!</span>
+                                    </span>
+                                </div>
+                                <div class="flex items-start bg-black/40 border border-white/10 rounded-xl overflow-hidden p-1 pr-1.5 focus-within:border-purple-500/50 transition-colors">
+                                    <textarea readonly id="payMemo" class="w-full bg-transparent text-white/90 px-3 py-2 text-xs focus:outline-none font-mono tracking-tight resize-none h-28 custom-scroll" style="line-height: 1.4; word-break: break-all;"></textarea>
+                                    <button type="button" data-target="payMemo" class="copy-btn p-2 hover:bg-white/10 rounded-lg transition-colors active:scale-90 flex-shrink-0 text-white/50 hover:text-white mt-1 w-9 h-9 flex items-center justify-center" data-i18n-title="tooltips.copy_memo" title="Copy Memo">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NEW QR CODE BUTTON -->
+                        <button type="button" id="showQrBtn" class="mt-4 w-full bg-white/10 hover:bg-white/20 border border-white/10 text-white font-bold py-3 px-8 rounded-xl transition-all flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
+                            <span data-i18n="payment.btn_qr">Show QR Code</span>
+                        </button>
+
+                        <!-- For paying from Kerrigan Core: opens #consoleModalOverlay with a ready
+                             z_sendmany line for its console (see openConsoleModal()). -->
+                        <button type="button" id="showConsoleBtn" class="mt-2 w-full bg-white/10 hover:bg-white/20 border border-white/10 text-white font-bold py-3 px-8 rounded-xl transition-all flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <span data-i18n="payment.btn_console">Pay with Kerrigan Core's Console</span>
+                        </button>
+
+                        <button type="button" id="iPaidBtn" class="btn-ripple mt-2 w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white font-bold py-3.5 px-8 rounded-xl shadow-lg transition-all flex items-center justify-center">
+                            <span data-i18n="payment.btn_paid">I paid</span>
+                        </button>
+                    </div>
+
+                    <!-- Slide 4: Status Monitor -->
+                    <div id="slideStatus" class="w-full flex-shrink-0 p-5 sm:p-6 md:p-8 flex flex-col items-center justify-center text-center">
+                        <div class="relative w-24 h-24 mb-6 flex items-center justify-center">
+                            <!-- Spinner -->
+                            <svg id="statusSpinner" class="w-20 h-20 text-purple-500 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <!-- Success Icon -->
+                            <div id="statusSuccessIcon" class="hidden absolute inset-0 flex items-center justify-center bg-green-500/20 rounded-full border border-green-500/30">
+                                <svg class="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                            <!-- Error Icon -->
+                            <div id="statusErrorIcon" class="hidden absolute inset-0 flex items-center justify-center bg-red-500/20 rounded-full border border-red-500/30">
+                                <svg class="w-10 h-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </div>
+                        </div>
+                        
+                        <h2 id="statusHeading" class="text-2xl font-bold text-white mb-2" data-i18n="status.scanning_title">Scanning Network...</h2>
+                        <p id="statusDescription" class="text-purple-200/80 text-sm mb-6 max-w-sm" data-i18n="status.scanning_desc">We are waiting for your payment to arrive on the blockchain.</p>
+
+                        <!-- Countdown Timer -->
+                        <div id="statusCountdownContainer" class="bg-black/20 border border-white/5 rounded-xl py-3 px-6 flex items-center gap-3 transition-opacity">
+                            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span id="statusCountdownText" class="text-sm font-medium text-white/90"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <!-- Features minimal / Progress Tracker -->
+            <div class="grid grid-cols-3 gap-4 mt-10 pt-8 border-t border-white/10 text-sm text-purple-200/60 fade-in-up delay-300" id="progressSteps">
+                <div id="stepIconCheck" class="flex flex-col items-center gap-2 text-purple-200 transition-colors duration-300 font-medium">
+                    <svg class="w-6 h-6 drop-shadow-[0_0_8px_rgba(245,158,11,0.6)] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <span data-i18n="progress.check">Check</span>
+                </div>
+                <div id="stepIconPay" class="flex flex-col items-center gap-2 text-purple-200/40 transition-colors duration-300 font-medium">
+                    <svg class="w-6 h-6 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                    <span data-i18n="progress.pay">Pay</span>
+                </div>
+                <div id="stepIconYours" class="flex flex-col items-center gap-2 text-purple-200/40 transition-colors duration-300 font-medium">
+                    <svg class="w-6 h-6 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.746 3.746 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"></path></svg>
+                    <span data-i18n="progress.yours">Done!</span>
+                </div>
+            </div>
+
+            </div> <!-- End of registerView -->
+
+            <!-- Marketplace Container -->
+            <div id="marketplaceView" class="hidden flex-col gap-6 w-full animate-fade-in text-left">
+                
+                <!-- Marketplace Search Block -->
+                <div class="flex flex-col sm:flex-row gap-3 items-center w-full">
+                    <div class="flex items-center gap-3 flex-grow w-full min-w-0">
+                        <div class="relative flex items-center bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 flex-grow w-full min-w-0">
+                            <svg class="w-4 h-4 text-purple-300/80 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <input type="text" id="marketSearchInput" class="bg-transparent text-white text-sm outline-none w-full placeholder-purple-300/40" placeholder="Search domains on sale..." data-i18n-placeholder="marketplace.search_placeholder" autocomplete="off" spellcheck="false" maxlength="64">
+                            <button id="marketSearchClearBtn" class="hidden text-white/40 hover:text-white transition-colors ml-2 flex-shrink-0" data-i18n-title="tooltips.clear_search" title="Clear search">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                        <!-- Filters toggle: opens the panel below the search row -->
+                        <button type="button" id="marketFilterBtn" class="list-filter-btn relative flex items-center justify-center w-11 h-11 flex-shrink-0 rounded-xl text-purple-300 hover:text-white transition-all" aria-expanded="false" aria-controls="marketFilterPanel" data-i18n-title="filters.toggle" title="Filters">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                            <span class="list-filter-dot hidden" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <button id="marketSearchBtn" class="w-full sm:w-auto bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-md shadow-purple-950/30 flex items-center justify-center gap-2 h-11 flex-shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <span data-i18n="marketplace.search_btn">Search</span>
+                    </button>
+                </div>
+                <!-- Filters Panel: applied as soon as a choice is made, reset on leaving the screen -->
+                <div id="marketFilterPanel" class="list-filter-panel hidden flex-col gap-4 w-full rounded-2xl p-4 sm:p-5">
+                    <div class="flex flex-col gap-2">
+                        <span class="list-filter-label" data-i18n="filters.zone">Zone</span>
+                        <div class="flex flex-wrap gap-2" data-filter-group="zone">
+                            <button type="button" class="list-filter-chip" data-value="" data-i18n="filters.all">All</button>
+                            <!-- One chip per zone after it, rendered by JS from the registrar's zone list -->
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <span class="list-filter-label" data-i18n="filters.sort">Sort by</span>
+                        <div class="flex flex-wrap gap-2" data-filter-group="sort">
+                            <button type="button" class="list-filter-chip" data-value="name:asc" data-i18n="filters.sort_name_asc">Name A–Z</button>
+                            <button type="button" class="list-filter-chip" data-value="name:desc" data-i18n="filters.sort_name_desc">Name Z–A</button>
+                            <button type="button" class="list-filter-chip" data-value="price:asc" data-i18n="filters.sort_price_asc">Price: low to high</button>
+                            <button type="button" class="list-filter-chip" data-value="price:desc" data-i18n="filters.sort_price_desc">Price: high to low</button>
+                        </div>
+                    </div>
+                    <div class="flex justify-end border-t border-white/5 pt-3">
+                        <button type="button" class="list-filter-reset flex items-center gap-1.5 text-xs font-semibold text-purple-300 hover:text-white transition-colors disabled:opacity-40 disabled:pointer-events-none" data-filter-reset>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            <span data-i18n="filters.reset">Reset filters</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- Search Error Message Container -->
+                <div id="marketSearchError" class="text-left text-sm font-medium transition-all duration-300 opacity-0 flex items-center w-full">
+                    <!-- Message injected via JS -->
+                </div>
+
+                <!-- Top Pagination -->
+                <div class="market-pagination-top flex items-center justify-center gap-1.5 text-xs text-purple-200/80 my-2">
+                    <!-- Pagination buttons dynamically rendered -->
+                </div>
+
+                <!-- Loading State -->
+                <div id="marketLoading" class="hidden flex-col items-center justify-center py-12 gap-3">
+                    <span class="loader"></span>
+                    <span class="text-sm text-purple-300" data-i18n="my_names_view.loading">Loading...</span>
+                </div>
+
+                <!-- Error State -->
+                <div id="marketError" class="hidden flex-col items-center justify-center py-12 gap-3 text-red-400 cursor-pointer hover:text-red-300 transition-colors">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <span class="text-sm font-semibold" data-i18n="marketplace.error_loading">Failed to load domains. Click to retry.</span>
+                </div>
+
+                <!-- Empty State -->
+                <div id="marketEmpty" class="hidden flex flex-col items-center justify-center py-12 text-center gap-4">
+                    <svg class="w-12 h-12 text-purple-400/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <p class="text-sm text-purple-200/60" data-i18n="marketplace.no_results">No names are currently listed for sale.</p>
+                    <button id="marketEmptyActionBtn" class="bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2 px-5 rounded-lg text-xs transition-all shadow-md shadow-purple-950/30" data-i18n="marketplace.empty_action">View My Names</button>
+                </div>
+
+                <!-- Domain List Grid -->
+                <div id="marketDomainGrid" class="flex flex-col gap-3 my-2">
+                    <!-- Dynamic Domain Cards -->
+                </div>
+
+                <!-- Bottom Pagination -->
+                <div class="market-pagination-bottom flex items-center justify-center gap-1.5 text-xs text-purple-200/80 my-2">
+                    <!-- Pagination buttons dynamically rendered -->
+                </div>
+
+            </div>
+
+            <!-- My Names Container -->
+            <div id="myNamesView" class="hidden flex-col gap-6 w-full animate-fade-in text-left">
+                
+                <!-- My Names Header -->
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center border border-purple-500/30">
+                        <svg class="w-5 h-5 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white" data-i18n="my_names_page.title">My Registered Names</h2>
+                        <p class="text-purple-200/50 text-xs" data-i18n="my_names_page.desc">Manage and configure your registered KNS identities.</p>
+                    </div>
+                </div>
+
+                <!-- My Names Search Block -->
+                <div class="flex flex-col sm:flex-row gap-3 items-center w-full">
+                    <div class="flex items-center gap-3 flex-grow w-full min-w-0">
+                        <div class="relative flex items-center bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 flex-grow w-full min-w-0">
+                            <svg class="w-4 h-4 text-purple-300/80 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <input type="text" id="myNamesSearchInput" class="bg-transparent text-white text-sm outline-none w-full placeholder-purple-300/40" placeholder="Search your registered names..." data-i18n-placeholder="my_names_page.search_placeholder" autocomplete="off" spellcheck="false" maxlength="64">
+                            <button id="myNamesSearchClearBtn" class="hidden text-white/40 hover:text-white transition-colors ml-2 flex-shrink-0" data-i18n-title="tooltips.clear_search" title="Clear search">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                        <!-- Filters toggle: opens the panel below the search row -->
+                        <button type="button" id="myNamesFilterBtn" class="list-filter-btn relative flex items-center justify-center w-11 h-11 flex-shrink-0 rounded-xl text-purple-300 hover:text-white transition-all" aria-expanded="false" aria-controls="myNamesFilterPanel" data-i18n-title="filters.toggle" title="Filters">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                            <span class="list-filter-dot hidden" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <button id="myNamesSearchBtn" class="w-full sm:w-auto bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-md shadow-purple-950/30 flex items-center justify-center gap-2 h-11 flex-shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <span data-i18n="my_names_page.search_btn">Search</span>
+                    </button>
+                </div>
+                <!-- Filters Panel: applied as soon as a choice is made, reset on leaving the screen -->
+                <div id="myNamesFilterPanel" class="list-filter-panel hidden flex-col gap-4 w-full rounded-2xl p-4 sm:p-5">
+                    <div class="flex flex-col gap-2">
+                        <span class="list-filter-label" data-i18n="filters.status">Status</span>
+                        <div class="flex flex-wrap gap-2" data-filter-group="status">
+                            <button type="button" class="list-filter-chip" data-value="all" data-i18n="filters.all">All</button>
+                            <button type="button" class="list-filter-chip" data-value="listed" data-i18n="filters.status_listed">On Sale</button>
+                            <button type="button" class="list-filter-chip" data-value="not_listed" data-i18n="filters.status_not_listed">Active</button>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <span class="list-filter-label" data-i18n="filters.zone">Zone</span>
+                        <div class="flex flex-wrap gap-2" data-filter-group="zone">
+                            <button type="button" class="list-filter-chip" data-value="" data-i18n="filters.all">All</button>
+                            <!-- One chip per zone after it, rendered by JS from the registrar's zone list -->
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <span class="list-filter-label" data-i18n="filters.sort">Sort by</span>
+                        <div class="flex flex-wrap gap-2" data-filter-group="sort">
+                            <button type="button" class="list-filter-chip" data-value="name:asc" data-i18n="filters.sort_name_asc">Name A–Z</button>
+                            <button type="button" class="list-filter-chip" data-value="name:desc" data-i18n="filters.sort_name_desc">Name Z–A</button>
+                            <button type="button" class="list-filter-chip" data-value="price:asc" data-i18n="filters.sort_price_asc">Price: low to high</button>
+                            <button type="button" class="list-filter-chip" data-value="price:desc" data-i18n="filters.sort_price_desc">Price: high to low</button>
+                        </div>
+                    </div>
+                    <div class="flex justify-end border-t border-white/5 pt-3">
+                        <button type="button" class="list-filter-reset flex items-center gap-1.5 text-xs font-semibold text-purple-300 hover:text-white transition-colors disabled:opacity-40 disabled:pointer-events-none" data-filter-reset>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            <span data-i18n="filters.reset">Reset filters</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- My Names Search Error Message Container -->
+                <div id="myNamesSearchError" class="text-left text-sm font-medium transition-all duration-300 opacity-0 flex items-center w-full">
+                    <!-- Message injected via JS -->
+                </div>
+
+                <!-- Top Pagination -->
+                <div class="my-names-pagination-top flex items-center justify-center gap-1.5 text-xs text-purple-200/80 my-2">
+                    <!-- Pagination buttons dynamically rendered -->
+                </div>
+
+                <!-- Loading State -->
+                <div id="myNamesPageLoading" class="hidden flex-col items-center justify-center py-12 gap-3">
+                    <span class="loader"></span>
+                    <span class="text-sm text-purple-300" data-i18n="my_names_view.loading">Loading...</span>
+                </div>
+
+                <!-- Error State -->
+                <div id="myNamesPageError" class="hidden flex-col items-center justify-center py-12 gap-3 text-red-400 cursor-pointer hover:text-red-300 transition-colors">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <span class="text-sm font-semibold" data-i18n="my_names_view.error_loading">Failed to load names. Click to retry.</span>
+                </div>
+
+                <!-- Empty State -->
+                <div id="myNamesPageEmpty" class="hidden flex flex-col items-center justify-center py-12 text-center gap-4">
+                    <svg class="w-12 h-12 text-purple-400/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    <p class="text-sm text-purple-200/60" data-i18n="my_names_view.empty">You haven't registered any KNS name yet.</p>
+                    <button id="myNamesPageEmptyActionBtn" class="bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2 px-5 rounded-lg text-xs transition-all shadow-md shadow-purple-950/30" data-i18n="my_names_view.empty_action">Register a name</button>
+                </div>
+
+                <!-- Domain List Grid -->
+                <div id="myNamesPageGrid" class="flex flex-col gap-3 my-2">
+                    <!-- Dynamic My Domain Cards -->
+                </div>
+
+                <!-- Bottom Pagination -->
+                <div class="my-names-pagination-bottom flex items-center justify-center gap-1.5 text-xs text-purple-200/80 my-2">
+                    <!-- Pagination buttons dynamically rendered -->
+                </div>
+
+            </div>
+
+            <!-- My Transactions Container -->
+            <div id="transactionsView" class="hidden flex-col gap-6 w-full animate-fade-in text-left">
+                
+                <!-- Header tools: Refresh Button -->
+                <div class="flex justify-between items-center w-full mt-4">
+                    <h3 id="transactionsSubTitleText" class="text-lg font-semibold text-white/90" data-i18n="transactions.incoming_title">Incoming Payments</h3>
+                    <button id="refreshTransactionsBtn" class="flex items-center justify-center gap-2 bg-purple-600/10 border border-purple-500/30 hover:bg-purple-600/20 text-purple-300 hover:text-white font-semibold py-2 px-4 rounded-xl transition-all shadow-md h-10">
+                        <svg id="refreshTransactionsIcon" class="w-4 h-4 text-purple-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"></path></svg>
+                        <span data-i18n="transactions.refresh">Refresh</span>
+                    </button>
+                </div>
+
+                <!-- Top Pagination -->
+                <div class="transactions-pagination flex items-center justify-center gap-1.5 text-xs text-purple-200/80 my-2">
+                    <!-- Pagination buttons dynamically rendered -->
+                </div>
+
+                <!-- Table Wrapper with overflow-hidden -->
+                <div class="bg-black/20 rounded-2xl border border-white/5 overflow-hidden w-full relative">
+                    <!-- Loading state overlay for table -->
+                    <div id="transactionsTableLoading" class="hidden absolute inset-0 bg-black/80 backdrop-blur-sm items-center justify-center z-10">
+                        <span class="loader"></span>
+                    </div>
+
+                    <div class="overflow-x-auto w-full custom-scroll">
+                        <table class="min-w-full text-sm text-left text-white/80 border-collapse">
+                            <thead class="text-xs uppercase bg-white/5 text-purple-200 border-b border-white/10">
+                                <tr id="transactionsTableHead">
+                                    <!-- Headers injected via JS -->
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTableBody" class="divide-y divide-white/5">
+                                <!-- Rows injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Empty/No results state inside the table area -->
+                    <div id="transactionsTableEmpty" class="hidden flex-col items-center justify-center py-12 text-center gap-3">
+                        <svg class="w-10 h-10 text-purple-400/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"></path></svg>
+                        <p class="text-xs text-purple-200/50" data-i18n="transactions.no_results">No transactions found matching criteria.</p>
+                    </div>
+
+                    <!-- Error state inside the table area -->
+                    <div id="transactionsTableError" class="hidden flex-col items-center justify-center py-12 text-center gap-3 text-red-400 cursor-pointer hover:text-red-300 transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <span class="text-xs font-semibold" data-i18n="my_names_view.error_loading">Failed to load transactions. Click to retry.</span>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="transactions-pagination flex items-center justify-center gap-1.5 text-xs text-purple-200/80 my-2">
+                    <!-- Pagination buttons dynamically rendered -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- 3. Footer -->
+    <footer class="glass mt-auto py-6 px-6 z-10 relative">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <!-- Left: Copyright -->
+            <div class="text-sm text-white/60">
+                &copy; <span id="year"></span> <span data-i18n="footer.created_by">by</span> 
+                <a href="https://github.com/alexxiy/kerrigan-namespace-indexer" target="_blank" rel="noopener noreferrer" class="text-purple-300 hover:text-white transition-colors font-medium ml-1 flex items-center inline-flex gap-1">
+                    Kerrigan NameSpace
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Right: Links & Language Switcher -->
+            <div class="flex flex-col sm:flex-row items-center gap-6 text-sm font-medium">
+                <div class="flex gap-6">
+                    <a href="https://docs.kerrigan-name.space" target="_blank" rel="noopener noreferrer" class="text-white/70 hover:text-purple-300 transition-colors" data-i18n="footer.docs">Docs</a>
+                    <a href="/security.html" class="text-white/70 hover:text-purple-300 transition-colors" data-i18n="footer.security">Security</a>
+                </div>
+                
+                <!-- Language Selector -->
+                <div class="relative bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg overflow-hidden transition-colors flex items-center pr-2 h-8">
+                    <select id="langSelect" class="bg-transparent text-purple-300 font-medium text-xs focus:outline-none cursor-pointer appearance-none pl-3 pr-6 py-1 h-full outline-none">
+                        <option value="en" class="bg-[#140828] text-white">English</option>
+                        <option value="de" class="bg-[#140828] text-white">Deutsch</option>
+                        <option value="es" class="bg-[#140828] text-white">Español</option>
+                        <option value="pt" class="bg-[#140828] text-white">Português</option>
+                        <option value="tr" class="bg-[#140828] text-white">Türkçe</option>
+                        <option value="az" class="bg-[#140828] text-white">Azərbaycan</option>
+                        <option value="ru" class="bg-[#140828] text-white">Русский</option>
+                        <option value="be" class="bg-[#140828] text-white">Беларуская</option>
+                        <option value="uk" class="bg-[#140828] text-white">Українська</option>
+                        <option value="vi" class="bg-[#140828] text-white">Tiếng Việt</option>
+                        <option value="zh" class="bg-[#140828] text-white">中文</option>
+                        <option value="ko" class="bg-[#140828] text-white">한국어</option>
+                        <option value="ja" class="bg-[#140828] text-white">日本語</option>
+                    </select>
+                    <svg class="w-3.5 h-3.5 text-purple-300/60 absolute right-2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Global Toast Container -->
+    <div id="toastContainer" class="fixed top-8 left-1/2 transform -translate-x-1/2 z-[200] flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- QR Code Modal Overlay -->
+    <div id="qrModalOverlay" class="fixed inset-0 z-[150] hidden items-center justify-center bg-black/60 backdrop-blur-md opacity-0 transition-opacity duration-300 p-4">
+        <div id="qrModalContainer" class="glass-panel w-full max-w-sm rounded-3xl relative overflow-hidden transform scale-95 transition-all duration-300 border border-purple-600/40 shadow-2xl flex flex-col p-6 items-center text-center">
+            <button id="closeQrModalBtn" aria-label="Close" class="absolute top-4 right-4 text-white/50 hover:text-white z-50 bg-black/20 p-1.5 rounded-full backdrop-blur-md transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-lg font-bold text-white mb-4 leading-tight px-4 mt-2" data-i18n="qr_modal.title">Scan the QR code with your wallet app to make the payment</h3>
+            
+            <!-- QR Code Display Area -->
+            <div class="bg-white p-6 rounded-none mb-5 mx-auto shadow-md flex items-center justify-center">
+                <div id="qrcode"></div>
+            </div>
+
+            <div class="bg-purple-500/10 border border-purple-500/20 rounded-xl p-3 flex gap-3 items-start text-left w-full shadow-inner">
+                <svg class="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <p class="text-purple-200/90 text-xs leading-snug" data-i18n="qr_modal.warning">
+                    Make sure your wallet populates all the payment details, including the shielded memo content.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kerrigan Core Console Modal Overlay -->
+    <!-- The payment as one z_sendmany line for Kerrigan Core's console, filled in by
+         openConsoleModal(): the destination, the amount and the memo, which z_sendmany takes
+         only as hex. YOUR_ADDRESS stays in the command for the payer to replace. -->
+    <div id="consoleModalOverlay" class="fixed inset-0 z-[150] hidden items-center justify-center bg-black/60 backdrop-blur-md opacity-0 transition-opacity duration-300 p-4">
+        <div id="consoleModalContainer" class="glass-panel w-full max-w-lg rounded-3xl relative overflow-hidden transform scale-95 transition-all duration-300 border border-purple-600/40 shadow-2xl flex flex-col p-6 text-left">
+            <button id="closeConsoleModalBtn" aria-label="Close" class="absolute top-4 right-4 text-white/50 hover:text-white z-50 bg-black/20 p-1.5 rounded-full backdrop-blur-md transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <h3 class="text-lg font-bold text-white mb-2 leading-tight pr-8 mt-2" data-i18n="console_modal.title">Pay from Kerrigan Core's console</h3>
+            <p class="text-purple-200/80 text-sm leading-snug mb-4" data-i18n="console_modal.lead">
+                In Kerrigan Core, open the console (Window → Console, or Ctrl+Shift+C), paste this command and press Enter. The destination, the amount and the memo are in it already, the memo written in hex, the way the wallet wants it.
+            </p>
+
+            <label for="consoleCommand" class="text-[11px] text-purple-300/60 uppercase tracking-wider mb-1 block text-left font-semibold pl-1" data-i18n="console_modal.label_command">Console command</label>
+            <div class="flex items-start bg-black/40 border border-white/10 rounded-xl overflow-hidden p-1 pr-1.5 focus-within:border-purple-500/50 transition-colors">
+                <textarea readonly id="consoleCommand" class="w-full bg-transparent text-white/90 px-3 py-2 text-xs focus:outline-none font-mono tracking-tight resize-none h-40 custom-scroll" style="line-height: 1.4; word-break: break-all;"></textarea>
+                <button type="button" data-target="consoleCommand" class="copy-btn p-2 hover:bg-white/10 rounded-lg transition-colors active:scale-90 flex-shrink-0 text-white/50 hover:text-white mt-1 w-9 h-9 flex items-center justify-center" data-i18n-title="tooltips.copy_command" title="Copy Command">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </button>
+            </div>
+
+            <p class="text-purple-200/80 text-xs leading-snug mt-3 mb-4 pl-1" data-i18n="console_modal.from">
+                Replace YOUR_ADDRESS with your own address the coins come from - a shielded one (ks1…) or a transparent one (K…).
+            </p>
+
+            <div class="bg-purple-500/10 border border-purple-500/20 rounded-xl p-3 flex gap-3 items-start text-left w-full shadow-inner">
+                <svg class="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <p class="text-purple-200/90 text-xs leading-snug" data-i18n="console_modal.warning">
+                    Needs Kerrigan Core v1.4.0 or later: older versions cannot read this command from the console.
+                </p>
+            </div>
+        </div>
+    </div>
+
+        <!-- Balance Modal Overlay -->
+        <div id="balanceModalOverlay" class="fixed inset-0 z-[150] hidden items-center justify-center bg-black/60 backdrop-blur-md opacity-0 transition-opacity duration-300 p-4">
+        <div id="balanceModalContainer" class="glass-panel w-full max-w-md rounded-3xl relative overflow-hidden transform scale-95 transition-all duration-300 border border-purple-600/40 shadow-2xl flex flex-col p-6 text-left">
+            <button id="closeBalanceModalBtn" aria-label="Close" class="absolute top-4 right-4 text-white/50 hover:text-white z-50 bg-black/20 p-1.5 rounded-full backdrop-blur-md transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-xl font-bold text-white mb-2 leading-tight mt-2 pr-8" data-i18n="balance_modal.title">My Balance</h3>
+            
+            <!-- Balance Info Row -->
+            <div class="flex flex-col gap-1.5 mb-6">
+                <label class="text-[11px] text-purple-300/60 uppercase tracking-wider font-semibold pl-1" data-i18n="balance_modal.desc">Your refunded balance</label>
+                <div class="flex items-stretch gap-2">
+                    <div class="flex-grow bg-black/25 border border-white/10 rounded-xl px-4 py-3 text-lg font-bold text-white flex items-center justify-between">
+                        <span id="balanceValue">0.00000000</span>
+                        <span class="text-purple-300 text-sm font-semibold">KRGN</span>
+                    </div>
+                    <button id="refreshBalanceBtn" aria-label="Refresh balance" class="glass rounded-xl hover:bg-white/10 active:bg-white/20 text-white transition-colors flex items-center justify-center p-3 w-[52px]">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"></path></svg>
+                    </button>
+                </div>
+                <!-- Shown while the balance is positive but below the registrar's minimum withdrawal -->
+                <p id="withdrawMinMsg" class="text-purple-200 text-xs hidden text-left pl-1" data-i18n="balance_modal.min_withdrawal">The minimum withdrawal is 0.52631579 KRGN.</p>
+            </div>
+
+            <!-- Withdraw Block -->
+            <div id="withdrawBlock" class="border-t border-white/5 pt-5 opacity-40 pointer-events-none transition-opacity duration-300">
+                <div class="flex flex-col gap-2">
+                    <label class="text-[11px] text-purple-300/60 uppercase tracking-wider font-semibold pl-1" data-i18n="balance_modal.label_address">Please, enter your Sapling address to withdraw funds</label>
+                    <input type="text" id="withdrawAddressInput" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-4 pr-10 text-white text-sm focus:outline-none focus:border-purple-500 transition-colors" data-i18n-placeholder="balance_modal.placeholder_address" placeholder="ks1..." autocomplete="off" />
+                    <p id="withdrawAddressErrorMsg" class="text-red-400 text-xs hidden text-left pl-1" data-i18n="balance_modal.error_address">Invalid Kerrigan shielded address (must start with 'ks1')</p>
+                </div>
+                
+                <!-- Service Fee Calculation Block -->
+                <div id="withdrawFeeBlock" class="mt-4 bg-purple-500/10 border border-purple-500/20 rounded-xl p-3.5 text-[13px] text-purple-200 flex justify-between items-center hidden border-dashed">
+                    <span data-i18n="balance_modal.fee_label">To be paid with service fee (5%):</span>
+                    <span id="withdrawPaidAmount" class="font-bold text-white">~ 0 KRGN</span>
+                </div>
+                
+                <button id="withdrawBtn" class="mt-5 w-full bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-400 hover:to-purple-600 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition-all flex justify-center items-center gap-2 h-12">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    <span data-i18n="balance_modal.btn_withdraw">Withdraw</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal Overlay -->
+    <div id="authModalOverlay" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-300 p-4">
+        <!-- Modal Container -->
+        <div id="authModalContainer" class="glass-panel w-full max-w-md rounded-3xl relative overflow-hidden transform translate-y-10 transition-all duration-300 border border-purple-600/40 shadow-2xl shadow-purple-950/50 flex flex-col max-h-[90vh]">
+            
+            <!-- Close Button -->
+            <button id="closeModalBtn" aria-label="Close" class="absolute top-4 right-4 text-white/50 hover:text-white z-50 bg-black/20 p-1.5 rounded-full backdrop-blur-md transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <!-- View 1: Selection -->
+            <div id="modalViewSelection" class="p-6 md:p-8 flex flex-col gap-4 overflow-y-auto custom-scroll">
+                <h3 class="text-2xl font-bold mb-2 text-white mt-2 pr-8" data-i18n="auth_modal.welcome_title">Welcome</h3>
+                <p class="text-purple-200/70 text-sm mb-4" data-i18n="auth_modal.welcome_desc">Choose how you want to access your KNS Identity.</p>
+                
+                <button id="btnShowCreate" class="w-full bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-400 hover:to-purple-600 text-white font-semibold py-4 px-6 rounded-xl shadow-lg transition-all flex items-center justify-between group">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-white/20 p-2 rounded-lg group-hover:bg-white/30 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        </div>
+                        <span class="text-lg" data-i18n="auth_modal.btn_create">Create Account</span>
+                    </div>
+                    <svg class="w-5 h-5 text-purple-300 opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+
+                <button id="btnShowImport" class="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold py-4 px-6 rounded-xl transition-all flex items-center justify-between group">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        </div>
+                        <span class="text-lg" data-i18n="auth_modal.btn_import">Import Account</span>
+                    </div>
+                    <svg class="w-5 h-5 text-white/50 opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+
+            <!-- View 2: Create Account Form -->
+            <div id="modalViewCreate" class="hidden p-6 md:p-8 flex-col overflow-y-auto custom-scroll flex-grow relative">
+                <div class="flex items-center mb-6">
+                    <button id="btnBackToSelection" class="text-white/50 hover:text-white flex items-center gap-1 text-sm font-medium bg-black/20 px-3 py-1.5 rounded-full backdrop-blur-md transition-colors mr-3 active:scale-95">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        <span data-i18n="auth_modal.btn_back">Back</span>
+                    </button>
+                    <h3 class="text-xl font-bold text-white m-0 truncate pr-8" data-i18n="auth_modal.create_title">Create Account</h3>
+                </div>
+                
+                <div class="flex flex-col gap-5 flex-grow">
+                    <!-- Seed Phrase Warning -->
+                    <div class="bg-purple-500/10 border border-purple-500/20 rounded-xl p-3 flex gap-3 items-start">
+                        <svg class="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <p class="text-purple-200/90 text-[13px] leading-tight" data-i18n="auth_modal.create_warning">
+                            Write down this seed phrase and keep it safe. If you lose it, you will <b>permanently lose access</b> to your domains.
+                        </p>
+                    </div>
+
+                    <!-- Seed Phrase Textarea -->
+                    <div class="relative">
+                        <textarea id="regSeedPhrase" readonly class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-purple-200 text-sm font-mono resize-none focus:outline-none focus:border-purple-500/50 leading-relaxed"></textarea>
+                    </div>
+
+                    <!-- Passwords -->
+                    <div class="flex flex-col gap-3 border-t border-white/10 pt-4 mt-1">
+                        <p class="text-sm font-medium text-purple-200/90 mb-1" data-i18n="auth_modal.create_desc">Set a password to unlock your account on this device.</p>
+                        <div class="relative w-full">
+                            <input type="password" id="regPassword1" class="w-full bg-black/20 border border-white/10 rounded-lg py-2.5 pl-3 pr-10 text-white text-sm focus:outline-none focus:border-purple-500 transition-colors" data-i18n-placeholder="auth_modal.placeholder_pwd" placeholder="Choose Password" autocomplete="new-password" />
+                            <button type="button" class="toggle-password absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white transition-colors" data-i18n-title="tooltips.toggle_visibility" title="Toggle visibility">
+                                <svg class="eye-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                <svg class="eye-off-icon w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg>
+                            </button>
+                        </div>
+                        <div class="relative w-full">
+                            <input type="password" id="regPassword2" class="w-full bg-black/20 border border-white/10 rounded-lg py-2.5 pl-3 pr-10 text-white text-sm focus:outline-none focus:border-purple-500 transition-colors" data-i18n-placeholder="auth_modal.placeholder_confirm" placeholder="Confirm Password" autocomplete="new-password" />
+                            <button type="button" class="toggle-password absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white transition-colors" data-i18n-title="tooltips.toggle_visibility" title="Toggle visibility">
+                                <svg class="eye-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                <svg class="eye-off-icon w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg>
+                            </button>
+                        </div>
+                        <p id="regErrorMsg" class="text-red-400 text-xs hidden text-left pl-1"></p>
+                    </div>
+
+                    <!-- Checkbox -->
+                    <label class="flex items-start gap-3 mt-1 select-none cursor-pointer group text-left">
+                        <input type="checkbox" id="regConfirmSaved" class="mt-1 rounded border-white/20 bg-black/20 text-purple-600 focus:ring-purple-500/50 cursor-pointer" />
+                        <span class="text-[13px] text-purple-200/70 group-hover:text-purple-200 transition-colors leading-tight" data-i18n="auth_modal.checkbox_warning">
+                            I have written down the 12-word seed phrase and stored it in a secure offline location.
+                        </span>
+                    </label>
+                </div>
+
+                <button id="doCreateAccountBtn" disabled class="mt-6 w-full bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-400 hover:to-purple-600 disabled:from-white/5 disabled:to-white/5 border border-white/0 disabled:border-white/10 disabled:text-white/30 disabled:cursor-not-allowed text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition-all flex justify-center items-center h-12 flex-shrink-0">
+                    <span id="createBtnText" data-i18n="auth_modal.btn_create_action">Create Account</span>
+                </button>
+            </div>
+
+            <!-- View 3: Unlock Account -->
+            <div id="modalViewUnlock" class="hidden p-6 md:p-8 flex-col overflow-y-auto custom-scroll flex-grow">
+                <h3 class="text-xl font-bold mb-2 text-white mt-2 pr-8" data-i18n="auth_modal.unlock_title">Unlock Wallet</h3>
+                <p class="text-purple-200/70 text-sm mb-5" data-i18n="auth_modal.unlock_desc">Enter your local password to decrypt and unlock your keys.</p>
+                
+                <div class="flex flex-col gap-4 flex-grow justify-center">
+                    <div class="relative w-full">
+                        <input type="password" id="unlockPassword" class="w-full bg-black/20 border border-white/10 rounded-lg py-2.5 pl-3 pr-10 text-white text-sm focus:outline-none focus:border-purple-500 transition-colors" data-i18n-placeholder="auth_modal.placeholder_unlock_pwd" placeholder="Password" autocomplete="current-password" />
+                        <button type="button" class="toggle-password absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white transition-colors" data-i18n-title="tooltips.toggle_visibility" title="Toggle visibility">
+                            <svg class="eye-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            <svg class="eye-off-icon w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg>
+                        </button>
+                    </div>
+                    <p id="unlockErrorMsg" class="text-red-400 text-xs hidden text-left pl-1" data-i18n="auth_modal.unlock_error">Incorrect password. Please try again.</p>
+                </div>
+
+                <button id="doUnlockBtn" class="mt-6 w-full bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-400 hover:to-purple-600 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition-all flex justify-center items-center h-12 flex-shrink-0">
+                    <span id="unlockBtnText" data-i18n="auth_modal.btn_unlock">Unlock</span>
+                </button>
+            </div>
+
+            <!-- View 4: Import Account - Seed Phrase -->
+            <div id="modalViewImportSeed" class="hidden p-6 md:p-8 flex-col overflow-y-auto custom-scroll flex-grow relative">
+                <div class="flex items-center mb-6">
+                    <button id="btnBackToSelectionFromImport" class="text-white/50 hover:text-white flex items-center gap-1 text-sm font-medium bg-black/20 px-3 py-1.5 rounded-full backdrop-blur-md transition-colors mr-3 active:scale-95">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        <span data-i18n="auth_modal.btn_back">Back</span>
+                    </button>
+                    <h3 class="text-xl font-bold text-white m-0 truncate pr-8" data-i18n="auth_modal.import_title">Import Account</h3>
+                </div>
+                
+                <p class="text-purple-200/70 text-sm mb-4" data-i18n="auth_modal.import_desc">Enter your 12- or 24-word seed phrase in sequential order. Tap suggestions to autocomplete.</p>
+
+                <!-- Grid of inputs -->
+                <div id="seedInputContainer" class="grid grid-cols-2 gap-3 mb-4 max-h-[40vh] overflow-y-auto custom-scroll p-1"></div>
+
+                <!-- 12 boxes or 24: the last 12 are shown by this, or by pasting a 24-word phrase -->
+                <div class="mb-2">
+                    <button type="button" id="btnSeedLength" class="text-purple-300 hover:text-white text-xs font-semibold underline transition-colors" data-i18n="auth_modal.import_use_24">I have a 24-word phrase</button>
+                </div>
+                
+                <p id="importSeedErrorMsg" class="text-red-400 text-xs hidden text-left pl-1 mb-2" data-i18n="auth_modal.import_error">Invalid BIP-39 mnemonic phrase. Check spelling/order.</p>
+
+                <button id="btnNextToImportPassword" disabled class="mt-4 w-full bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-400 hover:to-purple-600 disabled:from-white/5 disabled:to-white/5 border border-white/0 disabled:border-white/10 disabled:text-white/30 disabled:cursor-not-allowed text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition-all flex justify-center items-center h-12 flex-shrink-0">
+                    <span data-i18n="auth_modal.btn_next">Next</span>
+                </button>
+            </div>
+
+            <!-- View 5: Import Account - Set Password -->
+            <div id="modalViewImportPassword" class="hidden p-6 md:p-8 flex-col overflow-y-auto custom-scroll flex-grow relative">
+                <div class="flex items-center mb-6">
+                    <button id="btnBackToImportSeed" class="text-white/50 hover:text-white flex items-center gap-1 text-sm font-medium bg-black/20 px-3 py-1.5 rounded-full backdrop-blur-md transition-colors mr-3 active:scale-95">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        <span data-i18n="auth_modal.btn_back">Back</span>
+                    </button>
+                    <h3 class="text-xl font-bold text-white m-0 truncate pr-8" data-i18n="auth_modal.import_pwd_title">Set Local Password</h3>
+                </div>
+                
+                <p class="text-purple-200/70 text-sm mb-5" data-i18n="auth_modal.create_desc">Set a password to unlock your account on this device.</p>
+
+                <div class="flex flex-col gap-4 flex-grow justify-center">
+                    <div class="relative w-full">
+                        <input type="password" id="importPassword1" class="w-full bg-black/20 border border-white/10 rounded-lg py-2.5 pl-3 pr-10 text-white text-sm focus:outline-none focus:border-purple-500 transition-colors" data-i18n-placeholder="auth_modal.placeholder_pwd" placeholder="Choose Password" autocomplete="new-password" />
+                        <button type="button" class="toggle-password absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white transition-colors" data-i18n-title="tooltips.toggle_visibility" title="Toggle visibility">
+                            <svg class="eye-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            <svg class="eye-off-icon w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg>
+                        </button>
+                    </div>
+                    <div class="relative w-full">
+                        <input type="password" id="importPassword2" class="w-full bg-black/20 border border-white/10 rounded-lg py-2.5 pl-3 pr-10 text-white text-sm focus:outline-none focus:border-purple-500 transition-colors" data-i18n-placeholder="auth_modal.placeholder_confirm" placeholder="Confirm Password" autocomplete="new-password" />
+                        <button type="button" class="toggle-password absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white transition-colors" data-i18n-title="tooltips.toggle_visibility" title="Toggle visibility">
+                            <svg class="eye-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            <svg class="eye-off-icon w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg>
+                        </button>
+                    </div>
+                    <p id="importPwdErrorMsg" class="text-red-400 text-xs hidden text-left pl-1"></p>
+                </div>
+
+                <button id="doImportAccountBtn" disabled class="mt-6 w-full bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-400 hover:to-purple-600 disabled:from-white/5 disabled:to-white/5 border border-white/0 disabled:border-white/10 disabled:text-white/30 disabled:cursor-not-allowed text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition-all flex justify-center items-center h-12 flex-shrink-0">
+                    <span id="importBtnText" data-i18n="auth_modal.btn_import_action">Import Account</span>
+                </button>
+            </div>
+
+            <!-- View 6: Change Password -->
+            <div id="modalViewChangePassword" class="hidden p-6 md:p-8 flex-col overflow-y-auto custom-scroll flex-grow relative">
+                <h3 class="text-xl font-bold mb-2 text-white mt-2 pr-8" data-i18n="auth_modal.change_pwd_title">Change Password</h3>
+                <p class="text-purple-200/70 text-sm mb-5" data-i18n="auth_modal.change_pwd_desc">Change the local password used to encrypt and decrypt your wallet seed.</p>
+                
+                <div class="flex flex-col gap-4 flex-grow justify-center">
+                    <div class="relative w-full">
+                        <input type="password" id="changePwdOld" class="w-full bg-black/20 border border-white/10 rounded-lg py-2.5 pl-3 pr-10 text-white text-sm focus:outline-none focus:border-purple-500 transition-colors" data-i18n-placeholder="auth_modal.placeholder_old_pwd" placeholder="Current Password" autocomplete="current-password" />
+                        <button type="button" class="toggle-password absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white transition-colors" data-i18n-title="tooltips.toggle_visibility" title="Toggle visibility">
+                            <svg class="eye-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            <svg class="eye-off-icon w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg>
+                        </button>
+                    </div>
+                    <div class="relative w-full border-t border-white/10 pt-4 mt-1">
+                        <input type="password" id="changePwdNew1" class="w-full bg-black/20 border border-white/10 rounded-lg py-2.5 pl-3 pr-10 text-white text-sm focus:outline-none focus:border-purple-500 transition-colors" data-i18n-placeholder="auth_modal.placeholder_new_pwd" placeholder="New Password" autocomplete="new-password" />
+                        <button type="button" class="toggle-password absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white transition-colors" data-i18n-title="tooltips.toggle_visibility" title="Toggle visibility">
+                            <svg class="eye-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            <svg class="eye-off-icon w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg>
+                        </button>
+                    </div>
+                    <div class="relative w-full">
+                        <input type="password" id="changePwdNew2" class="w-full bg-black/20 border border-white/10 rounded-lg py-2.5 pl-3 pr-10 text-white text-sm focus:outline-none focus:border-purple-500 transition-colors" data-i18n-placeholder="auth_modal.placeholder_confirm_new_pwd" placeholder="Confirm New Password" autocomplete="new-password" />
+                        <button type="button" class="toggle-password absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white transition-colors" data-i18n-title="tooltips.toggle_visibility" title="Toggle visibility">
+                            <svg class="eye-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            <svg class="eye-off-icon w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg>
+                        </button>
+                    </div>
+                    <p id="changePwdErrorMsg" class="text-red-400 text-xs hidden text-left pl-1"></p>
+                </div>
+
+                <button id="doChangePwdBtn" disabled class="mt-6 w-full bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-400 hover:to-purple-600 disabled:from-white/5 disabled:to-white/5 border border-white/0 disabled:border-white/10 disabled:text-white/30 disabled:cursor-not-allowed text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition-all flex justify-center items-center h-12 flex-shrink-0">
+                    <span id="changePwdBtnText" data-i18n="auth_modal.btn_change_pwd">Change Password</span>
+                </button>
+            </div>
+
+            <!-- View 7: Reveal Seed - Password Auth -->
+            <div id="modalViewRevealSeedAuth" class="hidden p-6 md:p-8 flex-col overflow-y-auto custom-scroll flex-grow relative">
+                <h3 class="text-xl font-bold mb-2 text-white mt-2 pr-8" data-i18n="auth_modal.reveal_seed_title">Reveal Seed Phrase</h3>
+                <p class="text-purple-200/70 text-sm mb-5" data-i18n="auth_modal.reveal_seed_desc">Confirm your password to reveal the 12-word wallet seed phrase.</p>
+                
+                <div class="flex flex-col gap-4 flex-grow justify-center">
+                    <div class="relative w-full">
+                        <input type="password" id="revealSeedPassword" autocomplete="current-password" class="w-full bg-black/20 border border-white/10 rounded-lg py-2.5 pl-3 pr-10 text-white text-sm focus:outline-none focus:border-purple-500 transition-colors" data-i18n-placeholder="auth_modal.reveal_seed_placeholder" placeholder="Password" />
+                        <button type="button" class="toggle-password absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white transition-colors" data-i18n-title="tooltips.toggle_visibility" title="Toggle visibility">
+                            <svg class="eye-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            <svg class="eye-off-icon w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg>
+                        </button>
+                    </div>
+                    <p id="revealSeedErrorMsg" class="text-red-400 text-xs hidden text-left pl-1" data-i18n="auth_modal.reveal_seed_err_incorrect">Incorrect password. Please try again.</p>
+                </div>
+
+                <button id="doRevealSeedAuthBtn" class="mt-6 w-full bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-400 hover:to-purple-600 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition-all flex justify-center items-center h-12 flex-shrink-0">
+                    <span id="revealSeedAuthBtnText" data-i18n="auth_modal.btn_next">Next</span>
+                </button>
+            </div>
+
+            <!-- View 8: Reveal Seed - Show Phrase -->
+            <div id="modalViewRevealSeedShow" class="hidden p-6 md:p-8 flex-col overflow-y-auto custom-scroll flex-grow relative">
+                <h3 class="text-xl font-bold mb-2 text-white mt-2 pr-8 font-mono" data-i18n="auth_modal.reveal_seed_show_title">Your Seed Phrase</h3>
+                
+                <div class="flex flex-col gap-5 flex-grow">
+                    <div class="bg-purple-500/10 border border-purple-500/20 rounded-xl p-3 flex gap-3 items-start">
+                        <svg class="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <p class="text-purple-200/90 text-[13px] leading-tight" data-i18n="auth_modal.reveal_seed_warning">
+                            Never share your seed phrase. Anyone with access to this phrase has full control over all your KNS Identity names.
+                        </p>
+                    </div>
+
+                    <!-- Seed Phrase Textarea -->
+                    <div class="relative">
+                        <textarea id="revealSeedTextarea" readonly class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-purple-200 text-sm font-mono resize-none focus:outline-none focus:border-purple-500/50 leading-relaxed h-28 custom-scroll"></textarea>
+                    </div>
+                </div>
+
+                <button id="btnDoneRevealSeed" class="mt-6 w-full bg-white/10 hover:bg-white/20 border border-white/10 text-white font-bold py-3 px-6 rounded-xl transition-all flex justify-center items-center h-12 flex-shrink-0" data-i18n="auth_modal.btn_done">
+                    Done
+                </button>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <!-- Onboarding Wizard Modal Overlay -->
+    <div id="onboardingModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[250] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="onboardingCard" class="glass bg-[#140828]/95 border border-purple-500/20 rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl relative flex flex-col gap-6 text-white scale-95 transition-transform duration-300">
+            
+            <!-- Progress Indicator -->
+            <div class="flex justify-between items-center text-xs text-purple-300 font-bold uppercase tracking-wider">
+                <span id="onboardingStepIndicator">1 / 4</span>
+                <!-- Dots -->
+                <div class="flex gap-1.5 items-center" id="onboardingDots">
+                    <!-- Dots will be populated via JS -->
+                </div>
+            </div>
+
+            <!-- Slides Content -->
+            <div id="onboardingSlides" class="flex flex-col min-h-[220px]">
+                
+                <!-- Slide 1: How it works -->
+                <div class="onboarding-slide flex flex-col gap-4 text-left" data-slide="0">
+                    <h3 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-500" data-i18n="onboarding.title1">How it works</h3>
+                    <ul class="flex flex-col gap-4 text-base md:text-[17px] leading-relaxed text-purple-100/90">
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <span data-i18n="onboarding.bullet1_1">Get your personal name <b>john.krgn</b> and use it to receive payments instead of sharing a long cryptographic address</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="7.5" cy="15.5" r="5.5"></circle>
+                                <path d="m21 2-9.6 9.6"></path>
+                                <path d="m15.5 7.5 3 3"></path>
+                                <path d="m17 6 3 3"></path>
+                            </svg>
+                            <span data-i18n="onboarding.bullet1_2">Own and control your names. Hold, trade on marketplace, or transfer to others - only you can make updates</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Slide 2: Benefits -->
+                <div class="onboarding-slide hidden flex flex-col gap-4 text-left" data-slide="1">
+                    <h3 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-500" data-i18n="onboarding.title2">Benefits</h3>
+                    <ul class="flex flex-col gap-4 text-base md:text-[17px] leading-relaxed text-purple-100/90">
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path>
+                                <path d="M7 7h.01"></path>
+                            </svg>
+                            <span data-i18n="onboarding.bullet2_1">No renewal fees. Your names are always yours!</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                            </svg>
+                            <span data-i18n="onboarding.bullet2_2">Names are stored on-chain. Data cannot be altered or removed</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
+                                <path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+                                <line x1="2" y1="2" x2="22" y2="22"></line>
+                            </svg>
+                            <span data-i18n="onboarding.bullet2_3">Private by design. Your name reveals nothing about your finances.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Slide 3: Control -->
+                <div class="onboarding-slide hidden flex flex-col gap-4 text-left" data-slide="2">
+                    <h3 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-500" data-i18n="onboarding.title3">Control</h3>
+                    <ul class="flex flex-col gap-4 text-base md:text-[17px] leading-relaxed text-purple-100/90">
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m18 8 4 4-4 4"></path>
+                                <path d="M2 12h20"></path>
+                                <path d="m6 8-4 4 4 4"></path>
+                            </svg>
+                            <span data-i18n="onboarding.bullet3_1">Update your destination address without notifying senders. They still be sending to <b>john.krgn</b></span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 20h9"></path>
+                                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+                            </svg>
+                            <span data-i18n="onboarding.bullet3_2">Change owner, but only with signing by your private key. Only you can do that!</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <path d="M16 10a4 4 0 0 1-8 0"></path>
+                            </svg>
+                            <span data-i18n="onboarding.bullet3_3">List on Marketplace and earn for popular names reselling.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Slide 4: Socials / Docs -->
+                <div class="onboarding-slide hidden flex flex-col gap-4 text-left" data-slide="3">
+                    <h3 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-500" data-i18n="onboarding.title4">Have any question?</h3>
+                    <div class="flex flex-col gap-4 text-base md:text-[17px] leading-relaxed text-purple-100/90">
+                        <div class="flex flex-col gap-3">
+                            <div class="flex flex-col gap-1.5">
+                                <span data-i18n="onboarding.telegram_title">Join our Telegram:</span>
+                                <div class="flex flex-wrap gap-3 mt-0.5">
+                                    <a href="https://t.me/alexxiy_lounge" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 py-2 px-4 bg-white/5 border border-white/10 hover:bg-white/10 rounded-xl text-purple-300 font-semibold transition-all hover:text-white">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/></svg>
+                                        Telegram
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-1.5">
+                                <span data-i18n="onboarding.discord_title">You can ask for help in the official Kerrigan Discord:</span>
+                                <div class="flex flex-wrap gap-3 mt-0.5">
+                                    <a href="https://discord.gg/V9P3UDjkFu" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 py-2 px-4 bg-white/5 border border-white/10 hover:bg-white/10 rounded-xl text-purple-300 font-semibold transition-all hover:text-white">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+                                        Discord
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 mt-2">
+                            <span data-i18n="onboarding.bullet4_2">Read our Docs:</span>
+                            <a href="https://docs.kerrigan-name.space/" target="_blank" rel="noopener noreferrer" class="text-purple-300 hover:text-white transition-colors underline font-bold">docs.kerrigan-name.space</a>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/5 text-center text-sm italic text-purple-200/60 font-medium" data-i18n="onboarding.slogan">
+                            Let's support privacy and make it simpler
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer Buttons -->
+            <div class="flex justify-between items-center gap-4 mt-2">
+                <button id="onboardingSkipBtn" class="py-2.5 px-5 bg-white/5 hover:bg-white/10 border border-white/10 text-purple-200 rounded-xl text-sm font-bold transition-all active:scale-95 flex-1" data-i18n="onboarding.btn_skip">Skip</button>
+                <button id="onboardingNextBtn" class="py-2.5 px-5 bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-400 hover:to-purple-600 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-purple-950/50 active:scale-95 flex-1" data-i18n="onboarding.btn_next">Next</button>
+                <button id="onboardingFinishBtn" class="hidden py-2.5 px-5 bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-400 hover:to-purple-600 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-purple-950/50 active:scale-95 w-full" data-i18n="onboarding.btn_finish">Finish</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reusable Custom Confirmation Modal -->
+    <div id="confirmModalOverlay" class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/60 backdrop-blur-md opacity-0 transition-opacity duration-300 p-4">
+        <div id="confirmModalContainer" class="glass-panel w-full max-w-sm rounded-3xl relative overflow-hidden transform scale-95 transition-all duration-300 border border-purple-600/40 shadow-2xl flex flex-col p-6 text-center">
+            <h3 id="confirmModalTitle" class="text-lg font-bold text-white mb-3" data-i18n="confirm_modal.title">Confirm Action</h3>
+            <p id="confirmModalMessage" class="text-sm text-purple-200/80 mb-6 leading-relaxed" data-i18n="confirm_modal.default_message">Are you sure you want to proceed?</p>
+            
+            <div class="flex gap-3 justify-center">
+                <button id="confirmModalCancelBtn" class="flex-1 py-2.5 px-4 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-semibold transition-all" data-i18n="confirm_modal.cancel">Cancel</button>
+                <button id="confirmModalConfirmBtn" class="flex-1 py-2.5 px-4 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-sm font-semibold transition-all shadow-lg shadow-purple-950/30" data-i18n="confirm_modal.confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Memo Details Modal -->
+    <div id="memoModalOverlay" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[999] hidden items-center justify-center opacity-0 transition-opacity duration-300">
+        <div id="memoModalContainer" class="glass w-full max-w-lg mx-4 rounded-[32px] p-6 shadow-2xl border border-white/10 transform scale-95 transition-transform duration-300 flex flex-col gap-4 text-left">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
+                    <span data-i18n="transactions.memo_title">Transaction Memo</span>
+                </h3>
+                <button id="closeMemoModalXBtn" aria-label="Close" class="text-white/40 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="flex flex-col gap-1.5">
+                <label class="text-xs text-purple-300 font-semibold uppercase tracking-wider" data-i18n="transactions.memo_content">Memo Content</label>
+                <textarea id="memoModalTextarea" readonly class="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-white text-sm focus:outline-none focus:border-purple-500 transition-colors h-40 resize-none custom-scroll font-mono select-all"></textarea>
+            </div>
+            
+            <div class="flex gap-3 mt-2">
+                <button id="memoModalCopyBtn" class="btn-ripple flex-1 bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2.5 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                    <span data-i18n="transactions.copy">Copy</span>
+                </button>
+                <button id="memoModalCloseBtn" class="flex-1 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-semibold py-2.5 rounded-xl transition-colors">
+                    <span data-i18n="transactions.close">Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Controller Logic -->
+    <script type="module" src="js/app.js?v=1.0.8"></script>
+</body>
+</html>

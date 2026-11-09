@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" data-catalogue="security">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The same policy as index.html: everything is same-origin and nothing runs inline.
+     Strings come from lang/landing/ (nav, footer) merged with lang/security/ (this page);
+     js/landing.js does both, keyed by data-catalogue on <html>. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+<title data-i18n="meta.title">Security and verification — Kerrigan NameSpace</title>
+<meta name="description" data-i18n-meta="meta.description" content="What the Kerrigan NameSpace web app sends, where and why, and how to check that the code you run is the code published on GitHub.">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="canonical" href="https://kerrigan-name.space/security.html">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kerrigan-name.space/security.html">
+<meta property="og:site_name" content="Kerrigan NameSpace">
+<meta property="og:title" content="Security and verification — Kerrigan NameSpace">
+<meta property="og:description" content="What the Kerrigan NameSpace web app sends, where and why, and how to check that the code you run is the code published on GitHub.">
+<meta property="og:image" content="https://kerrigan-name.space/images/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kerrigan-name.space/images/og-image.png">
+
+<link rel="stylesheet" href="/css/landing.css">
+<link rel="stylesheet" href="/css/security.css?v=1.0.8">
+</head>
+<body>
+
+<a class="skip" href="#main" data-i18n="nav.skip">Skip to content</a>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="71 88 392 375" xmlns="http://www.w3.org/2000/svg"><g transform="translate(52.17 45.41) scale(5.7054)"><path fill="#8341ed" d="M59.17,36.38h-12.04l13.39-13.39c.37-.37.57-.86.58-1.38l.04-8.54c0-.52-.21-1.03-.58-1.4l-3.51-3.51c-.77-.77-2.02-.77-2.78,0l-22.06,22.06L10.13,8.16c-.77-.77-2.02-.77-2.78,0l-3.47,3.47c-.37.37-.58.87-.58,1.39v8.59c0,.53.2,1.02.58,1.39l13.38,13.38H5.27c-1.09,0-1.97.88-1.97,1.97v4.9c0,.53.2,1.02.58,1.39l6.07,6.07c.37.37.87.58,1.39.58h8.09v1.1c0,.53.2,1.02.58,1.39l3.47,3.47c.77.77,2.02.77,2.78,0l5.93-5.93,5.93,5.93c.77.77,2.02.77,2.78,0l3.51-3.51c.37-.37.58-.88.58-1.4v-1.04s8.09,0,8.09,0c.53,0,1.02-.2,1.39-.58l6.07-6.07c.37-.37.58-.87.58-1.39v-4.9c0-1.09-.88-1.97-1.97-1.97Z"/><path fill="#43de78" d="M24.13,15.45l7.98,8.02,8.01-8.01c.94-.94.28-2.56-1.06-2.56h-13.87c-1.33,0-2,1.61-1.06,2.55Z"/></g><g transform="translate(296.4, 296.4) scale(0.84)"><circle cx="90" cy="90" r="100" fill="#43de78" stroke="#ffffff" stroke-width="16"/><circle cx="50" cy="90" r="20" fill="#1a0a2e"/><circle cx="130" cy="60" r="20" fill="#1a0a2e"/><circle cx="110" cy="130" r="20" fill="#1a0a2e"/><line x1="50" y1="90" x2="130" y2="60" stroke="#1a0a2e" stroke-width="12"/><line x1="50" y1="90" x2="110" y2="130" stroke="#1a0a2e" stroke-width="12"/><line x1="130" y1="60" x2="110" y2="130" stroke="#1a0a2e" stroke-width="12"/></g></svg></span>
+      <span>Kerrigan-Name<b>.Space</b></span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#compare"   data-i18n="nav.problem">The problem</a>
+      <a href="/#trust"     data-i18n="nav.trust">Trust model</a>
+      <a href="/#different" data-i18n="nav.different">What's different</a>
+      <a href="/#pricing"   data-i18n="nav.pricing">Pricing</a>
+      <a href="/#roadmap"  data-i18n="nav.roadmap">Roadmap</a>
+      <a href="/#faq"       data-i18n="nav.faq">FAQ</a>
+    </nav>
+
+    <div class="lang-picker">
+      <svg class="lang-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/>
+      </svg>
+      <select id="langSelect" aria-label="Language">
+        <option value="en">English</option>
+        <option value="de">Deutsch</option>
+        <option value="es">Español</option>
+        <option value="pt">Português</option>
+        <option value="tr">Türkçe</option>
+        <option value="az">Azərbaycan</option>
+        <option value="ru">Русский</option>
+        <option value="be">Беларуская</option>
+        <option value="uk">Українська</option>
+        <option value="vi">Tiếng Việt</option>
+        <option value="zh">中文</option>
+        <option value="ko">한국어</option>
+        <option value="ja">日本語</option>
+      </select>
+    </div>
+
+    <a class="btn btn-sm" href="/app" data-i18n="nav.open_app">Open the app</a>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="sec-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="sec.eyebrow">Security</p>
+    <h1 data-i18n="sec.title">Check the code you run</h1>
+    <p class="lede" data-i18n="sec.lede">The Kerrigan NameSpace app runs in your browser. Your seed phrase, password and private key stay on your device. Below is every request the app makes, and two ways to be sure you run the published code: compare the site with GitHub, or run the app from your own copy.</p>
+  </div>
+</section>
+
+<section id="device" class="section section-alt">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="sec.device_eyebrow">On your device</p>
+    <h2 data-i18n="sec.device_title">What never leaves your browser</h2>
+    <div class="steps">
+      <div class="step glass">
+        <span class="step-n">01</span>
+        <h3 data-i18n="sec.d1_title">Seed phrase</h3>
+        <p data-i18n="sec.d1_body">Your private key is computed from it in the browser. The phrase is never sent, and the app doesn’t keep it in memory once the key is made.</p>
+      </div>
+      <div class="step glass">
+        <span class="step-n">02</span>
+        <h3 data-i18n="sec.d2_title">Password</h3>
+        <p data-i18n="sec.d2_body">Encrypts and unlocks the copy of your account saved in this browser. It is never sent.</p>
+      </div>
+      <div class="step glass">
+        <span class="step-n">03</span>
+        <h3 data-i18n="sec.d3_title">Private key</h3>
+        <p data-i18n="sec.d3_body">Kept in memory only while the app is unlocked, to sign your requests. Only the signatures are sent.</p>
+      </div>
+      <div class="step glass">
+        <span class="step-n">04</span>
+        <h3 data-i18n="sec.d4_title">Saved account</h3>
+        <p data-i18n="sec.d4_body">Your seed phrase, encrypted with AES-GCM-256 under a key made from your password (PBKDF2-SHA-256, 600,000 rounds), plus your public key. It is stored only in this browser, next to your language choice.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="requests" class="section">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="sec.req_eyebrow">Network</p>
+    <h2 data-i18n="sec.req_title">Every request the app makes</h2>
+    <p class="section-lede" data-i18n-html="sec.req_lede">The app talks to two places only: <b>kerrigan-name.space</b> for its own files and <b>registrar.kerrigan-name.space</b>, the registrar’s API. No analytics, no trackers, no ads, no fonts or scripts from other sites.</p>
+
+    <div class="table-scroll glass">
+      <table class="sec-table">
+        <thead>
+          <tr><th scope="col" data-i18n="sec.col_request">Request</th><th scope="col" data-i18n="sec.col_sent">What is sent</th><th scope="col" data-i18n="sec.col_why">Why</th></tr>
+        </thead>
+        <tbody>
+          <tr class="host"><th colspan="3" scope="rowgroup">kerrigan-name.space</th></tr>
+          <tr><td><code>GET /…</code></td><td class="sent" data-i18n="sec.nothing">Nothing</td><td data-i18n="sec.r1_why">The site itself: pages, scripts, styles, fonts, images and translations.</td></tr>
+          <tr><td><code>GET /version.json</code></td><td class="sent" data-i18n="sec.nothing">Nothing</td><td data-i18n="sec.r2_why">Checked at start and every 2 minutes, to offer a reload when a new version is out.</td></tr>
+          <tr class="host"><th colspan="3" scope="rowgroup">registrar.kerrigan-name.space</th></tr>
+          <tr><td><code>GET /v1.0/getPaymentAddress</code></td><td class="sent" data-i18n="sec.nothing">Nothing</td><td data-i18n="sec.r3_why">The registrar’s payment address, network and how many confirmations it waits for.</td></tr>
+          <tr><td><code>POST /v1.0/prices</code></td><td class="sent" data-i18n="sec.nothing">Nothing</td><td data-i18n="sec.r4_why">Current prices, fetched again when older than 5 minutes.</td></tr>
+          <tr><td><code>GET /v1.0/check/&lt;name&gt;</code></td><td class="sent" data-i18n="sec.r5_sent">The name you look up</td><td data-i18n="sec.r5_why">Whether the name is free and what it costs. With an account saved, the lookup is a POST that also asks for the owner’s public key, so the app can tell if the name is yours.</td></tr>
+          <tr><td><code>POST /v1.0/check/&lt;name&gt;</code></td><td class="sent" data-i18n="sec.r6_sent">Transaction ID or payment memo</td><td data-i18n="sec.r6_why">Follows your payment every 30 seconds until it is confirmed. The memo is the signed command that goes on-chain with the payment anyway.</td></tr>
+          <tr><td><code>POST /v1.0/domains</code></td><td class="sent" data-i18n="sec.r7_sent">Page, sorting, zone and search text</td><td data-i18n="sec.r7_why">Names for sale on the marketplace.</td></tr>
+          <tr><td><code>POST /v1.0/domains</code></td><td class="sent" data-i18n="sec.r8_sent">Your public key, page and filters</td><td data-i18n="sec.r8_why">The names that belong to your key.</td></tr>
+          <tr><td><code>POST /v1.0/transactions</code></td><td class="sent" data-i18n="sec.r9_sent">Your public key, page, time and signature</td><td data-i18n="sec.r9_why">Your payment and refund history. The signature proves the request comes from the key’s owner and is accepted only within a minute.</td></tr>
+          <tr><td><code>POST /v1.0/balance</code></td><td class="sent" data-i18n="sec.r10_sent">Your public key</td><td data-i18n="sec.r10_why">Your balance from sales and refunds.</td></tr>
+          <tr><td><code>POST /v1.0/balance</code></td><td class="sent" data-i18n="sec.r11_sent">Your public key, payout address, amount, time and signature</td><td data-i18n="sec.r11_why">Withdraws your balance. The signature covers the address and the amount, so nobody can change them on the way.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fineprint" data-i18n="sec.req_note">Registering, updating, selling or buying a name happens on-chain: the app builds and signs the command, and you send it with the payment from your own wallet. After that, the app only asks the registrar about its status.</p>
+
+    <div class="callout">
+      <h3 data-i18n="sec.sees_title">What our server sees anyway</h3>
+      <p data-i18n="sec.sees_body">Like any website, it sees your IP address, your browser and the time of each request. It also sees the names you look up and, when you open your names, balance or history, your public key, which ties your names together. A public key can’t sign or spend anything, and it is part of every command you put on-chain anyway. To hide your IP address, use Tor or a VPN.</p>
+    </div>
+  </div>
+</section>
+
+<section id="browser-rules" class="section section-alt">
+  <div class="wrap wrap-narrow">
+    <p class="eyebrow" data-i18n="sec.csp_eyebrow">Browser rules</p>
+    <h2 data-i18n="sec.csp_title">Enforced by your browser</h2>
+    <p class="prose" data-i18n-html="sec.csp_body">Every page carries a Content Security Policy. The app’s policy allows scripts only from kerrigan-name.space (plus one small inline script, pinned by its hash) and connections only to kerrigan-name.space and its subdomains, <code>*.kerrigan-name.space</code>, which in practice means registrar.kerrigan-name.space. If any code tried to send data elsewhere, the browser would block it. The policy also names <code>*.kerrigan-name.loc</code>: that name exists only on the developer’s test machine and can’t be reached from the internet.</p>
+    <p class="prose" data-i18n-html="sec.csp_check">To see it yourself, open the app, press <b>F12</b>, choose the <b>Network</b> tab and use the app: every request goes to one of the two hosts above.</p>
+    <p class="prose" data-i18n="sec.csp_limit">The policy arrives with the page, so a changed page could bring a looser one. That is what the next two sections are for.</p>
+  </div>
+</section>
+
+<section id="verify" class="section">
+  <div class="wrap wrap-narrow">
+    <p class="eyebrow" data-i18n="sec.verify_eyebrow">Verify</p>
+    <h2 data-i18n="sec.verify_title">Compare the site with GitHub</h2>
+    <p class="section-lede" data-i18n-html="sec.verify_lede">The code is open source under GPLv3 at <a href="https://github.com/alexxiy/kerrigan-namespace-front">github.com/alexxiy/kerrigan-namespace-front</a>. Each release has a tag named after its version, and the site serves the files of that tag byte for byte.</p>
+
+    <ol class="howto">
+      <li class="glass">
+        <h3 data-i18n="sec.v1_title">Get the code</h3>
+        <p data-i18n-html="sec.v1_body">You need git and Python 3. Look up the version the site runs in <a href="https://kerrigan-name.space/version.json">kerrigan-name.space/version.json</a> and check out its tag, with that version in place of X.Y.Z:</p>
+        <pre class="cmd"><code>git clone https://github.com/alexxiy/kerrigan-namespace-front.git
+cd kerrigan-namespace-front
+git checkout vX.Y.Z</code></pre>
+      </li>
+      <li class="glass">
+        <h3 data-i18n="sec.v2_title">Run the check</h3>
+        <p data-i18n-html="sec.v2_body"><code>tools/verify.py</code> downloads every file of the site, including the exact addresses the pages load, such as <code>js/app.js?v=…</code>, and compares the SHA-256 hash of each with your copy. It only sends GET requests to kerrigan-name.space, needs nothing but Python, and is short enough to read first.</p>
+        <pre class="cmd"><code>python3 tools/verify.py</code></pre>
+        <p data-i18n="sec.v2_result">It ends with “All files match” or names every file that differs.</p>
+      </li>
+      <li class="glass">
+        <h3 data-i18n="sec.v3_title">Or check one file by hand</h3>
+        <p data-i18n="sec.v3_body">Hash the file the site serves and your own copy. The two hashes must be equal:</p>
+        <pre class="cmd"><code>curl -s https://kerrigan-name.space/js/app.js | sha256sum
+sha256sum js/app.js</code></pre>
+        <p data-i18n-html="sec.v3_os">On macOS, use <code>shasum -a 256</code> instead of <code>sha256sum</code>. On Windows, download the file with <code>curl -o app.js https://kerrigan-name.space/js/app.js</code> and run <code>certutil -hashfile app.js SHA256</code>.</p>
+      </li>
+      <li class="glass">
+        <h3 data-i18n="sec.v4_title">A public daily check</h3>
+        <p data-i18n-html="sec.v4_body">A GitHub Actions job runs the same check every day, and its logs are public: <a href="https://github.com/alexxiy/kerrigan-namespace-front/actions/workflows/verify-live.yml">see the latest runs</a>.</p>
+      </li>
+    </ol>
+
+    <div class="callout">
+      <h3 data-i18n="sec.limit_title">What a check proves</h3>
+      <p data-i18n="sec.limit_body">It proves what the server sent to the computer that ran it. A dishonest server could in theory send other files to selected visitors. If you don’t want to rely on that, run your own copy.</p>
+    </div>
+  </div>
+</section>
+
+<section id="run" class="section section-alt">
+  <div class="wrap wrap-narrow">
+    <p class="eyebrow" data-i18n="sec.run_eyebrow">Run locally</p>
+    <h2 data-i18n="sec.run_title">Run the app from your own copy</h2>
+    <p class="section-lede" data-i18n="sec.run_lede">Then your browser runs exactly the code you checked out, and our web server is out of the picture. Your copy talks to the same registrar, so you see the same names, balance and history.</p>
+
+    <ol class="howto">
+      <li class="glass">
+        <h3 data-i18n="sec.s1_title">Start a local server</h3>
+        <p data-i18n="sec.s1_body">In the folder you checked out above, run:</p>
+        <pre class="cmd"><code>python3 tools/serve.py</code></pre>
+        <p data-i18n="sec.s1_note">It serves the folder to your computer only (127.0.0.1, port 8080). Ctrl+C stops it.</p>
+      </li>
+      <li class="glass">
+        <h3 data-i18n="sec.s2_title">Open the app</h3>
+        <p data-i18n-html="sec.s2_body">Go to <a href="http://localhost:8080/app">http://localhost:8080/app</a>. Your copy uses <b>registrar.kerrigan-name.space</b>, the same registrar as the site.</p>
+      </li>
+      <li class="glass">
+        <h3 data-i18n="sec.s3_title">Import your account</h3>
+        <p data-i18n-html="sec.s3_body">A browser keeps saved accounts per address, so the account saved on kerrigan-name.space isn’t visible on localhost. Choose <b>Log In → Import Account</b> and enter your seed phrase. Always open the same address, or you’ll have to import it again.</p>
+      </li>
+    </ol>
+    <p class="fineprint" data-i18n-html="sec.run_file">Why not open app.html straight from disk? Browsers block the app’s scripts and translations on pages opened as files, so it needs a server. Any static server works, for example <code>python3 -m http.server 8080 --bind 127.0.0.1</code>, then open /app.html.</p>
+  </div>
+</section>
+
+<section id="libraries" class="section">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="sec.libs_eyebrow">Libraries</p>
+    <h2 data-i18n="sec.libs_title">Third-party code</h2>
+    <p class="section-lede" data-i18n-html="sec.libs_lede">Everything is served from kerrigan-name.space; nothing is loaded from other sites. The libraries are copies in <code>js/vendor/</code>, built for browsers by esm.sh from npm packages, and most start with a line naming the package and version.</p>
+
+    <div class="table-scroll glass">
+      <table class="sec-table">
+        <thead>
+          <tr><th scope="col" data-i18n="sec.col_lib">Library</th><th scope="col" data-i18n="sec.col_use">Used for</th><th scope="col" data-i18n="sec.col_license">License</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>@noble/ed25519 <code>2.0.0</code></td><td data-i18n="sec.lib_ed25519">Signing your requests and commands</td><td>MIT</td></tr>
+          <tr><td>@noble/hashes <code>1.3.3</code></td><td data-i18n="sec.lib_hashes">SHA-512 for the signatures</td><td>MIT</td></tr>
+          <tr><td>@scure/bip39 <code>1.2.1</code></td><td data-i18n="sec.lib_bip39">Creating and checking the seed phrase</td><td>MIT</td></tr>
+          <tr><td>bech32 <code>2.0.0</code></td><td data-i18n="sec.lib_bech32">Checking addresses</td><td>MIT</td></tr>
+          <tr><td>EasyQRCodeJS <code>4.6.1</code></td><td data-i18n="sec.lib_qrcode">Payment QR codes</td><td>MIT</td></tr>
+          <tr><td>Tailwind CSS <code>3.4.19</code></td><td data-i18n="sec.lib_tailwind">The app’s styles, compiled into css/tailwind.css</td><td>MIT</td></tr>
+          <tr><td>Inter</td><td data-i18n="sec.lib_inter">The font</td><td>SIL OFL 1.1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fineprint" data-i18n-html="sec.libs_build">To rebuild <code>css/tailwind.css</code> yourself, run <code>npm ci</code> and then <code>npm run build:css</code>: you get the same file as in the repository.</p>
+  </div>
+</section>
+
+<section id="report" class="section section-alt">
+  <div class="wrap wrap-narrow">
+    <p class="eyebrow" data-i18n="sec.report_eyebrow">Contact</p>
+    <h2 data-i18n="sec.report_title">Found a problem?</h2>
+    <p class="prose" data-i18n-html="sec.report_body">Please tell us privately first at <a href="mailto:info@kerrigan-name.space">info@kerrigan-name.space</a>, with what you found and how to reproduce it.</p>
+    <p class="prose" data-i18n-html="sec.report_docs">How anyone can check the registry itself, independently of this website, is explained in <a href="https://docs.kerrigan-name.space/trust-and-privacy/">Trust and Privacy</a>.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div>
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="71 88 392 375" xmlns="http://www.w3.org/2000/svg"><g transform="translate(52.17 45.41) scale(5.7054)"><path fill="#8341ed" d="M59.17,36.38h-12.04l13.39-13.39c.37-.37.57-.86.58-1.38l.04-8.54c0-.52-.21-1.03-.58-1.4l-3.51-3.51c-.77-.77-2.02-.77-2.78,0l-22.06,22.06L10.13,8.16c-.77-.77-2.02-.77-2.78,0l-3.47,3.47c-.37.37-.58.87-.58,1.39v8.59c0,.53.2,1.02.58,1.39l13.38,13.38H5.27c-1.09,0-1.97.88-1.97,1.97v4.9c0,.53.2,1.02.58,1.39l6.07,6.07c.37.37.87.58,1.39.58h8.09v1.1c0,.53.2,1.02.58,1.39l3.47,3.47c.77.77,2.02.77,2.78,0l5.93-5.93,5.93,5.93c.77.77,2.02.77,2.78,0l3.51-3.51c.37-.37.58-.88.58-1.4v-1.04s8.09,0,8.09,0c.53,0,1.02-.2,1.39-.58l6.07-6.07c.37-.37.58-.87.58-1.39v-4.9c0-1.09-.88-1.97-1.97-1.97Z"/><path fill="#43de78" d="M24.13,15.45l7.98,8.02,8.01-8.01c.94-.94.28-2.56-1.06-2.56h-13.87c-1.33,0-2,1.61-1.06,2.55Z"/></g><g transform="translate(296.4, 296.4) scale(0.84)"><circle cx="90" cy="90" r="100" fill="#43de78" stroke="#ffffff" stroke-width="16"/><circle cx="50" cy="90" r="20" fill="#1a0a2e"/><circle cx="130" cy="60" r="20" fill="#1a0a2e"/><circle cx="110" cy="130" r="20" fill="#1a0a2e"/><line x1="50" y1="90" x2="130" y2="60" stroke="#1a0a2e" stroke-width="12"/><line x1="50" y1="90" x2="110" y2="130" stroke="#1a0a2e" stroke-width="12"/><line x1="130" y1="60" x2="110" y2="130" stroke="#1a0a2e" stroke-width="12"/></g></svg></span>
+        <span>Kerrigan-Name<b>.Space</b></span>
+      </a>
+      <p class="footer-note" data-i18n="footer.note">
+        An open, verifiable name service for Kerrigan shielded addresses.
+      </p>
+    </div>
+    <nav class="footer-links" aria-label="Footer">
+      <a href="/app" data-i18n="footer.app">Web app</a>
+      <a href="https://docs.kerrigan-name.space" data-i18n="footer.docs">Documentation</a>
+      <a href="/security.html" data-i18n="footer.security">Security</a>
+      <a href="https://github.com/alexxiy/kerrigan-namespace-indexer" data-i18n="footer.source">Source code</a>
+      <a href="https://docs.kerrigan-name.space" data-i18n="footer.indexer">Run an indexer</a>
+    </nav>
+  </div>
+  <div class="wrap footer-legal">
+    <p data-i18n="footer.legal">Not affiliated with the Kerrigan project or the Kerrigan Network development team.</p>
+  </div>
+</footer>
+
+<script src="/js/landing.js?v=1.0.8"></script>
+</body>
+</html>

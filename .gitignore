@@ -1,0 +1,15 @@
+# Installed by npm ci, only needed to rebuild css/tailwind.css
+node_modules/
+
+# Editor and assistant settings
+.idea/
+.vscode/
+.claude/
+CLAUDE.md
+
+# Internal notes
+PIVXIE-NOTES.md
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,151 @@
+{
+    "compare": {
+        "eyebrow": "Özünüz sınayın",
+        "lede2": "İndi əsas hissə. Aşağıda iki ünvan var: ya tamamilə eynidirlər, ya da ortada bir yerdə tək bir simvolla fərqlənirlər. İstədiyiniz qədər baxın — çoxu ilk dördü və son dördü yoxlayır, yəni yetmiş səkkiz simvoldan səkkizini.",
+        "title": "Heç kim <em>78</em> simvolun hamısını oxumur"
+    },
+    "cta": {
+        "body": "Növbə yox, dəvət yox, rezervasiya siyahısı yox. Kim birinci istəsə, onundur.",
+        "button": "Tətbiqi aç",
+        "title": "Ad hələ boşdurkən götürün"
+    },
+    "different": {
+        "c1_body": "Gözləmə siyahısı, növbə, referal nərdivanı və ya içəridəkilər üçün saxlanılmış premium adlar bloku yoxdur. Reyestr boş açılır. Qeydiyyatdan keçməmiş hər ad ilk istəyənindir və «ilk» olmağı blok hündürlüyü ilə mövqe müəyyən edir — biz yox.",
+        "c1_title": "Ön qeydiyyat yoxdur",
+        "c2_body": "Protokolda bitmə tarixi, illik haqq və ya buraxa biləcəyiniz təsdiq pəncərəsi yoxdur. Qeydiyyat bir dəfədir. Ad yalnız siz onu ötürmək və ya satmaq üçün əmr imzaladığınızda nəzarətinizdən çıxır — nə bizdə, nə də başqasında onu geri almaq mexanizmi var.",
+        "c2_title": "Yeniləmə yoxdur. Sizin qalır.",
+        "c3_body": "Ad sizin Ed25519 açıq açarınıza bağlıdır və hər dəyişiklik özünüzün imzaladığı əmrdir. Açarlarınızı heç vaxt saxlamırıq və adı sizin əvəzinizə heç vaxt hərəkət etdirmirik. Sistemdə sizin icazə vermədiyiniz heç nəyi biz idarə edə bilmirik.",
+        "c3_title": "Açarlarınız, adınız",
+        "c4_body": "Adı öz qiymətinizlə satışa qoyun, siyahıdan çıxarın və ya siyahıda olanı alın. Satış gəliri sabit <b>5 %</b> xidmət haqqı çıxıldıqdan sonra balansınıza keçir, yarışı uduzan təklif isə itmək əvəzinə balansınıza qayıdır. Mülkiyyət, hər şey kimi, imzalanmış zəncirüstü əmrlə əl dəyişir.",
+        "c4_title": "Əsl bazar",
+        "c5_body": "<code>.kerrigan</code>, <code>.krgn</code>, <code>.private</code>, <code>.secure</code> və <code>.safe</code>. Eyni protokol, eyni qiymətlər, eyni zəmanətlər — sizə ən yaxşı səslənəni seçin.",
+        "c5_title": "Beş zona, bir qayda kitabı",
+        "c6_body": "Pulqabı dəyişdikcə adınızın arxasındakı ünvanı dəyişin. Adı bilən hər kəs düzgün yerə ödəməyə davam edir və heç kimə xəbər vermək lazım gəlmir. Köhnə ünvan sadəcə cavab olmaqdan çıxır.",
+        "c6_title": "İstədiyiniz yerə, istədiyiniz vaxt yönəldin",
+        "eyebrow": "Fərqi nədir",
+        "title": "İlk gündən açıq"
+    },
+    "faq": {
+        "a1": "Adınızı açıq açarınıza və hədəf ünvana bağlayan reyestr qeydinə. Onu yalnız həmin açarla imzalanmış əmr dəyişə bilər. Qeydin bütün tarixçəsi zəncirdə olduğuna və baxış açarı ictimai olduğuna görə, iddianızı üçüncü tərəf bizdən soruşmadan yoxlaya bilər.",
+        "a2": "Əmr tarixçəsi Kerrigan blokçeynindədir və onu şərh edən proqram açıq mənbəlidir, ona görə Kerrigan node-u və dərc edilmiş baxış açarı olan hər kəs reyestri bərpa edə bilər. Ad həlli bizsiz də davam edə bilər. Dizaynın əmrləri bizim idarə etdiyimiz verilənlər bazası əvəzinə zəncirə qoymasının səbəbi məhz budur.",
+        "a3": "Əmrlər qorunan tranzaksiyalarla gedir, ona görə məbləğlər və ünvanlar ictimai dəftərdən kənarda qalır. Ad sizə çatmaq üsuludur, balansınıza və ya tarixçənizə açılan pəncərə deyil — bank çıxarışından çox, e-poçt ünvanı dərc etməyə bənzəyir.",
+        "a4": "Etiketlər kiçik <code>a–z</code>, rəqəmlər və defislərlə məhdudlaşır, ona görə Unicode identifikatorlarını sarsıdan homoqraf hiylələri burada mümkün deyil. Ad yenə də başqasına <em>oxşar</em> ola bilər — amma tamamını oxumaq üçün kifayət qədər qısadır, əvəz etdiyi ünvan üçün bunu demək olmaz.",
+        "a5": "İndeksləyici node işə salın. O, dərc edilmiş baxış açarı ilə Kerrigan-ı skan edir, hər əmri yenidən oynadır, vəziyyət kökünü müstəqil hesablayır və zəncirə bağlanmış köklə müqayisə edir. Sənədlərdə ünvan, açar və tək əmrlik Docker imici var.",
+        "a6": "Tətbiq olunmaq əvəzinə rədd edilir — etibarsız əmr reyestri heç vaxt korlaya bilməz, zəncirüstü sübutun tələb etdiyi məhz budur. Ödəniş sizə aid edilə bilirsə, balansınıza qayıdır; əmr ödəyicini müəyyən etməyi mümkünsüz edəcək qədər pozulubsa, qayıda bilmir. Tətbiq siz göndərməzdən əvvəl əmrləri yoxlayır.",
+        "eyebrow": "Suallar",
+        "q1": "Dəqiq nəyə sahibəm?",
+        "q2": "Siz yox olsanız nə olacaq?",
+        "q3": "Ad istifadə etmək Kerrigan məxfiliyini zəiflədirmi?",
+        "q4": "Ad başqasınınkinə oxşaya bilərmi?",
+        "q5": "Reyestri özüm necə yoxlayım?",
+        "q6": "Qaydaları pozan əmr göndərsəm nə olar?",
+        "title": "Tez-tez verilən suallar"
+    },
+    "footer": {
+        "app": "Veb tətbiq",
+        "docs": "Sənədlər",
+        "security": "Təhlükəsizlik",
+        "indexer": "İndeksləyici işə sal",
+        "legal": "Kerrigan project və ya Kerrigan Network development team ilə əlaqəli deyil.",
+        "note": "Kerrigan qorunan ünvanları üçün açıq və yoxlanıla bilən ad xidməti.",
+        "source": "Mənbə kodu"
+    },
+    "game": {
+        "again": "Bir dənə də",
+        "correct": "<b>Doğru</b> — və {n} san. çəkdi. İndi bunu hər ödənişdə, telefonda, tələsik etdiyinizi təsəvvür edin.",
+        "diff": "Fərqlidirlər",
+        "reveal_lede": "İndi eyni yoxlama, adlarla:",
+        "reveal_note": "Eyni sual, təxminən bir saniyəyə cavablandı — çünki hamısını başınızda saxlaya bilirsiniz. Məsələ tam olaraq budur.",
+        "same": "Eynidirlər",
+        "tag_name_notes": "Qeydlərinizdəki ad",
+        "tag_name_paying": "Ödəyəcəyiniz ad",
+        "tag_notes": "Qeydlərinizdəki ünvan",
+        "tag_paying": "Ödəyəcəyiniz ünvan",
+        "wrong_diff": "<b>Tam yox.</b> Ortadakı bir simvol fərqli idi — yuxarıda işıqlandırılıb.",
+        "wrong_same": "<b>Tam yox.</b> Eyni idilər. Əmin olmamaq normal nəticədir; format sadəcə insanlar üçün qurulmayıb."
+    },
+    "hero": {
+        "cta_register": "Ad qeydiyyatı",
+        "cta_verify": "Bunu necə yoxlayarsınız",
+        "eyebrow": "Tezliklə Kerrigan əsas şəbəkəsində",
+        "fact_custody": "Açarlarınızın saxlanması <b>yoxdur</b>",
+        "fact_prereg": "Ön qeydiyyat <b>yoxdur</b>",
+        "fact_renew": "Yeniləmə <b>yoxdur</b>, heç vaxt",
+        "lede": "Kerrigan NameSpace qısa, oxunaqlı adı sizin qorunan ünvanınıza uyğunlaşdırır. Ad qorunan tranzaksiya ilə qeydiyyata alınır, ona görə qeyd Kerrigan blokçeyninin özündə yaşayır — və hər kəs ondan bütün reyestri yenidən qura və operatorun qaydalara riayət etdiyini yoxlaya bilər.",
+        "title": "Ünvanınız 78&nbsp;simvoldur.<br><span class=\"hl\">Adınız səkkizdir.</span>"
+    },
+    "meta": {
+        "description": "Kerrigan qorunan ünvanınız üçün oxunaqlı ad qeydiyyatdan keçirin. Ön qeydiyyat yox, yeniləmə yox, saxlama yox. Hər ad Kerrigan blokçeynində yaşayır və istənilən üçüncü tərəf bütün reyestri ondan yenidən yarada bilər.",
+        "title": "Kerrigan NameSpace — ünvan əvəzinə ad, hər kəs tərəfindən yoxlanıla bilən"
+    },
+    "nav": {
+        "different": "Fərqi nədir",
+        "faq": "Suallar",
+        "open_app": "Tətbiqi aç",
+        "pricing": "Qiymətlər",
+        "problem": "Problem",
+        "roadmap": "Yol xəritəsi",
+        "skip": "Məzmuna keç",
+        "trust": "Etibar modeli"
+    },
+    "panel": {
+        "check_free": "Boş olub-olmadığını yoxlayın →",
+        "counter": "Yoxlanacaq <b>{n}</b> simvol",
+        "err_charset": "Yalnız a–z, 0–9 və defis.",
+        "err_hyphen_dbl": "Qoşa defis olmaz.",
+        "err_hyphen_edge": "Defislə başlaya və ya bitə bilməz.",
+        "hint": "Kiçik hərflər, rəqəmlər və defislər. Bütün əlifba budur — arxasında gizlənmək üçün oxşar görünüşlü Unicode yoxdur.",
+        "mode_address": "Xam ünvan",
+        "mode_name": "Kerrigan adı",
+        "pay_to": "Bura ödə",
+        "placeholder": "adınız",
+        "price": "{len} simvolluq ad bir dəfəyə <b>{price} KRGN</b> qarşılığında qeydiyyata alınır.",
+        "send": "KRGN göndər",
+        "try_own": "Öz adınızı sınayın"
+    },
+    "pricing": {
+        "caption": "Ad uzunluğuna görə KRGN ilə qeydiyyat və yeniləmə qiymətləri",
+        "col_len": "Ad uzunluğu",
+        "col_reg": "Qeydiyyat (bir dəfə)",
+        "col_upd": "Ünvan yeniləmə",
+        "eyebrow": "Qiymətlər",
+        "fineprint": "Uzunluq nöqtədən əvvəlki hissəni sayır. Bazar satışlarında 5 % xidmət haqqı var. Qiymətlər protokol sabitləridir, hər zona və hər qeydiyyatçı üçün eynidir.",
+        "lede": "Qısa adlar daha bahalıdır, çünki sayları azdır. Qeydiyyat birdəfəlik ödənişdir — ikinci sütun adı sonradan başqa ünvana yönəltməyin qiymətidir və bunu istədiyiniz qədər edə bilərsiniz.",
+        "len_max": "7 və daha çox",
+        "len_n": "{n} simvol",
+        "len_one": "1 simvol",
+        "title": "Uzunluğa görə qiymət. Bir dəfə ödənir."
+    },
+    "roadmap": {
+        "eyebrow": "Növbəti nə var",
+        "lede": "Protokol əhəmiyyətli mənada tamamlanıb: adlar işləyir və reyestri hər kəs yoxlaya bilər. Bundan sonrası onlardan istifadəni asanlaşdırmaqla bağlıdır.",
+        "r1_body": "Blok araşdırıcısı sizə tranzaksiyaları göstərir. Bu isə adları göstərəcək: hər qeydiyyatı, hər ünvan dəyişikliyini, hər mülkiyyət ötürülməsini, hər elanı və hər satışı — öz node-unuzu işə salmadan izləyə biləcəyiniz vahid, axtarıla bilən tarixçə şəklində.",
+        "r1_tag": "Hazırlanır",
+        "r1_title": "Ad araşdırıcısı",
+        "r2_body": "Adın bütün mənası ünvana heç toxunmamağınızdır. Bu, yalnız pulqabınız adları özü həll etdikdə tam doğru olur — növbəti səy oraya yönəlir. Əgər Kerrigan pulqabısı hazırlayırsınızsa, bunu sizin ətrafınızdan dolanaraq deyil, sizinlə birlikdə etməyi üstün tuturuq.",
+        "r2_link": "Pulqabı komandaları — bizimlə danışın →",
+        "r2_tag": "Növbəti addım",
+        "r2_title": "Onsuz da istifadə etdiyiniz pulqabıların içində",
+        "r3_body": "Bu iki bənddən sonrası qəsdən yazılmayıb. Nəyin çatışmadığını, nəyin yolunuzu kəsdiyini və ya tapmağı gözləyib tapmadığınızı bizə deyin — bundan sonrakıların sırasını məhz bu müəyyən edir.",
+        "r3_link": "Bizə funksiya sorğusu göndərin →",
+        "r3_tag": "Həmişə",
+        "r3_title": "Sizin istəkləriniz formalaşdırır",
+        "title": "Buradan sonra hara gedir"
+    },
+    "trust": {
+        "callout_body": "Xüsusiyyət <b>saxtakarlığı aşkar etməkdir</b>, onun qarşısını almaq deyil. Pis paket zəncirə çata və sonra təkzib edilə bilər; buradakı heç nə onun ilk növbədə dərc olunmasının qarşısını ala bilməz. Dizaynın zəmanət verdiyi şey onun gizlədilə bilməməsi — və bunu öyrənmək üçün heç vaxt bizim əməkdaşlığımıza ehtiyacınız olmamasıdır.",
+        "callout_link": "Tam etibar modelini oxuyun →",
+        "callout_title": "Bunun nə olduğu barədə dürüst olaq",
+        "eyebrow": "Etibar modeli",
+        "lede": "Əksər ad xidmətləri sizdən verilənlər bazasına inanmağınızı istəyir. Bu isə inanmağı lazımsız edəcək şəkildə qurulub: reyestri dəyişən hər əmr qorunan Kerrigan tranzaksiyasıdır və onları oxumaq üçün lazım olan açar dərc edilib.",
+        "s1_body": "Adı qeydiyyata almaq, yeniləmək, satışa qoymaq və ya almaq protokol ünvanına göndərilən qorunan notdur. Məbləğ ödənişdir, şifrələnmiş memo isə imzalanmış əmr — hamısı bir tranzaksiyada. Beləliklə niyyət və ödəniş ayrıla, sıralanı dəyişdirilə və ya sonradan uydurula bilməz.",
+        "s1_title": "Əmr zəncirdə yaşayır",
+        "s2_body": "Qeydiyyatçı protokol ünvanını <em>və</em> onun baxış açarını dərc edir. Hər kəs bununla zənciri skan edib genesis-dən bəri verilmiş hər əmri, blokçeynin sabitlədiyi dəqiq sıra ilə bərpa edə bilər.",
+        "s2_title": "Oxuma açarı ictimaidir",
+        "s3_body": "Bu axını açıq mənbəli indeksləyicidən keçirin və reyestr vəziyyətini özünüz, müstəqil şəkildə əldə edin. Dərc edilmiş Docker imici ilə tək əmrdə işə salın və ya mənbəni oxuyub özünüzünkünü qurun.",
+        "s3_title": "Cavabı hər kəs yenidən hesablaya bilər",
+        "s4_body": "Vəziyyət kökü keçid qaydalarına riayət edildiyini göstərən sıfır bilikli sübutla zəncirə bağlanır. Operator nə vaxtsa ödənilmiş əmri senzura etsə, ötürmə uydursa və ya tarixçəni yenidən sıralasa, hər müstəqil indeksləyici fərqli kök hesablayar və onu təkzib edər — icazə və ya xüsusi giriş olmadan.",
+        "s4_title": "Fikir ayrılığı hamıya görünür",
+        "title": "Bizə etibar etmək məcburiyyətində deyilsiniz. Yoxlaya bilərsiniz."
+    }
+}

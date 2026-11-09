@@ -1,0 +1,151 @@
+{
+    "compare": {
+        "eyebrow": "Probier es selbst",
+        "lede2": "Jetzt der entscheidende Teil. Unten zwei Adressen, entweder identisch oder in einem einzigen Zeichen irgendwo in der Mitte verschieden. Nimm dir so viel Zeit du willst – die meisten prüfen die ersten vier und die letzten vier, also acht von achtundsiebzig Zeichen.",
+        "title": "Niemand liest alle <em>78</em> Zeichen"
+    },
+    "cta": {
+        "body": "Keine Warteschlange, keine Einladung, keine Reservierungsliste. Wer zuerst fragt, bekommt ihn.",
+        "button": "App öffnen",
+        "title": "Sichere dir einen Namen, solange er frei ist"
+    },
+    "different": {
+        "c1_body": "Es gibt keine Warteliste, keine Warteschlange, keine Empfehlungsleiter und keinen reservierten Block von Premium-Namen für Insider. Die Registry startet leer. Jeder nicht registrierte Name gehört dem, der zuerst fragt, und „zuerst“ entscheiden Blockhöhe und Position – nicht wir.",
+        "c1_title": "Keine Vorregistrierung",
+        "c2_body": "Im Protokoll gibt es kein Ablaufdatum, keine Jahresgebühr und kein Zeitfenster, das du verpassen kannst. Registriert wird einmal. Ein Name verlässt deine Kontrolle nur, wenn du einen Befehl zum Übertragen oder Verkaufen signierst – es gibt keinen Mechanismus, weder für uns noch für sonst jemanden, ihn zurückzuholen.",
+        "c2_title": "Keine Verlängerungen. Er bleibt deiner.",
+        "c3_body": "Ein Name ist an deinen Ed25519-Public-Key gebunden, und jede Änderung ist ein Befehl, den du selbst signierst. Wir verwahren deine Schlüssel nie und bewegen niemals einen Namen in deinem Auftrag. Nichts im System können wir betreiben, was du nicht autorisiert hast.",
+        "c3_title": "Deine Schlüssel, dein Name",
+        "c4_body": "Biete einen Namen zu deinem Preis an, nimm ihn wieder vom Markt oder kaufe einen angebotenen. Verkaufserlöse werden deinem Guthaben abzüglich einer pauschalen <b>5 %</b> Servicegebühr gutgeschrieben, und ein Gebot, das ein Rennen verliert, geht auf dein Guthaben zurück statt verloren zu sein. Der Besitz wechselt als signierter On-Chain-Befehl wie alles andere.",
+        "c4_title": "Ein echter Marktplatz",
+        "c5_body": "<code>.kerrigan</code>, <code>.krgn</code>, <code>.private</code>, <code>.secure</code> und <code>.safe</code>. Gleiches Protokoll, gleiche Preise, gleiche Garantien – nimm die, die sich für dich am besten liest.",
+        "c5_title": "Fünf Zonen, ein Regelwerk",
+        "c6_body": "Ändere die Adresse hinter deinem Namen, wann immer du die Wallet wechselst. Alle, die den Namen kennen, zahlen weiter an die richtige Stelle, und niemand muss informiert werden. Die alte Adresse ist einfach nicht mehr die Antwort.",
+        "c6_title": "Zeig überallhin, jederzeit",
+        "eyebrow": "Was anders ist",
+        "title": "Offen ab dem ersten Tag"
+    },
+    "faq": {
+        "a1": "Einen Eintrag in der Registry, der deinen Namen an deinen Public Key und eine Zieladresse bindet. Nur ein mit diesem Schlüssel signierter Befehl kann ihn ändern. Weil die gesamte Historie des Eintrags on-chain liegt und der Viewing Key öffentlich ist, kann ein Dritter deinen Anspruch prüfen, ohne uns zu fragen.",
+        "a2": "Die Befehlshistorie liegt in der Kerrigan-Blockchain und die Software, die sie interpretiert, ist Open Source. Die Registry lässt sich also von jedem mit einem Kerrigan-Node und dem veröffentlichten Viewing Key rekonstruieren. Die Auflösung kann ohne uns weiterlaufen. Genau deshalb legt das Design die Befehle on-chain statt in eine Datenbank, die wir kontrollieren.",
+        "a3": "Befehle laufen als abgeschirmte Transaktionen, Beträge und Adressen bleiben also aus dem öffentlichen Ledger heraus. Ein Name ist ein Weg, dich zu erreichen, kein Fenster in dein Guthaben oder deine Historie – näher an einer veröffentlichten E-Mail-Adresse als an einem Kontoauszug.",
+        "a4": "Labels sind auf Kleinbuchstaben <code>a–z</code>, Ziffern und Bindestriche beschränkt, die Homograph-Tricks, die Unicode-Bezeichner plagen, sind hier also unmöglich. Ein Name kann einem anderen trotzdem <em>ähnlich</em> sein – aber er ist kurz genug, um ihn vollständig zu lesen, was für die Adresse, die er ersetzt, nicht gilt.",
+        "a5": "Betreibe einen Indexer-Node. Er scannt Kerrigan mit dem veröffentlichten Viewing Key, spielt jeden Befehl nach, berechnet die State Root unabhängig und vergleicht sie mit der on-chain verankerten Root. Die Dokumentation enthält die Adresse, den Schlüssel und ein Docker-Image für einen einzigen Befehl.",
+        "a6": "Er wird abgelehnt statt angewendet – ein ungültiger Befehl kann die Registry niemals beschädigen, genau das erzwingt der On-Chain-Beweis. Wo sich die Zahlung dir zuordnen lässt, geht sie auf dein Guthaben zurück; wo der Befehl so fehlerhaft ist, dass kein Zahler mehr erkennbar ist, geht das nicht. Die App prüft Befehle, bevor du einen sendest.",
+        "eyebrow": "Fragen",
+        "q1": "Was genau besitze ich?",
+        "q2": "Was passiert, wenn ihr verschwindet?",
+        "q3": "Schwächt ein Name die Kerrigan-Privatsphäre?",
+        "q4": "Kann ein Name wie der eines anderen aussehen?",
+        "q5": "Wie prüfe ich die Registry selbst?",
+        "q6": "Was, wenn ich einen regelwidrigen Befehl sende?",
+        "title": "Häufig gefragt"
+    },
+    "footer": {
+        "app": "Web-App",
+        "docs": "Dokumentation",
+        "security": "Sicherheit",
+        "indexer": "Indexer betreiben",
+        "legal": "Nicht verbunden mit der Kerrigan project oder der Kerrigan Network development team.",
+        "note": "Ein offener, überprüfbarer Namensdienst für abgeschirmte Kerrigan-Adressen.",
+        "source": "Quellcode"
+    },
+    "game": {
+        "again": "Noch eine",
+        "correct": "<b>Richtig</b> – und du hast {n}s gebraucht. Stell dir das jetzt bei jeder Zahlung vor, auf dem Handy, in Eile.",
+        "diff": "Sie unterscheiden sich",
+        "reveal_lede": "Jetzt dieselbe Prüfung, mit Namen:",
+        "reveal_note": "Dieselbe Frage, in etwa einer Sekunde beantwortet – weil du das Ganze im Kopf behalten kannst. Genau darum geht es.",
+        "same": "Sie sind identisch",
+        "tag_name_notes": "Name in deinen Notizen",
+        "tag_name_paying": "Name, an den du gleich zahlst",
+        "tag_notes": "Adresse in deinen Notizen",
+        "tag_paying": "Adresse, an die du gleich zahlst",
+        "wrong_diff": "<b>Nicht ganz.</b> Ein Zeichen in der Mitte war anders – es ist oben hervorgehoben.",
+        "wrong_same": "<b>Nicht ganz.</b> Sie waren identisch. Unsicher zu sein ist der Normalfall; das Format ist schlicht nicht für Menschen gemacht."
+    },
+    "hero": {
+        "cta_register": "Namen registrieren",
+        "cta_verify": "Wie du es überprüfst",
+        "eyebrow": "Bald im Kerrigan-Mainnet",
+        "fact_custody": "<b>Keine</b> Verwahrung deiner Schlüssel",
+        "fact_prereg": "<b>Keine</b> Vorregistrierung",
+        "fact_renew": "<b>Keine</b> Verlängerungen, nie",
+        "lede": "Kerrigan NameSpace bildet einen kurzen, lesbaren Namen auf deine abgeschirmte Adresse ab. Der Name wird per abgeschirmter Transaktion registriert, der Eintrag lebt also in der Kerrigan-Blockchain selbst — und jeder kann daraus die gesamte Registry nachbauen und prüfen, ob der Betreiber sich an die Regeln gehalten hat.",
+        "title": "Deine Adresse hat 78&nbsp;Zeichen.<br><span class=\"hl\">Dein Name hat acht.</span>"
+    },
+    "meta": {
+        "description": "Registriere einen menschenlesbaren Namen für deine abgeschirmte Kerrigan-Adresse. Keine Vorregistrierung, keine Verlängerungen, keine Verwahrung. Jeder Name lebt in der Kerrigan-Blockchain und jeder Dritte kann die gesamte Registry daraus reproduzieren.",
+        "title": "Kerrigan NameSpace – Namen statt Adressen, von jedem überprüfbar"
+    },
+    "nav": {
+        "different": "Was anders ist",
+        "faq": "FAQ",
+        "open_app": "App öffnen",
+        "pricing": "Preise",
+        "problem": "Das Problem",
+        "roadmap": "Roadmap",
+        "skip": "Zum Inhalt springen",
+        "trust": "Vertrauensmodell"
+    },
+    "panel": {
+        "check_free": "Prüfen, ob er frei ist →",
+        "counter": "<b>{n}</b> Zeichen zu prüfen",
+        "err_charset": "Nur a–z, 0–9 und Bindestriche.",
+        "err_hyphen_dbl": "Keine doppelten Bindestriche.",
+        "err_hyphen_edge": "Darf nicht mit einem Bindestrich beginnen oder enden.",
+        "hint": "Kleinbuchstaben, Ziffern und Bindestriche. Das ist das ganze Alphabet – kein täuschend ähnliches Unicode zum Verstecken.",
+        "mode_address": "Rohe Adresse",
+        "mode_name": "Kerrigan-Name",
+        "pay_to": "Zahlen an",
+        "placeholder": "deinname",
+        "price": "Ein Name mit {len} Zeichen kostet einmalig <b>{price} KRGN</b>.",
+        "send": "KRGN senden",
+        "try_own": "Probier deinen eigenen"
+    },
+    "pricing": {
+        "caption": "Registrierungs- und Aktualisierungspreise in KRGN nach Namenslänge",
+        "col_len": "Namenslänge",
+        "col_reg": "Registrieren (einmalig)",
+        "col_upd": "Adresse ändern",
+        "eyebrow": "Preise",
+        "fineprint": "Die Länge zählt den Teil vor dem Punkt. Marktplatzverkäufe tragen eine Servicegebühr von 5 %. Preise sind Protokollkonstanten, identisch für jede Zone und jeden Registrierenden.",
+        "lede": "Kürzere Namen kosten mehr, weil es weniger davon gibt. Die Registrierung ist eine einmalige Zahlung – die zweite Spalte zeigt, was es kostet, den Namen später auf eine andere Adresse zu richten, was du so oft tun kannst, wie du willst.",
+        "len_max": "7 oder mehr",
+        "len_n": "{n} Zeichen",
+        "len_one": "1 Zeichen",
+        "title": "Preis nach Länge. Einmal bezahlt."
+    },
+    "roadmap": {
+        "eyebrow": "Was als Nächstes kommt",
+        "lede": "Das Protokoll ist in dem Sinne fertig, auf den es ankommt: Namen funktionieren, und die Registry kann von jedem überprüft werden. Was jetzt folgt, dreht sich darum, sie leichter benutzbar zu machen.",
+        "r1_body": "Ein Block-Explorer zeigt dir Transaktionen. Dieser zeigt dir Namen: jede Registrierung, jeden Adresswechsel, jeden Eigentümerwechsel, jedes Angebot und jeden Verkauf — als eine durchsuchbare Historie, der du folgen kannst, ohne selbst einen Node zu betreiben.",
+        "r1_tag": "In Entwicklung",
+        "r1_title": "Ein Namens-Explorer",
+        "r2_body": "Der Sinn eines Namens ist, dass du die Adresse nie anfasst. Ganz stimmt das erst, wenn deine Wallet Namen selbst auflöst — dorthin geht als Nächstes die Arbeit. Wenn du eine Kerrigan-Wallet baust, machen wir das lieber mit dir als an dir vorbei.",
+        "r2_link": "Wallet-Teams — sprecht mit uns →",
+        "r2_tag": "Als Nächstes",
+        "r2_title": "Eingebaut in die Wallets, die du schon nutzt",
+        "r3_body": "Nach diesen beiden ist die Roadmap bewusst unbeschrieben. Sagt uns, was fehlt, was euch im Weg steht oder was ihr erwartet und nicht gefunden habt — genau das entscheidet die Reihenfolge von allem Weiteren.",
+        "r3_link": "Schick uns einen Feature-Wunsch →",
+        "r3_tag": "Immer",
+        "r3_title": "Geformt von dem, was ihr euch wünscht",
+        "title": "Wohin es von hier aus geht"
+    },
+    "trust": {
+        "callout_body": "Die Eigenschaft ist <b>betrugsaufdeckend</b>, nicht betrugsverhindernd. Ein schlechter Batch kann die Chain erreichen und wird danach widerlegt; nichts hier kann verhindern, dass er überhaupt veröffentlicht wird. Was das Design garantiert, ist, dass es nicht verborgen bleiben kann – und dass du unsere Mitwirkung nie gebraucht hast, um es herauszufinden.",
+        "callout_link": "Das vollständige Vertrauensmodell lesen →",
+        "callout_title": "Ehrlich gesagt, was das ist",
+        "eyebrow": "Vertrauensmodell",
+        "lede": "Die meisten Namensdienste verlangen, dass du einer Datenbank glaubst. Dieser ist so gebaut, dass Glauben unnötig ist: Jeder Befehl, der die Registry je verändert hat, ist eine abgeschirmte Kerrigan-Transaktion, und der Schlüssel zum Lesen ist veröffentlicht.",
+        "s1_body": "Einen Namen registrieren, aktualisieren, anbieten oder kaufen ist eine abgeschirmte Note an die Protokolladresse. Der Betrag ist die Zahlung und das verschlüsselte Memo der signierte Befehl, in einer Transaktion – Absicht und Zahlung lassen sich also nicht trennen, umsortieren oder nachträglich erfinden.",
+        "s1_title": "Der Befehl lebt on-chain",
+        "s2_body": "Der Registrar veröffentlicht die Protokolladresse <em>und</em> ihren Viewing Key. Jeder kann damit die Chain scannen und jeden je erteilten Befehl seit Genesis wiederherstellen, in genau der Reihenfolge, die die Blockchain festgelegt hat.",
+        "s2_title": "Der Leseschlüssel ist öffentlich",
+        "s3_body": "Schick diesen Strom durch den quelloffenen Indexer und du leitest den Registry-Zustand selbst her, unabhängig. Starte ihn mit einem Befehl über das veröffentlichte Docker-Image oder lies den Quellcode und bau deinen eigenen.",
+        "s3_title": "Jeder kann die Antwort nachrechnen",
+        "s4_body": "Die State Root wird on-chain mit einem Zero-Knowledge-Beweis verankert, dass die Übergangsregeln eingehalten wurden. Hätte der Betreiber je einen bezahlten Befehl zensiert, eine Übertragung erfunden oder die Historie umsortiert, berechnet jeder unabhängige Indexer eine andere Root und widerspricht – ohne Erlaubnis oder Sonderzugang.",
+        "s4_title": "Widerspruch ist öffentlich",
+        "title": "Du musst uns nicht vertrauen. Du kannst prüfen."
+    }
+}
