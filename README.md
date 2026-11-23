@@ -53,7 +53,8 @@ scripts and `fetch` on `file://` pages.
 | `index.html`, `js/landing.js`, `css/landing.css` | The landing page |
 | `app.html`, `js/app.js`, `css/style.css`, `css/tailwind.css` | The app |
 | `security.html`, `css/security.css` | The security page (it shares `js/landing.js`) |
-| `js/dev-mock.js` | Test data for development, loaded only with `?mock=1` on a local copy |
+| `js/dev-mock.js` | Test data for development, loaded only with `?mock=1` on a local copy; the site does not serve it |
+| `css/tailwind.input.css` | The input `css/tailwind.css` is built from (see Development); the site does not serve it |
 | `js/vendor/` | Third-party libraries, see `THIRD_PARTY_NOTICES.md` |
 | `lang/`, `lang/landing/`, `lang/security/` | Translations, 13 languages |
 | `tools/` | `verify.py` and `serve.py` |
@@ -71,9 +72,17 @@ npm run build:css                # or watch:css; rebuild when classes change
 - **Test data without a backend:** run `tools/serve.py` and open
   http://localhost:8080/app?mock=1 (`?mock=0` switches it off). The page shows a label while it
   is on, and no request reaches the registrar.
-- **Tests:** `node scripts/payaddr.test.js` and `node scripts/addr_corpus.test.mjs`
+- **Tests:** `node scripts/payaddr.test.js`, `node scripts/poll.test.js` (the payment status checks),
+  `node scripts/search.test.js` (answers to a name search that come back after the name was edited),
+  `node scripts/addr_corpus.test.mjs`, `node scripts/vendor_kat.test.mjs`
+  and `node scripts/seed_crypto.test.mjs` (the stored seed's encryption). `node scripts/commands.test.mjs` runs the
+  commands and requests the app signs through the indexer's own parser and the registrar's signed strings: it needs
+  PHP with sodium and the indexer's tree with its `vendor/` (`INDEXER=/path/to/kerrigan-name-indexer`, by default the
+  folder beside this one).
 - **Release:** `npm run set-version X.Y.Z` (version.json, package.json, package-lock.json, `?v=` in
-  app.html and security.html, the fallback in app.js), rebuild the CSS if classes changed, commit, tag
+  app.html and security.html, the version built into app.js and landing.js, and the `?v=` of app.js's
+  `js/vendor/` imports; it stops with nothing written if any of them is not found), rebuild
+  the CSS if classes changed, commit, tag
   `vX.Y.Z`, push, deploy the tagged files, then run `python3 tools/verify.py`.
 
 ## License

@@ -155,13 +155,15 @@
         "placeholder_confirm_new_pwd": "Neues Passwort bestätigen",
         "btn_change_pwd": "Passwort ändern",
         "btn_change_pwd_saving": "Speichern...",
-        "btn_change_pwd_err_length": "Das neue Passwort muss mindestens 8 Zeichen lang sein",
+        "btn_change_pwd_err_length": "Das neue Passwort muss mindestens {min} Zeichen lang sein",
         "btn_change_pwd_err_match": "Die neuen Passwörter stimmen nicht überein",
         "btn_change_pwd_err_incorrect": "Ungültiges altes Passwort",
         "reveal_seed_title": "Seed-Phrase anzeigen",
         "reveal_seed_desc": "Bestätige dein Passwort, um die 12-Wörter-Seed-Phrase deines Kontos anzuzeigen.",
         "reveal_seed_placeholder": "Passwort",
         "reveal_seed_err_incorrect": "Ungültiges Passwort",
+        "logout_confirm_title": "Abmelden?",
+        "logout_confirm_msg": "Beim Abmelden wird dein Konto von diesem Gerät entfernt. Um es wieder zu nutzen, brauchst du deine Seed-Phrase, also stelle sicher, dass du sie aufgeschrieben hast.",
         "reveal_seed_show_title": "Deine Seed-Phrase",
         "reveal_seed_warning": "Teile deine Seed-Phrase niemals mit anderen. Jeder, der Zugriff auf diese Phrase hat, hat die volle Kontrolle über deine KNS-Identitätsnamen.",
         "btn_done": "Fertig"
@@ -249,10 +251,13 @@
     },
     "errors": {
         "request_failed": "Bei der Datenabfrage ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.",
+        "storage_blocked": "Ihr Browser blockiert den Speicher dieser Website, in dem die Wallet Ihr verschlüsseltes Konto ablegt. Erlauben Sie Websitedaten (Cookies) für diese Website und laden Sie die Seite dann neu.",
         "not_logged_in": "Nicht eingeloggt",
         "withdraw_unexpected_err": "Auszahlung fehlgeschlagen. Unerwartete Antwort vom Server.",
         "fetch_balance_failed": "Guthaben konnte nicht geladen werden",
-        "sign_or_req_failed": "Signatur oder Anfrage fehlgeschlagen"
+        "sign_or_req_failed": "Signatur oder Anfrage fehlgeschlagen",
+        "clock_skew": "Die Uhr Ihres Geräts scheint um mehr als eine Minute falsch zu gehen. Bitte stellen Sie die richtige Zeit ein und versuchen Sie es erneut.",
+        "nonce_wait": "Dieser Name wurde gerade erst geändert. Bitte warten Sie einige Minuten und versuchen Sie es erneut."
     },
     "onboarding": {
         "title1": "Wie es funktioniert",
@@ -282,6 +287,7 @@
         "label_address": "Bitte geben Sie Ihre Shielded-Adresse ein, um Geld abzuheben",
         "placeholder_address": "Kerrigan-Shielded-Adresse (beginnt mit {prefix})",
         "error_address": "Ungültige Kerrigan-Shielded-Adresse (muss mit '{prefix}' beginnen)",
+        "error_pay_address": "Das ist die Zahlungsadresse des Dienstes, von der die Auszahlungen gesendet werden. Heben Sie auf eine eigene Adresse ab.",
         "btn_withdraw": "Abheben",
         "btn_withdraw_processing": "Verarbeitung...",
         "fee_label": "Auszuzahlender Betrag mit Servicegebühr ({fee}%):",
@@ -309,6 +315,7 @@
         "no_results": "Keine Transaktionen gefunden.",
         "memo_title": "Transaktionsmemo",
         "memo_content": "Memo-Inhalt",
+        "show_memo": "Anzeigen",
         "close": "Schließen",
         "copy": "Kopieren",
         "copied": "In die Zwischenablage kopiert!",

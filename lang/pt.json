@@ -155,13 +155,15 @@
         "placeholder_confirm_new_pwd": "Confirme a nova senha",
         "btn_change_pwd": "Alterar senha",
         "btn_change_pwd_saving": "Salvando...",
-        "btn_change_pwd_err_length": "A nova senha deve ter pelo menos 8 caracteres",
+        "btn_change_pwd_err_length": "A nova senha deve ter pelo menos {min} caracteres",
         "btn_change_pwd_err_match": "Novas senhas não coincidem",
         "btn_change_pwd_err_incorrect": "Senha antiga incorreta",
         "reveal_seed_title": "Revelar frase-semente",
         "reveal_seed_desc": "Confirme sua senha para revelar a frase inicial da conta de 12 palavras.",
         "reveal_seed_placeholder": "Senha",
         "reveal_seed_err_incorrect": "Senha incorreta",
+        "logout_confirm_title": "Sair?",
+        "logout_confirm_msg": "Ao sair, sua conta é removida deste dispositivo. Para usá-la novamente, você precisará da sua frase-semente, então certifique-se de tê-la anotada.",
         "reveal_seed_show_title": "Sua frase-semente",
         "reveal_seed_warning": "Nunca compartilhe sua frase-semente. Qualquer pessoa com acesso a esta frase tem controle total sobre todos os seus nomes de identidade KNS.",
         "btn_done": "Concluído"
@@ -249,10 +251,13 @@
     },
     "errors": {
         "request_failed": "Ocorreu um erro ao solicitar dados. Por favor, tente novamente mais tarde.",
+        "storage_blocked": "Seu navegador bloqueia o armazenamento deste site, onde a carteira guarda sua conta criptografada. Permita os dados do site (cookies) para este site e depois recarregue a página.",
         "not_logged_in": "Não logado",
         "withdraw_unexpected_err": "A retirada falhou. Resposta inesperada do servidor.",
         "fetch_balance_failed": "Falha ao buscar saldo",
-        "sign_or_req_failed": "Falha na assinatura ou solicitação"
+        "sign_or_req_failed": "Falha na assinatura ou solicitação",
+        "clock_skew": "O relógio do seu dispositivo parece estar errado em mais de um minuto. Por favor, acerte a hora e tente novamente.",
+        "nonce_wait": "Este nome acabou de ser alterado. Por favor, aguarde alguns minutos e tente novamente."
     },
     "onboarding": {
         "title1": "Como funciona",
@@ -282,6 +287,7 @@
         "label_address": "Por favor, insira seu endereço protegido para sacar fundos",
         "placeholder_address": "Endereço blindado Kerrigan (começa com {prefix})",
         "error_address": "Endereço blindado Kerrigan inválido (deve começar com '{prefix}')",
+        "error_pay_address": "Este é o endereço de pagamento do serviço, de onde os saques são enviados. Saque para um endereço seu.",
         "btn_withdraw": "Retirar",
         "btn_withdraw_processing": "Processando...",
         "fee_label": "A pagar com taxa de serviço ({fee}%):",
@@ -309,6 +315,7 @@
         "no_results": "Nenhuma transação encontrada correspondendo aos critérios.",
         "memo_title": "Memorando de transação",
         "memo_content": "Conteúdo do memorando",
+        "show_memo": "Mostrar",
         "close": "Fechar",
         "copy": "Copiar",
         "copied": "Copiado para a área de transferência!",

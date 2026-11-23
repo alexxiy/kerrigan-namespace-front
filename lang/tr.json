@@ -155,13 +155,15 @@
         "placeholder_confirm_new_pwd": "Yeni Şifreyi Onayla",
         "btn_change_pwd": "Şifreyi Değiştir",
         "btn_change_pwd_saving": "Kaydediliyor...",
-        "btn_change_pwd_err_length": "Yeni şifre en az 8 karakterden oluşmalıdır",
+        "btn_change_pwd_err_length": "Yeni şifre en az {min} karakterden oluşmalıdır",
         "btn_change_pwd_err_match": "Yeni şifreler eşleşmiyor",
         "btn_change_pwd_err_incorrect": "Yanlış eski şifre",
         "reveal_seed_title": "Tohum Cümlesini Ortaya Çıkar",
         "reveal_seed_desc": "12 kelimelik hesap tohum ifadesini ortaya çıkarmak için şifrenizi onaylayın.",
         "reveal_seed_placeholder": "Şifre",
         "reveal_seed_err_incorrect": "Yanlış şifre",
+        "logout_confirm_title": "Oturum kapatılsın mı?",
+        "logout_confirm_msg": "Oturumu kapatmak hesabınızı bu cihazdan kaldırır. Tekrar kullanmak için tohum ifadenize ihtiyacınız olacak; bu yüzden onu bir yere yazdığınızdan emin olun.",
         "reveal_seed_show_title": "Tohum İfadeniz",
         "reveal_seed_warning": "Tohum ifadenizi asla paylaşmayın. Bu ifadeye erişimi olan herkes, tüm KNS Identity adlarınız üzerinde tam kontrole sahiptir.",
         "btn_done": "Bitti"
@@ -249,10 +251,13 @@
     },
     "errors": {
         "request_failed": "Veri istenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+        "storage_blocked": "Tarayıcınız bu sitenin depolama alanını engelliyor; cüzdan şifreli hesabınızı orada saklar. Bu site için site verilerine (çerezlere) izin verin, ardından sayfayı yeniden yükleyin.",
         "not_logged_in": "Giriş yapılmadı",
         "withdraw_unexpected_err": "Para çekme başarısız oldu. Sunucudan beklenmeyen yanıt.",
         "fetch_balance_failed": "Bakiye getirilemedi",
-        "sign_or_req_failed": "İmza veya istek başarısız oldu"
+        "sign_or_req_failed": "İmza veya istek başarısız oldu",
+        "clock_skew": "Cihazınızın saati bir dakikadan fazla sapmış görünüyor. Lütfen doğru saati ayarlayıp tekrar deneyin.",
+        "nonce_wait": "Bu ad az önce değiştirildi. Lütfen birkaç dakika bekleyip tekrar deneyin."
     },
     "onboarding": {
         "title1": "Nasıl çalışır?",
@@ -282,6 +287,7 @@
         "label_address": "Para çekmek için lütfen Korumalı Adresinizi girin",
         "placeholder_address": "Kerrigan korumalı adresi ({prefix} ile başlar)",
         "error_address": "Geçersiz Kerrigan korumalı adresi ('{prefix}' ile başlamalıdır)",
+        "error_pay_address": "Bu, hizmetin ödeme adresidir; çekimler buradan gönderilir. Kendinize ait bir adrese çekin.",
         "btn_withdraw": "Çekilme",
         "btn_withdraw_processing": "İşleniyor...",
         "fee_label": "Hizmet bedeli (%{fee}) ile ödenecek:",
@@ -309,6 +315,7 @@
         "no_results": "Kriterlerle eşleşen işlem bulunamadı.",
         "memo_title": "İşlem Notu",
         "memo_content": "Not İçeriği",
+        "show_memo": "Göster",
         "close": "Kapat",
         "copy": "Kopyala",
         "copied": "Panoya kopyalandı!",

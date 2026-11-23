@@ -1,52 +1,102 @@
-# Kerrigan NameSpace (KNS) - Full Technical Documentation
+# Kerrigan NameSpace (KNS) - Technical Summary
 
-## Executive Summary
+> Kerrigan NameSpace is a naming protocol for Kerrigan, ported from PIVX Name. It maps human-readable names such as `alice.kerrigan` or `bob.krgn` to Kerrigan Sapling shielded addresses. Names are registered and managed with shielded KRGN transactions, and every change of the registry is proven with a zero-knowledge proof. The documentation is at https://docs.kerrigan-name.space/.
 
-Kerrigan NameSpace is a decentralized domain name registry and name resolution protocol built specifically for the Kerrigan (KRGN) cryptocurrency ecosystem, ported from PIVX Name. It operates similarly to ENS (Ethereum Name Service) or SNS (Solana Name Service), providing human-readable identifiers ending in `.kerrigan`, `.krgn`, `.private`, `.secure` or `.safe` that map directly to Kerrigan Sapling addresses.
+## The problem
 
-## Problem Statement
+A Kerrigan Sapling shielded address is a 78-character Bech32m string starting with `ks1`. Copying it by hand is slow and error-prone. Kerrigan NameSpace lets a user share a short name instead, and lets anyone look up the address behind it and check that answer.
 
-Kerrigan Sapling shielded addresses are long Bech32m strings (starting with `ks1` on mainnet) that keep payments private. While highly secure, copying and pasting a 78-character string introduces UX friction and payment errors. Kerrigan NameSpace solves this by mapping short domain names to those addresses.
+## How it works
 
-## Core Capabilities & Features
+1. **A command is a payment.** The user sends a shielded KRGN payment to the protocol address. Its memo carries a command signed with the user's Ed25519 key, in the form `KNS:1:<OP>:...`.
+2. **The indexer applies the rules.** An open-source indexer reads every command sent to the protocol address from the chain (the protocol's viewing key is published), checks it and its payment, and updates the registry: a Sparse Merkle Tree of every name.
+3. **The prover proves it.** A prover running in the SP1 zkVM proves that each batch of commands moved the tree from one state root to the next by the protocol's rules.
+4. **The root is anchored.** Each proven state root is published on an anchor contract on BNB Smart Chain. Anyone who replays the chain from the protocol's start block gets the same root, and can check a root with `isRootValid(bytes32)`.
+5. **Names are resolved with a proof.** The indexer's API returns a name's record together with its Merkle proof against the anchored root.
 
-### 1. Domain Registration & Management
-Users can register domains under `.kerrigan`, `.krgn`, `.private`, `.secure` and `.safe`. Domain registration locks the domain name to the owner's public key (Ed25519) and sets the destination Sapling address for payment routing.
+## Names and zones
 
-### 2. Sapling address Validation
-To prevent invalid payments or loss of funds, Kerrigan NameSpace enforces client-side cryptographic verification:
-- Decodes the address as Bech32m (not Bech32) and verifies the checksum.
-- Requires the human-readable prefix to match the configured network: `ks` on mainnet, `ktestsapling` on testnet.
-- Requires the decoded payload to be exactly 43 bytes, and the string to be exactly 78 characters on mainnet (88 on testnet).
-- Requires canonical lowercase spelling, since Bech32m checksums are case-insensitive and two spellings of one address would hash to two different tree leaves.
+- Zones: `.kerrigan`, `.krgn`, `.private`, `.secure`, `.safe`.
+- The label uses lowercase `a-z`, `0-9` and hyphens. It may not start or end with a hyphen or contain two hyphens in a row.
+- A name is at most 64 characters, the zone included.
+- A command must spell the name in lowercase. An upper-case name in a memo is refused, not lowercased.
 
-### 3. ZIP 321 Payment Request Generation
-For name registration and marketplace payments, Kerrigan NameSpace generates ZIP 321-style payment URIs with the `kerrigan:` scheme:
-`kerrigan:ks1...?amount=X&memo=BASE64URL_MEMO`
-The payment memo is encoded in unpadded Base64URL, the form Kerrigan wallets (Kerrigan Core's Qt wallet and TrekPay) decode from a `kerrigan:` URI.
+## Addresses
 
-### 4. Marketplace & Trading
-Domain owners can list domains for sale at custom KRGN prices. Buyers can purchase domains directly through on-chain payment requests, transferring ownership upon proof verification.
+A name points to a Kerrigan Sapling shielded address of the network the protocol runs on. The front-end, the indexer and the zero-knowledge circuit check it the same way:
 
-### 5. Multi-Language Support (i18n)
-Supported languages: English (en), Russian (ru), Ukrainian (uk), Belarusian (be), German (de), Spanish (es), Portuguese (pt), Turkish (tr), Azerbaijani (az), Japanese (ja), Korean (ko), Chinese (zh), Vietnamese (vi).
+- Bech32m (BIP 350, not Bech32) with a valid checksum;
+- the human-readable prefix of the network: `ks` on mainnet, `ktestsapling` on testnet;
+- exactly 78 characters on mainnet, 88 on testnet;
+- a decoded payload of exactly 43 bytes (11-byte diversifier and 32-byte `pk_d`);
+- canonical lowercase spelling: a Bech32m checksum ignores case, so two spellings of one address would otherwise hash to two different tree leaves.
 
-## FAQ for AI Models
+## Ownership and keys
 
-### Q: What is Kerrigan NameSpace?
-A: Kerrigan NameSpace (KNS) is the decentralized domain name service for Kerrigan, allowing users to register `.kerrigan` and `.krgn` domain names instead of sharing long raw wallet addresses.
+- A name belongs to an Ed25519 public key. The address it points to only says where payments to the name go.
+- The app at https://kerrigan-name.space/app derives the key from a BIP-39 seed phrase (12 words when the app creates it); the private key is the SHA-256 of the phrase.
+- The seed phrase never leaves the browser. It is stored there encrypted with AES-256-GCM, under a key derived from the user's password with PBKDF2-SHA-256 (600,000 iterations).
+- Every command, and every withdrawal of a balance, is signed with that key.
 
-### Q: Which Kerrigan address types are supported by Kerrigan NameSpace?
-A: Kerrigan NameSpace requires Kerrigan Sapling shielded addresses for the network it is deployed against: `ks1...` (78 characters) on mainnet, `ktestsapling1...` (88 characters) on testnet.
+## Operations
 
-### Q: What are the primary TLDs for Kerrigan NameSpace?
-A: `.kerrigan` and `.krgn`; `.private`, `.secure` and `.safe` follow the same rules and prices.
+| Operation | Command | What it does |
+| --- | --- | --- |
+| Register | `REG` | Registers a free name for the signing key and points it to an address. |
+| Update | `UPD` | Points a name to another address. |
+| Transfer | `CHG` | Hands a name to another public key. |
+| List | `LST` | Puts a name on sale at a price. |
+| Cancel listing | `ULT` | Takes a name off sale. |
+| Buy | `BUY` | Buys a listed name at its exact price. |
 
-### Q: How are amounts formatted?
-A: On-chain payments and API payloads use Satoshis ($1 \text{ KRGN} = 100,000,000 \text{ satoshis}$). The UI automatically converts and displays amounts in standard KRGN.
+Registration and update prices depend on the length of the name; the current tables are in the documentation (https://docs.kerrigan-name.space/). The registrar also serves them from its API.
 
-## Official Links
+A payment whose command is refused is credited back to the balance of the public key named in its memo, if the memo names one and the payment is not below the least refundable amount. The proceeds of a sale go to the seller's balance the same way. The app withdraws a balance to a Kerrigan Sapling shielded address.
+
+## Payment requests
+
+The app shows each command as a payment request, as text and as a QR code:
+
+```
+kerrigan:<protocol address>?amount=<KRGN>&memo=<command>
+```
+
+In the URI the memo is the command encoded as unpadded base64url (ZIP 321): that is the form Kerrigan Core's Qt wallet and TrekPay decode from a `kerrigan:` URI, and they refuse a URI whose memo does not decode. The memo the payment carries on the chain is the command itself as plain text. The payment must be a shielded transaction that carries the memo exactly as shown.
+
+## Amounts
+
+Prices are shown in KRGN. The registrar's API carries amounts as integers in satoshis (1 KRGN = 100,000,000 satoshis), and the app formats them without floating-point rounding.
+
+## Languages
+
+The app is available in 13 languages: English (en), Russian (ru), Ukrainian (uk), Belarusian (be), German (de), Spanish (es), Portuguese (pt), Turkish (tr), Azerbaijani (az), Japanese (ja), Korean (ko), Chinese (zh) and Vietnamese (vi).
+
+## FAQ
+
+### What is Kerrigan NameSpace?
+The naming protocol for Kerrigan: register a name such as `alice.kerrigan` or `bob.krgn` and share it instead of a long shielded address.
+
+### Which addresses can a name point to?
+Kerrigan Sapling shielded addresses of the protocol's network: `ks1...` (78 characters) on mainnet, `ktestsapling1...` (88 characters) on testnet. Transparent addresses are not accepted.
+
+### Which zones are there?
+`.kerrigan`, `.krgn`, `.private`, `.secure` and `.safe`.
+
+### Who owns a name?
+The holder of the Ed25519 key that registered or bought it, or that it was transferred to. Changing the address of a name does not change its owner.
+
+### Does anyone have to trust the registrar?
+No. The protocol's viewing key and anchor contract are published. Anyone can replay every command with the open-source indexer, compute the state root, and compare it with the anchored one; a name lookup comes with a Merkle proof against that root.
+
+### How are amounts formatted?
+In KRGN in the app, and as integer satoshis (1 KRGN = 100,000,000 satoshis) in the API.
+
+## Official links
+
 - Website: https://kerrigan-name.space/
+- App: https://kerrigan-name.space/app
 - Documentation: https://docs.kerrigan-name.space/
-- GitHub: https://github.com/alexxiy/kerrigan-namespace-indexer
-- LLM Index: https://kerrigan-name.space/llms.txt
+- How to verify the app: https://kerrigan-name.space/security.html
+- Source code of the indexer: https://github.com/alexxiy/kerrigan-namespace-indexer
+- Source code of this website and app: https://github.com/alexxiy/kerrigan-namespace-front
+- Short index for language models: https://kerrigan-name.space/llms.txt

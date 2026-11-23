@@ -155,13 +155,15 @@
         "placeholder_confirm_new_pwd": "Confirm New Password",
         "btn_change_pwd": "Change Password",
         "btn_change_pwd_saving": "Saving...",
-        "btn_change_pwd_err_length": "New password must be at least 8 characters",
+        "btn_change_pwd_err_length": "New password must be at least {min} characters",
         "btn_change_pwd_err_match": "New passwords do not match",
         "btn_change_pwd_err_incorrect": "Incorrect old password",
         "reveal_seed_title": "Reveal Seed Phrase",
         "reveal_seed_desc": "Confirm your password to reveal the 12-word account seed phrase.",
         "reveal_seed_placeholder": "Password",
         "reveal_seed_err_incorrect": "Incorrect password",
+        "logout_confirm_title": "Log out?",
+        "logout_confirm_msg": "Logging out removes your account from this device. To use it again you will need your seed phrase, so make sure it is written down.",
         "reveal_seed_show_title": "Your Seed Phrase",
         "reveal_seed_warning": "Never share your seed phrase. Anyone with access to this phrase has full control over all your KNS Identity names.",
         "btn_done": "Done"
@@ -249,10 +251,13 @@
     },
     "errors": {
         "request_failed": "An error occurred while requesting data. Please try again later.",
+        "storage_blocked": "Your browser blocks this site's storage, where the wallet keeps your encrypted account. Allow site data (cookies) for this site, then reload the page.",
         "not_logged_in": "Not logged in",
         "withdraw_unexpected_err": "Withdrawal failed. Unexpected response from server.",
         "fetch_balance_failed": "Failed to fetch balance",
-        "sign_or_req_failed": "Signature or request failed"
+        "sign_or_req_failed": "Signature or request failed",
+        "clock_skew": "Your device's clock seems to be off by more than a minute. Set it to the correct time and try again.",
+        "nonce_wait": "This name was changed moments ago. Wait a few minutes and try again."
     },
     "onboarding": {
         "title1": "How it works",
@@ -282,6 +287,7 @@
         "label_address": "Please, enter your Shielded Address to withdraw funds",
         "placeholder_address": "Kerrigan shielded address (starts with {prefix})",
         "error_address": "Invalid Kerrigan shielded address (must start with '{prefix}')",
+        "error_pay_address": "This is the service's payment address, where payouts are sent from. Withdraw to an address of your own.",
         "btn_withdraw": "Withdraw",
         "btn_withdraw_processing": "Processing...",
         "fee_label": "To be paid with service fee ({fee}%):",
@@ -309,6 +315,7 @@
         "no_results": "No transactions found matching criteria.",
         "memo_title": "Transaction Memo",
         "memo_content": "Memo Content",
+        "show_memo": "Show",
         "close": "Close",
         "copy": "Copy",
         "copied": "Copied to clipboard!",

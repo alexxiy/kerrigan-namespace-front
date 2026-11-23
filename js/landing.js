@@ -23,7 +23,10 @@
    * Absolute paths, not './': the app is served at /app with no trailing slash, and a
    * relative fetch would resolve differently the moment that changes. */
   var SUPPORTED = ['en', 'de', 'es', 'pt', 'tr', 'az', 'ru', 'be', 'uk', 'vi', 'zh', 'ko', 'ja'];
-  var VERSION = '0';
+  /* The version of this code, set by scripts/set-version.mjs: the ?v= of the catalogues, which
+   * are cached for good. This file is served uncached, so it is always the one deployed. Not
+   * read from version.json at start: that held every catalogue back by a round trip. */
+  var VERSION = '1.0.9';
   var strings = {};
   var fallback = {};
   var redrawHooks = [];
@@ -86,11 +89,29 @@
       .then(function (both) { return Object.assign({}, both[0], both[1]); });
   }
 
-  function setLanguage(lang) {
-    localStorage.setItem('kerrigan_lang', lang);
+  /* Counts the languages asked for: one picked while another was still on its way wins, and
+   * the earlier one, come later, is dropped. */
+  var languageRequest = 0;
+
+  /* The language picked, kept in localStorage under the key the app reads too. With site data
+   * blocked (a browser setting), every use of localStorage throws: the language is then not
+   * kept, and the page is translated all the same. */
+  function storedLanguage() {
+    try { return localStorage.getItem('kerrigan_lang'); } catch (e) { return null; }
+  }
+  function storeLanguage(lang) {
+    try { localStorage.setItem('kerrigan_lang', lang); } catch (e) { /* not kept */ }
+  }
+
+  /* `data`: the language's catalogue, when the caller has it already (initLocalization()
+   * fetches the first one beside English). */
+  function setLanguage(lang, data) {
+    storeLanguage(lang);
     document.documentElement.setAttribute('lang', lang);
-    return fetchCatalogue(lang).then(function (data) {
-      strings = data;
+    var request = ++languageRequest;
+    return (data ? Promise.resolve(data) : fetchCatalogue(lang)).then(function (catalogue) {
+      if (request !== languageRequest) { return; }
+      strings = catalogue;
       applyTranslations();
       var sel = document.getElementById('langSelect');
       if (sel) { sel.value = lang; }
@@ -98,7 +119,7 @@
   }
 
   function detectLanguage() {
-    var stored = localStorage.getItem('kerrigan_lang');
+    var stored = storedLanguage();
     if (stored && SUPPORTED.indexOf(stored) !== -1) { return stored; }
     // navigator.languages is the ordered preference list; navigator.language is only the
     // top one. Walking the list means a browser set to [ja, en] still gets Japanese even
@@ -113,14 +134,14 @@
   }
 
   function initLocalization() {
-    return fetch('/version.json?t=' + Date.now(), { cache: 'no-store' })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (d) { if (d && d.version) { VERSION = d.version; } })
-      .catch(function () { /* keep the default; a missing version only affects cache-busting */ })
-      .then(function () { return fetchCatalogue('en'); })
-      .then(function (en) {
-        fallback = en;
-        return setLanguage(detectLanguage());
+    var lang = detectLanguage();
+    /* English, the fallback of every key, and the visitor's language at once: one round trip
+     * before the page is translated, where it took three one after the other (version.json,
+     * then English, then the visitor's language). */
+    return Promise.all([fetchCatalogue('en'), lang === 'en' ? null : fetchCatalogue(lang)])
+      .then(function (both) {
+        fallback = both[0];
+        return setLanguage(lang, both[1] || both[0]);
       })
       .then(function () {
         var sel = document.getElementById('langSelect');

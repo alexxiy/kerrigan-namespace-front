@@ -155,13 +155,15 @@
         "placeholder_confirm_new_pwd": "Confirmar nueva contraseña",
         "btn_change_pwd": "Cambiar contraseña",
         "btn_change_pwd_saving": "Guardando...",
-        "btn_change_pwd_err_length": "La nueva contraseña debe tener al menos 8 caracteres",
+        "btn_change_pwd_err_length": "La nueva contraseña debe tener al menos {min} caracteres",
         "btn_change_pwd_err_match": "Las nuevas contraseñas no coinciden",
         "btn_change_pwd_err_incorrect": "Contraseña actual incorrecta",
         "reveal_seed_title": "Revelar frase semilla",
         "reveal_seed_desc": "Confirma tu contraseña para revelar la frase semilla de 12 palabras de tu cuenta.",
         "reveal_seed_placeholder": "Contraseña",
         "reveal_seed_err_incorrect": "Contraseña incorrecta",
+        "logout_confirm_title": "¿Cerrar sesión?",
+        "logout_confirm_msg": "Al cerrar sesión, tu cuenta se elimina de este dispositivo. Para volver a usarla necesitarás tu frase semilla, así que asegúrate de tenerla anotada.",
         "reveal_seed_show_title": "Tu frase semilla",
         "reveal_seed_warning": "Nunca compartas tu frase semilla. Cualquier persona con acceso a esta frase tiene el control total sobre todos tus nombres de identidad KNS.",
         "btn_done": "Hecho"
@@ -249,10 +251,13 @@
     },
     "errors": {
         "request_failed": "Ocurrió un error al solicitar los datos. Por favor, inténtelo de nuevo más tarde.",
+        "storage_blocked": "Su navegador bloquea el almacenamiento de este sitio, donde la billetera guarda su cuenta cifrada. Permita los datos de sitios (cookies) para este sitio y luego vuelva a cargar la página.",
         "not_logged_in": "No ha iniciado sesión",
         "withdraw_unexpected_err": "Error de retiro. Respuesta inesperada del servidor.",
         "fetch_balance_failed": "Error al obtener el saldo",
-        "sign_or_req_failed": "Firma o solicitud fallida"
+        "sign_or_req_failed": "Firma o solicitud fallida",
+        "clock_skew": "El reloj de su dispositivo parece desviarse más de un minuto. Por favor, ajuste la hora correcta e inténtelo de nuevo.",
+        "nonce_wait": "Este nombre se acaba de modificar. Por favor, espere unos minutos e inténtelo de nuevo."
     },
     "onboarding": {
         "title1": "Cómo funciona",
@@ -282,6 +287,7 @@
         "label_address": "Por favor, introduce tu dirección Shielded para retirar fondos",
         "placeholder_address": "Dirección blindada de Kerrigan (empieza por {prefix})",
         "error_address": "Dirección blindada de Kerrigan no válida (debe empezar por '{prefix}')",
+        "error_pay_address": "Esta es la dirección de pago del servicio, desde la que se envían los retiros. Retira a una dirección propia.",
         "btn_withdraw": "Retirar",
         "btn_withdraw_processing": "Procesando...",
         "fee_label": "A pagar con comisión de servicio ({fee}%):",
@@ -309,6 +315,7 @@
         "no_results": "No se encontraron transacciones.",
         "memo_title": "Memo de la transacción",
         "memo_content": "Contenido del memo",
+        "show_memo": "Mostrar",
         "close": "Cerrar",
         "copy": "Copiar",
         "copied": "¡Copiado al portapapeles!",

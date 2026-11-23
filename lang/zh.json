@@ -155,13 +155,15 @@
         "placeholder_confirm_new_pwd": "确认新密码",
         "btn_change_pwd": "更改密码",
         "btn_change_pwd_saving": "正在保存...",
-        "btn_change_pwd_err_length": "新密码必须至少 8 个字符",
+        "btn_change_pwd_err_length": "新密码必须至少 {min} 个字符",
         "btn_change_pwd_err_match": "新密码不匹配",
         "btn_change_pwd_err_incorrect": "旧密码不正确",
         "reveal_seed_title": "显示种子短语",
         "reveal_seed_desc": "确认您的密码以显示 12 个单词的帐户种子短语。",
         "reveal_seed_placeholder": "密码",
         "reveal_seed_err_incorrect": "密码错误",
+        "logout_confirm_title": "要退出吗？",
+        "logout_confirm_msg": "退出会从此设备上删除您的帐户。要再次使用它，您需要助记词，请确保您已将其记下。",
         "reveal_seed_show_title": "你的种子短语",
         "reveal_seed_warning": "切勿分享您的助记词。任何有权访问此短语的人都可以完全控制您的所有 KNS Identity 名称。",
         "btn_done": "完成"
@@ -249,10 +251,13 @@
     },
     "errors": {
         "request_failed": "请求数据时发生错误。请稍后重试。",
+        "storage_blocked": "你的浏览器阻止了本站的存储，而钱包会把你的加密账户保存在其中。请允许本站的网站数据（Cookie），然后重新加载页面。",
         "not_logged_in": "未登录",
         "withdraw_unexpected_err": "提现失败。来自服务器的意外响应。",
         "fetch_balance_failed": "获取余额失败",
-        "sign_or_req_failed": "签名或请求失败"
+        "sign_or_req_failed": "签名或请求失败",
+        "clock_skew": "你的设备时钟似乎偏差超过一分钟。请校准时间后重试。",
+        "nonce_wait": "该名称刚刚被更改。请等待几分钟后重试。"
     },
     "onboarding": {
         "title1": "它是如何运作的",
@@ -282,6 +287,7 @@
         "label_address": "请输入您的屏蔽地址以提取资金",
         "placeholder_address": "Kerrigan 隐私地址（以 {prefix} 开头）",
         "error_address": "无效的 Kerrigan 隐私地址（必须以 '{prefix}' 开头）",
+        "error_pay_address": "这是本服务的付款地址，提款从这里发出。请提取到您自己的地址。",
         "btn_withdraw": "撤回",
         "btn_withdraw_processing": "处理中...",
         "fee_label": "需支付服务费（{fee}%）：",
@@ -309,6 +315,7 @@
         "no_results": "未找到符合条件的交易。",
         "memo_title": "交易备忘录",
         "memo_content": "备忘录内容",
+        "show_memo": "查看",
         "close": "关闭",
         "copy": "复制",
         "copied": "已复制到剪贴板！",

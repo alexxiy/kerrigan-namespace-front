@@ -24,22 +24,24 @@ export function installMock({ apiBase, getZones, getCachedPublicKey }) {
         if (url.includes('/v1.0/getPaymentAddress')) {
             return new Response(JSON.stringify({
                 response: {
-                    address: "ks1mockpaymentaddress",
+                    address: "ks14uyfh9m64njntdtxsnt662utf2yxtvtnyzyh2v8d0nna7cngzd6eeht3x80689d973v0yvc2fkz",
                     network: "mainnet",
                     payment_confirmations: 5,
                     refund_confirmations: 10,
                     chainlock_confirmations: 2,
                     zones: getZones(),
-                    max_count: 100
+                    max_count: 100,
+                    server_time: Math.floor(Date.now() / 1000)
                 }
             }), { status: 200, headers: { 'Content-Type': 'application/json' } });
         }
 
         // The update price check serves, by label length as the mock prices table below has it,
-        // and a free name already paid for by someone else: one starting with "pending"
+        // a taken name's nonce (its last command an hour ago), and a free name already paid for
+        // by someone else: one starting with "pending"
         const mockCheckExtras = (domain, isTaken) => ({
             update_price: (8 - Math.min(domain.indexOf('.'), 7)) * 100000000,
-            ...(isTaken ? {} : { reg_pending: domain.startsWith('pending') })
+            ...(isTaken ? { nonce: Math.floor(Date.now() / 1000) - 3600 } : { reg_pending: domain.startsWith('pending') })
         });
 
         // 1. Check Domain (GET /v1.0/check/{domain})

@@ -17,6 +17,19 @@ The files in `js/vendor/` built by esm.sh (https://esm.sh) are browser bundles o
 packages named in their first line; the bundling dropped the packages' own license headers,
 which are reproduced below.
 
+The vendored files' SHA-256 checksums, for `sha256sum -c` from the repository root. A changed file
+must come with a new line here; `node scripts/vendor_kat.test.mjs` checks both, and runs the
+crypto bundles against known answers (RFC 8032, FIPS 180-2, BIP-39):
+
+```text
+959314e4e1cda52aff245f7af0f8a8c2d0e575708e656aacadfccfd1ac51c178  js/vendor/bech32.js
+3f74e0112cc860e4310b7e1d94b867156ef1cb0c596872c09a67a93dd5ecf813  js/vendor/bip39.js
+168d9178eae6e02a457914f7804880df4de43bc8223a6c04926eaecf7fba0c18  js/vendor/easy.qrcode.min.js
+d77aa9a19214a6c02cca4bb0974a432c5c2b0159457690f814f7d580104806b5  js/vendor/ed25519.js
+a2c14e09b8882fbde860cf4bf09cb92b94e4e810ff2d434b2702881e31988888  js/vendor/hashes.js
+5eeeeb408e799060c2c0848c4be39e91a75bc7342c77565b8e9dbcafb6815cb7  js/vendor/wordlist.js
+```
+
 ## MIT License
 
 Applies to the projects marked MIT above, with these copyright notices:

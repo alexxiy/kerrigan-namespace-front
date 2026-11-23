@@ -26,10 +26,13 @@ import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# In the repository but not part of the site, so never fetched.
+# In the repository but not part of the site, so never fetched. js/dev-mock.js is the test
+# stand-in for the APIs (app.js loads it only on a local copy opened with ?mock=1) and
+# css/tailwind.input.css the build input of css/tailwind.css: the site answers 404 for both.
 NOT_SERVED_FILES = {
     '.gitignore', 'README.md', 'LICENSE', 'SECURITY.md', 'THIRD_PARTY_NOTICES.md',
     'package.json', 'package-lock.json', 'tailwind.config.js', 'images/README.md',
+    'js/dev-mock.js', 'css/tailwind.input.css',
 }
 NOT_SERVED_DIRS = ('.github/', 'tools/', 'scripts/', 'node_modules/')
 

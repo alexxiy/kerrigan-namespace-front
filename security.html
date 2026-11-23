@@ -24,7 +24,7 @@
 <meta name="twitter:image" content="https://kerrigan-name.space/images/og-image.png">
 
 <link rel="stylesheet" href="/css/landing.css">
-<link rel="stylesheet" href="/css/security.css?v=1.0.8">
+<link rel="stylesheet" href="/css/security.css?v=1.0.9">
 </head>
 <body>
 
@@ -98,7 +98,7 @@
       <div class="step glass">
         <span class="step-n">03</span>
         <h3 data-i18n="sec.d3_title">Private key</h3>
-        <p data-i18n="sec.d3_body">Kept in memory only while the app is unlocked, to sign your requests. Only the signatures are sent.</p>
+        <p data-i18n="sec.d3_body">Kept in memory only while the app is unlocked, to sign your requests. Only the signatures are sent. After 15 minutes without use, the app locks itself.</p>
       </div>
       <div class="step glass">
         <span class="step-n">04</span>
@@ -150,7 +150,7 @@
   <div class="wrap wrap-narrow">
     <p class="eyebrow" data-i18n="sec.csp_eyebrow">Browser rules</p>
     <h2 data-i18n="sec.csp_title">Enforced by your browser</h2>
-    <p class="prose" data-i18n-html="sec.csp_body">Every page carries a Content Security Policy. The app’s policy allows scripts only from kerrigan-name.space (plus one small inline script, pinned by its hash) and connections only to kerrigan-name.space and its subdomains, <code>*.kerrigan-name.space</code>, which in practice means registrar.kerrigan-name.space. If any code tried to send data elsewhere, the browser would block it. The policy also names <code>*.kerrigan-name.loc</code>: that name exists only on the developer’s test machine and can’t be reached from the internet.</p>
+    <p class="prose" data-i18n-html="sec.csp_body">Every page carries a Content Security Policy. The app’s policy allows scripts only from kerrigan-name.space (plus one small inline script, pinned by its hash) and connections only to kerrigan-name.space and its subdomains, <code>*.kerrigan-name.space</code>, which in practice means registrar.kerrigan-name.space. If any code tried to send data elsewhere, the browser would block it.</p>
     <p class="prose" data-i18n-html="sec.csp_check">To see it yourself, open the app, press <b>F12</b>, choose the <b>Network</b> tab and use the app: every request goes to one of the two hosts above.</p>
     <p class="prose" data-i18n="sec.csp_limit">The policy arrives with the page, so a changed page could bring a looser one. That is what the next two sections are for.</p>
   </div>
@@ -283,6 +283,6 @@ sha256sum js/app.js</code></pre>
   </div>
 </footer>
 
-<script src="/js/landing.js?v=1.0.8"></script>
+<script src="/js/landing.js?v=1.0.9"></script>
 </body>
 </html>

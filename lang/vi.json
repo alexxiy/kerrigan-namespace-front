@@ -155,13 +155,15 @@
         "placeholder_confirm_new_pwd": "Xác nhận mật khẩu mới",
         "btn_change_pwd": "Thay đổi mật khẩu",
         "btn_change_pwd_saving": "Đang lưu...",
-        "btn_change_pwd_err_length": "Mật khẩu mới phải có ít nhất 8 ký tự",
+        "btn_change_pwd_err_length": "Mật khẩu mới phải có ít nhất {min} ký tự",
         "btn_change_pwd_err_match": "Mật khẩu mới không khớp",
         "btn_change_pwd_err_incorrect": "Mật khẩu cũ không đúng",
         "reveal_seed_title": "Tiết lộ cụm từ hạt giống",
         "reveal_seed_desc": "Xác nhận mật khẩu của bạn để hiển thị cụm từ hạt giống tài khoản 12 từ.",
         "reveal_seed_placeholder": "Mật khẩu",
         "reveal_seed_err_incorrect": "Mật khẩu không chính xác",
+        "logout_confirm_title": "Đăng xuất?",
+        "logout_confirm_msg": "Đăng xuất sẽ xóa tài khoản của bạn khỏi thiết bị này. Để dùng lại, bạn sẽ cần cụm từ hạt giống, vì vậy hãy chắc chắn rằng bạn đã ghi lại nó.",
         "reveal_seed_show_title": "Cụm từ hạt giống của bạn",
         "reveal_seed_warning": "Không bao giờ chia sẻ cụm từ hạt giống của bạn. Bất kỳ ai có quyền truy cập vào cụm từ này đều có toàn quyền kiểm soát tất cả các tên Nhận dạng KNS của bạn.",
         "btn_done": "Xong"
@@ -249,10 +251,13 @@
     },
     "errors": {
         "request_failed": "Đã xảy ra lỗi khi yêu cầu dữ liệu. Vui lòng thử lại sau.",
+        "storage_blocked": "Trình duyệt của bạn đang chặn bộ nhớ của trang này, nơi ví lưu tài khoản đã mã hóa của bạn. Hãy cho phép dữ liệu trang web (cookie) cho trang này, rồi tải lại trang.",
         "not_logged_in": "Chưa đăng nhập",
         "withdraw_unexpected_err": "Rút tiền không thành công. Phản hồi không mong đợi từ máy chủ.",
         "fetch_balance_failed": "Không thể lấy số dư",
-        "sign_or_req_failed": "Chữ ký hoặc yêu cầu không thành công"
+        "sign_or_req_failed": "Chữ ký hoặc yêu cầu không thành công",
+        "clock_skew": "Đồng hồ trên thiết bị của bạn có vẻ lệch hơn một phút. Vui lòng chỉnh lại giờ cho đúng rồi thử lại.",
+        "nonce_wait": "Tên này vừa được thay đổi. Vui lòng đợi vài phút rồi thử lại."
     },
     "onboarding": {
         "title1": "Nó hoạt động như thế nào",
@@ -282,6 +287,7 @@
         "label_address": "Vui lòng nhập Địa chỉ được bảo vệ của bạn để rút tiền",
         "placeholder_address": "Địa chỉ được bảo vệ Kerrigan (bắt đầu bằng {prefix})",
         "error_address": "Địa chỉ được bảo vệ Kerrigan không hợp lệ (phải bắt đầu bằng '{prefix}')",
+        "error_pay_address": "Đây là địa chỉ thanh toán của dịch vụ, nơi các khoản rút tiền được gửi đi. Hãy rút về một địa chỉ của riêng bạn.",
         "btn_withdraw": "Rút tiền",
         "btn_withdraw_processing": "Đang xử lý...",
         "fee_label": "Phải trả phí dịch vụ ({fee}%):",
@@ -309,6 +315,7 @@
         "no_results": "Không tìm thấy giao dịch nào phù hợp với tiêu chí.",
         "memo_title": "Bản ghi nhớ giao dịch",
         "memo_content": "Nội dung ghi nhớ",
+        "show_memo": "Xem",
         "close": "Đóng",
         "copy": "Sao chép",
         "copied": "Đã sao chép vào bảng nhớ tạm!",

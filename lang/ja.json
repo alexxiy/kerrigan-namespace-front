@@ -155,13 +155,15 @@
         "placeholder_confirm_new_pwd": "新しいパスワードの確認",
         "btn_change_pwd": "パスワードの変更",
         "btn_change_pwd_saving": "保存中...",
-        "btn_change_pwd_err_length": "新しいパスワードは 8 文字以上である必要があります",
+        "btn_change_pwd_err_length": "新しいパスワードは {min} 文字以上である必要があります",
         "btn_change_pwd_err_match": "新しいパスワードが一致しません",
         "btn_change_pwd_err_incorrect": "古いパスワードが間違っています",
         "reveal_seed_title": "シードフレーズを明らかにする",
         "reveal_seed_desc": "パスワードを確認して、12 単語のアカウント シード フレーズを表示します。",
         "reveal_seed_placeholder": "パスワード",
         "reveal_seed_err_incorrect": "パスワードが間違っています",
+        "logout_confirm_title": "ログアウトしますか？",
+        "logout_confirm_msg": "ログアウトすると、このデバイスからアカウントが削除されます。再び使うにはシードフレーズが必要です。書き留めてあることを確認してください。",
         "reveal_seed_show_title": "あなたのシードフレーズ",
         "reveal_seed_warning": "シードフレーズを決して共有しないでください。このフレーズにアクセスできる人は誰でも、あなたのすべての KNS ID 名を完全に制御できます。",
         "btn_done": "完了"
@@ -249,10 +251,13 @@
     },
     "errors": {
         "request_failed": "データのリクエスト中にエラーが発生しました。後でもう一度試してください。",
+        "storage_blocked": "ブラウザーがこのサイトのストレージをブロックしています。ウォレットは暗号化されたアカウントをそこに保存します。このサイトのサイトデータ（Cookie）を許可してから、ページを再読み込みしてください。",
         "not_logged_in": "ログインしていません",
         "withdraw_unexpected_err": "引き出しに失敗しました。サーバーからの予期しない応答。",
         "fetch_balance_failed": "残高の取得に失敗しました",
-        "sign_or_req_failed": "署名またはリクエストが失敗しました"
+        "sign_or_req_failed": "署名またはリクエストが失敗しました",
+        "clock_skew": "端末の時計が 1 分以上ずれているようです。正しい時刻に合わせてから、もう一度試してください。",
+        "nonce_wait": "この名前はたった今変更されました。数分待ってから、もう一度試してください。"
     },
     "onboarding": {
         "title1": "仕組み",
@@ -282,6 +287,7 @@
         "label_address": "資金を引き出すには、シールドされたアドレスを入力してください",
         "placeholder_address": "Kerrigan シールドアドレス（{prefix} で始まります）",
         "error_address": "無効な Kerrigan シールドアドレスです（'{prefix}' で始まる必要があります）",
+        "error_pay_address": "これはサービスの支払いアドレスで、出金はここから送金されます。ご自身のアドレスに出金してください。",
         "btn_withdraw": "撤退",
         "btn_withdraw_processing": "処理中...",
         "fee_label": "サービス料 ({fee}%) と一緒にお支払いください:",
@@ -309,6 +315,7 @@
         "no_results": "条件に一致するトランザクションは見つかりませんでした。",
         "memo_title": "取引メモ",
         "memo_content": "メモの内容",
+        "show_memo": "表示",
         "close": "閉じる",
         "copy": "コピー",
         "copied": "クリップボードにコピーされました!",

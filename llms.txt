@@ -1,38 +1,30 @@
 # Kerrigan NameSpace (KNS)
 
-> Decentralized Domain Name Service for the Kerrigan (KRGN) Cryptocurrency Ecosystem (.kerrigan and .krgn TLDs).
+> A naming protocol for Kerrigan: human-readable names such as `alice.kerrigan` or `bob.krgn` that point to Kerrigan Sapling shielded addresses, registered with one shielded KRGN transaction and proven correct with zero-knowledge proofs.
 
-Kerrigan NameSpace (KNS) allows Kerrigan users to map human-readable domain names (such as `alice.kerrigan` or `bob.krgn`) to Kerrigan Sapling addresses, enabling simple, private, and cryptographic name resolution across Kerrigan wallets and decentralized applications. It is a port of PIVX Name to the Kerrigan chain.
+A name is registered by sending a shielded KRGN payment to the protocol address with a command in its memo. An open-source indexer reads those commands from the chain, applies the protocol's rules and keeps the registry in a Sparse Merkle Tree; a prover (SP1 zkVM) proves every batch of changes, and the resulting state root is published on an anchor contract, so anyone can resolve a name and check the answer against it. It is a port of PIVX Name to the Kerrigan chain.
 
-## Key Features
+## Key facts
 
-- **Human-Readable Kerrigan Handles**: Replace long Kerrigan Sapling addresses with short `.kerrigan` or `.krgn` domain names.
-- **Sapling Integration**: Validates and binds domain names to Kerrigan Sapling shielded addresses (`ks1...` on mainnet, `ktestsapling1...` on testnet).
-- **ZK-Prover State Roots**: Built with zero-knowledge proof verification (SP1 zkVM guest prover) to batch-validate domain ownership and state root transitions on Kerrigan.
-- **Decentralized Marketplace**: Buy, sell, transfer, and update domain names with native KRGN payments (denominated in satoshis).
-- **Client-Side Privacy**: Cryptographic keys and seed phrases are stored encrypted locally in browser storage using Ed25519 signatures.
+- **Zones**: `.kerrigan`, `.krgn`, `.private`, `.secure`, `.safe`.
+- **Names**: lowercase `a-z`, `0-9` and hyphens, no hyphen at the start or end of the label and no two in a row; at most 64 characters including the zone.
+- **Target addresses**: Kerrigan Sapling shielded addresses only — Bech32m (BIP 350, not Bech32), prefix `ks` on mainnet (`ks1...`, exactly 78 characters) or `ktestsapling` on testnet (`ktestsapling1...`, exactly 88 characters), a 43-byte payload, canonical lowercase. The indexer and the zero-knowledge circuit enforce the same rules.
+- **Ownership**: a name belongs to an Ed25519 public key, not to the address it points to. The app derives that key from a BIP-39 seed phrase, which it keeps in the browser only, encrypted with AES-256-GCM under a key from the user's password (PBKDF2-SHA-256).
+- **Operations**: register, update the address, transfer to another key, list for sale, cancel a listing, buy. Each is one shielded payment whose memo carries a signed command (`KNS:1:<OP>:...`).
+- **Payment requests**: `kerrigan:<protocol address>?amount=<KRGN>&memo=<command>`. In the URI the memo is the command encoded as unpadded base64url (ZIP 321), the form Kerrigan Core's Qt wallet and TrekPay decode; the memo that reaches the chain is the command as plain text.
+- **Amounts**: prices are in KRGN; the registrar's API carries amounts as integers in satoshis (1 KRGN = 100,000,000 satoshis).
+- **Anchor contract**: on BNB Smart Chain; check a computed state root with `isRootValid(bytes32)`.
 
-## Supported Top-Level Domains (TLDs)
+## Docs
 
-- `.kerrigan` (Primary Kerrigan NameSpace TLD)
-- `.krgn` (Compact KRGN currency TLD)
-- `.private`
-- `.secure`
-- `.safe`
+- [Documentation](https://docs.kerrigan-name.space/): protocol, prices, operations, API and proofs.
+- [Trust and privacy](https://docs.kerrigan-name.space/trust-and-privacy/)
+- [Full summary for language models](https://kerrigan-name.space/llms-full.txt)
 
-## Address Validation & Cryptography
+## Links
 
-- **Supported Address Type**: Kerrigan Sapling shielded addresses — `ks1...` on mainnet, `ktestsapling1...` on testnet.
-- **Address Requirements**: Target addresses must be Kerrigan Sapling shielded addresses: Bech32m-encoded (BIP 350, not Bech32), with the network's human-readable prefix (`ks` mainnet / `ktestsapling` testnet), a 43-byte payload (11-byte diversifier + 32-byte `pk_d`), and canonical lowercase spelling. The same rules are enforced by the indexer and by the zero-knowledge circuit.
-- **Length Constraint**: Exactly 78 characters on mainnet, 88 on testnet.
-
-## Technical Specifications
-
-- **Frontend Architecture**: Modern Vanilla JS SPA with responsive glassmorphism design, multi-language i18n support (13 languages), base64url ZIP 321 memo encoding in `kerrigan:` payment URIs, and responsive QR code generation.
-- **Base Currency Unit**: Satoshis ($1 \text{ KRGN} = 10^8 \text{ satoshis}$).
-
-## Official Links & Resources
-
-- **Website**: https://kerrigan-name.space/
-- **GitHub Repository**: https://github.com/alexxiy/kerrigan-namespace-indexer
-- **Documentation / Rules**: https://docs.kerrigan-name.space/
+- [Website](https://kerrigan-name.space/)
+- [App](https://kerrigan-name.space/app)
+- [How to verify the app](https://kerrigan-name.space/security.html)
+- [Source code of the indexer (GitHub)](https://github.com/alexxiy/kerrigan-namespace-indexer)
+- [Source code of this website and app (GitHub)](https://github.com/alexxiy/kerrigan-namespace-front)

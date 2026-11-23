@@ -6,15 +6,18 @@
     <!-- connect-src must cover whatever getDynamicAPIBaseURL() derives at runtime: it builds
          registrar.<apex-hostname>, so the wildcard keeps apex, www and staging subdomains working.
          If this app is ever served from a different domain, add that domain's registrar here.
-         Keep the connect-src text byte for byte as it is: the nginx config of the onion mirror
-         rewrites it with sub_filter by exact match, and an edited string would no longer match.
+         The onion mirror's registrar is listed by its own address: the onion serves this file as
+         it stands (no rewriting of it on the way), so tools/verify.py can check the app there too.
+         Its http: origin is no opening for the https site, where a browser blocks it as mixed
+         content anyway. js/app.js holds the payment address that registrar serves to the
+         published one (ONION_REGISTRAR), as it does for registrar.kerrigan-name.space.
          The script-src hash pins the single inline script element further down (the locked-state
          header helper). Changing it by even one character - whitespace included - makes the
          browser block it and log a CSP error on every load, so re-pin it in the same change; this
          prints the value to paste (the pattern only matches a tag opening its own line, so it
          skips this comment):
            python3 -c "import re,hashlib,base64;b=re.search(rb'\n[ \t]*<script>(.*?)</script>',open('app.html','rb').read(),re.S).group(1);print('sha256-'+base64.b64encode(hashlib.sha256(b).digest()).decode())" -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Y9JT1Rf7kF8z27j04NhBaAF+QikVgTS166Z5LUFbm/4='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://*.kerrigan-name.space https://*.kerrigan-name.loc; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Y9JT1Rf7kF8z27j04NhBaAF+QikVgTS166Z5LUFbm/4='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://*.kerrigan-name.space http://registrar.krgns77yw5kpfz3p6i7uxvdv5wtsbh35mrmfdrszzxz2xpjv7pihxnid.onion; object-src 'none'; base-uri 'self'; form-action 'self';">
 
     <!-- Primary Title & SEO Meta Tags -->
     <title data-i18n="title">Kerrigan NameSpace - Decentralized Domain Name Service for Kerrigan (.kerrigan, .krgn)</title>
@@ -22,7 +25,7 @@
     <meta name="keywords" content="Kerrigan NameSpace, KNS, Kerrigan domain, .kerrigan, .krgn, Sapling address, crypto domain, decentralized name service, privacy, Kerrigan handles, Kerrigan aliases">
     <meta name="author" content="Kerrigan NameSpace">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <link rel="canonical" href="https://kerrigan-name.space/">
+    <link rel="canonical" href="https://kerrigan-name.space/app">
 
     <!-- Theme & PWA App Standards -->
     <meta name="theme-color" content="#000000">
@@ -35,7 +38,7 @@
 
     <!-- Open Graph / Facebook / Telegram / Discord -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://kerrigan-name.space/">
+    <meta property="og:url" content="https://kerrigan-name.space/app">
     <meta property="og:site_name" content="Kerrigan NameSpace">
     <meta property="og:title" content="Kerrigan NameSpace - Decentralized Domain Name Service for Kerrigan">
     <meta property="og:description" content="Register human-readable .kerrigan and .krgn domain names for your Kerrigan Sapling addresses. Secure, private, and decentralized name resolution.">
@@ -58,21 +61,21 @@
 
     <!-- Favicons & App Icons for Desktop, Mac, iOS & Android -->
     <!-- 1. Fallback for legacy browsers and direct root requests -->
-    <link rel="icon" href="favicon.ico?v=1.0.8" sizes="any">
+    <link rel="icon" href="favicon.ico?v=1.0.9" sizes="any">
     <!-- 2. Standard PNG favicons for desktop browsers -->
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png?v=1.0.8">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png?v=1.0.8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png?v=1.0.9">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png?v=1.0.9">
     <!-- 3. Infinite-scaling vector icon for modern PC/Mac/Mobile browsers -->
-    <link rel="icon" href="images/favicon.svg?v=1.0.8" type="image/svg+xml">
+    <link rel="icon" href="images/favicon.svg?v=1.0.9" type="image/svg+xml">
     <!-- 4. High-res icon for Apple iOS home screens -->
-    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png?v=1.0.8">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png?v=1.0.9">
     <!-- 5. Web Manifest linking 192x192 and 512x512 icons for Android & PWAs -->
-    <link rel="manifest" href="site.webmanifest?v=1.0.8">
+    <link rel="manifest" href="site.webmanifest?v=1.0.9">
     <!-- 6. LLM / AI Search Indexing standard -->
     <link rel="alternate" type="text/markdown" href="llms.txt" title="LLM Documentation">
 
     <!-- EasyQRCodeJS for generating the payment QR -->
-    <script defer src="js/vendor/easy.qrcode.min.js?v=1.0.8"></script>
+    <script defer src="js/vendor/easy.qrcode.min.js?v=1.0.9"></script>
     <!-- Critical preloader styles, inline and deliberately ahead of the stylesheets.
          The loading screen is otherwise positioned and coloured only by Tailwind utilities,
          and tailwind.css is the last of three stylesheets in this head. Firefox paints
@@ -102,13 +105,13 @@
       .app-spinner { border-bottom-color: transparent; border-left-color: transparent; }
     </style>
     <!-- Custom Style Sheet (fonts loaded via a separate <link> so both fetch in parallel instead of a serial @import) -->
-    <link rel="stylesheet" href="css/fonts.css?v=1.0.8">
-    <link rel="stylesheet" href="css/style.css?v=1.0.8">
+    <link rel="stylesheet" href="css/fonts.css?v=1.0.9">
+    <link rel="stylesheet" href="css/style.css?v=1.0.9">
     <!-- Precompiled Tailwind utilities. Generated by the Tailwind CLI (see tailwind.config.js
          and `npm run build:css`) rather than the browser JIT runtime, which must not ship to
          production. Loaded last to keep the previous cascade order: the JIT used to append its
          <style> at the end of <head>, so utilities win specificity ties against style.css. -->
-    <link rel="stylesheet" href="css/tailwind.css?v=1.0.8">
+    <link rel="stylesheet" href="css/tailwind.css?v=1.0.9">
 
     <!-- Structured Data / JSON-LD for Search Engines -->
     <script type="application/ld+json">
@@ -166,7 +169,7 @@
                 <div class="absolute inset-0 rounded-full border-4 border-purple-500/10"></div>
                 <div class="app-spinner absolute inset-0 rounded-full border-4 border-t-purple-500 border-r-purple-500 animate-spin"></div>
             </div>
-            <span class="text-xs font-bold tracking-widest text-purple-300 uppercase animate-pulse">Loading App</span>
+            <span id="appPreloaderLabel" class="text-xs font-bold tracking-widest text-purple-300 uppercase animate-pulse">Loading App</span>
         </div>
     </div>
 
@@ -911,6 +914,7 @@
                     <label class="text-[11px] text-purple-300/60 uppercase tracking-wider font-semibold pl-1" data-i18n="balance_modal.label_address">Please, enter your Sapling address to withdraw funds</label>
                     <input type="text" id="withdrawAddressInput" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-4 pr-10 text-white text-sm focus:outline-none focus:border-purple-500 transition-colors" data-i18n-placeholder="balance_modal.placeholder_address" placeholder="ks1..." autocomplete="off" />
                     <p id="withdrawAddressErrorMsg" class="text-red-400 text-xs hidden text-left pl-1" data-i18n="balance_modal.error_address">Invalid Kerrigan shielded address (must start with 'ks1')</p>
+                    <p id="withdrawPayAddressMsg" class="text-red-400 text-xs hidden text-left pl-1" data-i18n="balance_modal.error_pay_address">This is the service's payment address, where payouts are sent from. Withdraw to an address of your own.</p>
                 </div>
                 
                 <!-- Service Fee Calculation Block -->
@@ -1376,6 +1380,6 @@
     </div>
 
     <!-- Application Controller Logic -->
-    <script type="module" src="js/app.js?v=1.0.8"></script>
+    <script type="module" src="js/app.js?v=1.0.9"></script>
 </body>
 </html>

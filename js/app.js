@@ -1,17 +1,16 @@
-import { generateMnemonic, validateMnemonic } from './vendor/bip39.js';
-import { wordlist } from './vendor/wordlist.js';
-import * as ed25519 from './vendor/ed25519.js';
-import { sha512 } from './vendor/hashes.js';
-import { bech32m } from './vendor/bech32.js';
+// The libraries carry the version, as every asset of app.html does (scripts/set-version.mjs sets
+// both): /js/ is cached for good, so a release that changes one reaches a returning visitor with
+// the app.js that expects it, not when the cache happens to drop the old copy.
+import { generateMnemonic, validateMnemonic } from './vendor/bip39.js?v=1.0.9';
+import { wordlist } from './vendor/wordlist.js?v=1.0.9';
+import * as ed25519 from './vendor/ed25519.js?v=1.0.9';
+import { sha512 } from './vendor/hashes.js?v=1.0.9';
+import { bech32m } from './vendor/bech32.js?v=1.0.9';
 
 // Set up the required hash function for the ed25519 library.
-// The library calls it with several arrays - sign() derives its nonce as sha512Sync(prefix,
-// message) - and noble-hashes' sha512 hashes only its first argument. Passed as it was, the
-// nonce never saw the message: every signature from one key carried the same R, and any two
-// of them (every command memo is readable with the registrar's published viewing key) give
-// away the private key. So the arrays are joined first, as noble-ed25519's README does it;
-// signatures are RFC 8032 again (section 7.1, TEST 2). Set once: the library ignores a
-// second assignment.
+// The library calls it with several arrays and every one of them must be hashed, so they are
+// joined first, as noble-ed25519's README does it (RFC 8032 signatures). Set once: the library
+// ignores a second assignment.
 ed25519.etc.sha512Sync = (...m) => sha512(ed25519.etc.concatBytes(...m));
 
 const HTML_ESCAPE_MAP = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
@@ -43,21 +42,12 @@ function isValidEd25519PubKey(pubkey) {
 let defaultLanguageData = {};
 let currentLanguageData = {};
 
-let APP_VERSION = "1.0.8";
-
-async function initAppVersion() {
-    try {
-        const response = await fetch(`./version.json?t=${Date.now()}`, { cache: 'no-store' });
-        if (response.ok) {
-            const data = await response.json();
-            if (data && data.version) {
-                APP_VERSION = data.version;
-            }
-        }
-    } catch (e) {
-        console.warn("Could not fetch version.json at startup, using default:", e);
-    }
-}
+// The version of this code, set by scripts/set-version.mjs: the ?v= of the language files, which are
+// cached for good, and what checkForAppUpdates() holds version.json against. Not read from
+// version.json at start: that held the language files back by a round trip, and a version.json
+// newer than this code - a deploy under way - had the page take that version for its own, so it
+// never offered the reload.
+const APP_VERSION = "1.0.9";
 
 async function fetchLanguageFile(lang) {
     try {
@@ -110,7 +100,10 @@ function t(key, replacements = {}) {
     const withDefaults = { prefix: addressPrefix(), ...replacements };
 
     Object.keys(withDefaults).forEach(placeholder => {
-        result = result.replace(new RegExp(`{${placeholder}}`, 'g'), withDefaults[placeholder]);
+        // Through a function, not as a replacement string: a `$&`, `$'` or `` $` `` in the value
+        // is put in as it stands, not expanded.
+        const value = String(withDefaults[placeholder]);
+        result = result.replace(new RegExp(`{${placeholder}}`, 'g'), () => value);
     });
 
     return result;
@@ -132,7 +125,7 @@ function applyTranslations() {
         
         if (el.tagName === 'TITLE') {
             document.title = t(key);
-        } else if (key === 'hero.title_part1' || key === 'hero.title_part2' || key === 'status.next_check' || key === 'qr_modal.warning' || key === 'auth_modal.create_warning' || key.startsWith('onboarding.bullet') || key === 'onboarding.slogan') {
+        } else if (key === 'hero.title_part1' || key === 'hero.title_part2' || key === 'qr_modal.warning' || key === 'auth_modal.create_warning' || key.startsWith('onboarding.bullet') || key === 'onboarding.slogan') {
             // These contain span templates, warnings, or dynamic child elements
             el.innerHTML = t(key);
         } else if (key === 'my_names_view.on_sale') {
@@ -141,7 +134,7 @@ function applyTranslations() {
         } else if (key === 'balance_modal.fee_label') {
             el.textContent = t(key, { fee: currentRefundFeePercent });
         } else if (key === 'balance_modal.min_withdrawal') {
-            el.textContent = t(key, { amount: formatBalanceDisplay(currentMinWithdrawal) });
+            el.textContent = t(key, { amount: formatSats(currentMinWithdrawalSats) });
         } else {
             el.textContent = t(key);
         }
@@ -158,14 +151,44 @@ function applyTranslations() {
         const key = el.getAttribute('data-i18n-title');
         el.title = t(key);
     });
+
+    // 4. The payment status countdown (status.next_check), which its timer writes each second
+    // with the number in it, and no data-i18n can carry: written now too, so that a language
+    // picked reaches it at once rather than at the next tick.
+    const countdown = document.getElementById('statusCountdownText');
+    if (countdown && countdown.innerHTML !== '') {
+        countdown.innerHTML = tSafe('status.next_check', { seconds: secondsRemaining });
+    }
 }
 
-// Load and change active language
-async function setLanguage(lang) {
-    localStorage.setItem('kerrigan_lang', lang);
-    currentLanguageData = await fetchLanguageFile(lang);
+// Counts the languages asked for: one picked while another was still on its way wins, and the
+// earlier one, come later, is dropped.
+let languageRequest = 0;
+
+// The wallet keeps the encrypted account (and the language picked) in localStorage. With site
+// data blocked (a browser setting), every use of localStorage throws: the first one at load
+// stopped this script, and left the preloader up for good with no word why. Found once here:
+// the script then reads and writes none of it at load, and the preloader says what to do
+// (initLocalization()).
+const storageAvailable = (() => {
+    try {
+        localStorage.getItem('kerrigan_lang');
+        return true;
+    } catch {
+        return false;
+    }
+})();
+
+// Load and change active language. `data`: the language's strings, when the caller has them
+// already (initLocalization() fetches the first one beside English).
+async function setLanguage(lang, data) {
+    if (storageAvailable) localStorage.setItem('kerrigan_lang', lang);
+    const request = ++languageRequest;
+    const strings = data ?? await fetchLanguageFile(lang);
+    if (request !== languageRequest) return;
+    currentLanguageData = strings;
     applyTranslations();
-    
+
     // Set select dropdown value
     const langSelect = document.getElementById('langSelect');
     if (langSelect) langSelect.value = lang;
@@ -173,13 +196,7 @@ async function setLanguage(lang) {
 
 // Initialization of localization
 async function initLocalization() {
-    // 1. Initialize APP_VERSION from version.json
-    await initAppVersion();
-    
-    // 2. Load English as default base fallback
-    defaultLanguageData = await fetchLanguageFile('en');
-    
-    let activeLang = localStorage.getItem('kerrigan_lang');
+    let activeLang = storageAvailable ? localStorage.getItem('kerrigan_lang') : null;
     if (!activeLang) {
         // First open: detect browser language
         const supported = ['en', 'de', 'es', 'pt', 'tr', 'az', 'ru', 'be', 'uk', 'vi', 'zh', 'ko', 'ja'];
@@ -187,8 +204,16 @@ async function initLocalization() {
         const prefix = browserLang.split('-')[0];
         activeLang = supported.includes(prefix) ? prefix : 'en';
     }
-    
-    await setLanguage(activeLang);
+
+    // English, the fallback of every key, and the active language, at once: one round trip
+    // before the page is translated, where it took three one after the other (version.json,
+    // then English, then the active language).
+    const [english, active] = await Promise.all([
+        fetchLanguageFile('en'),
+        activeLang === 'en' ? null : fetchLanguageFile(activeLang),
+    ]);
+    defaultLanguageData = english;
+    await setLanguage(activeLang, active ?? english);
     
     // Event listener for language select dropdown
     const langSelect = document.getElementById('langSelect');
@@ -200,6 +225,18 @@ async function initLocalization() {
 
     // Hide and remove preloader once loaded
     const preloader = document.getElementById('appPreloader');
+    if (preloader && !storageAvailable) {
+        // It stays up, as nothing behind it works without storage, and says why in place of
+        // "Loading App", with the spinner gone.
+        preloader.querySelector('.app-spinner')?.parentElement?.remove();
+        const label = document.getElementById('appPreloaderLabel');
+        if (label) {
+            label.className = 'max-w-sm px-6 text-center text-sm font-medium leading-relaxed text-purple-200';
+            label.setAttribute('role', 'alert');
+            label.textContent = t('errors.storage_blocked');
+        }
+        return;
+    }
     if (preloader) {
         preloader.classList.add('opacity-0', 'pointer-events-none');
         setTimeout(() => {
@@ -258,11 +295,20 @@ class SecureWalletSession {
 // Initialize globally for app access
 const walletSession = new SecureWalletSession();
 
+// The shortest password a new account, an import or a password change may set. It was 8. Only
+// setting a password is held to it: unlocking, revealing the seed and the current password of a
+// change ask for whatever password encrypted the account, so one set under the old minimum
+// keeps working until its owner changes it.
+const MIN_NEW_PASSWORD_LENGTH = 12;
+
 // --- API CONFIGURATION ---
 
 // The registrar that a copy of this app run from the user's own computer talks to (see
 // isLocalCopy()). app.html's CSP connect-src must keep allowing it.
 const PRODUCTION_REGISTRAR = "https://registrar.kerrigan-name.space";
+// The same registrar as the onion mirror reaches it (getDynamicAPIBaseURL() derives it there).
+// app.html's CSP connect-src lists it by this address.
+const ONION_REGISTRAR = "http://registrar.krgns77yw5kpfz3p6i7uxvdv5wtsbh35mrmfdrszzxz2xpjv7pihxnid.onion";
 
 // True when the page does not come from a real domain: localhost, an IP address or a file
 // opened from disk. That is how someone runs the code checked out from GitHub instead of
@@ -282,8 +328,9 @@ function getDynamicAPIBaseURL() {
 
     // A local copy uses the production registrar, so it shows the same names, balance and
     // history as the website. The developer's test setup is served from kerrigan-name.loc and
-    // takes the derived branch below, which is why app.html's CSP also lists *.kerrigan-name.loc
-    // (a name that exists only on the developer's machine).
+    // takes the derived branch below; app.html's CSP does not list *.kerrigan-name.loc (the
+    // published page names no host that exists only on the developer's machine), so that
+    // setup's web server adds it to the copy of app.html it serves.
     if (isLocalCopy()) {
         return PRODUCTION_REGISTRAR;
     }
@@ -293,6 +340,11 @@ function getDynamicAPIBaseURL() {
     // production, so the hostname here is already canonical and needs no normalising.
     return `${protocol}//registrar.${hostname}`;
 }
+// The registrar is another origin than the page. A request to it with a body is sent as
+// text/plain, and a GET with no header of its own: the browser sends such a cross-origin
+// request at once, where one typed application/json first waits for an OPTIONS preflight - a
+// round trip more per URL, and every name searched is a new URL. The registrar reads the body
+// as JSON whatever type it carries.
 const API_BASE_URL = getDynamicAPIBaseURL();
 
 // Test data in place of the registrar, for working on the interface without a backend.
@@ -345,10 +397,10 @@ let CHAINLOCK_CONFIRMATIONS = 2;
 // server's current value. Declared up here because applyTranslations() reads it.
 const DEFAULT_REFUND_FEE_PERCENT = 5;
 let currentRefundFeePercent = DEFAULT_REFUND_FEE_PERCENT;
-// The least balance, in KRGN, the registrar accepts a withdrawal of. Served with the balance
+// The least balance, in satoshi, the registrar accepts a withdrawal of. Served with the balance
 // for the same reason as the fee; 0 until then, or from a registrar too old to report it, which
 // leaves the decision to the registrar.
-let currentMinWithdrawal = 0;
+let currentMinWithdrawalSats = 0;
 
 // Pending action memory (to resume flow after login/unlock)
 let pendingAction = null;
@@ -372,6 +424,11 @@ const domainZoneSelect = document.getElementById('domainZone');
 const btn = document.getElementById('checkBtn');
 const btnText = document.getElementById('btnText');
 const resultMessage = document.getElementById('resultMessage');
+// Counts the name searches, and what makes the answer of one still on its way stale: an edit
+// of the name (or of its zone), a marketplace purchase filling it in, and a reset of the form.
+// An answer that comes back after any of them is dropped: it was for a name no longer in the
+// box, and offered that one's button.
+let searchGeneration = 0;
 const sliderWrapper = document.getElementById('sliderWrapper');
 const claimSliderTrack = document.getElementById('claimSliderTrack');
 
@@ -475,6 +532,8 @@ setTimeout(() => {
 // --- Reset Registration Flow ---
 function resetRegistrationFlow() {
     if (input) input.value = '';
+    // A search still in flight drops its answer (see searchGeneration).
+    searchGeneration++;
     if (resultMessage) {
         resultMessage.style.opacity = '0';
         resultMessage.innerHTML = '';
@@ -500,6 +559,8 @@ function resetRegistrationFlow() {
         clearInterval(countdownInterval);
         countdownInterval = null;
     }
+    // A poll still in flight drops its answer (see pollGeneration).
+    pollGeneration++;
     
     // Reset state & view
     currentTransactionType = "REG";
@@ -713,8 +774,25 @@ document.querySelectorAll('.copy-btn').forEach(btn => {
 
 const SATOSHIS_PER_KRGN = 100000000;
 // A satoshi amount as the registrar serves it, shown in KRGN without trailing zeros.
+//
+// A whole number of satoshi (a number, a digit string or a BigInt) is written out from its digits,
+// never through a KRGN float: past ~2^51 satoshi that is off by one in the last place. Anything
+// else is shown as it always was.
 function formatSats(sats) {
-    return parseFloat((Number(sats) / SATOSHIS_PER_KRGN).toFixed(8)).toString();
+    let n = null;
+    if (typeof sats === 'bigint') {
+        n = sats;
+    } else if (typeof sats === 'number' && Number.isSafeInteger(sats)) {
+        n = BigInt(sats);
+    } else if (typeof sats === 'string' && /^-?\d+$/.test(sats.trim())) {
+        n = BigInt(sats.trim());
+    }
+    if (n === null) {
+        return parseFloat((Number(sats) / SATOSHIS_PER_KRGN).toFixed(8)).toString();
+    }
+    const digits = (n < 0n ? -n : n).toString().padStart(9, '0');
+    const frac = digits.slice(-8).replace(/0+$/, '');
+    return (n < 0n ? '-' : '') + digits.slice(0, -8) + (frac ? '.' + frac : '');
 }
 // Upper bound on a marketplace listing price.
 //
@@ -737,7 +815,7 @@ const ED25519_SIG_HEX_LEN = 128;    // 64 bytes, hex encoded
 // The address is the flexible component here: a shorter domain buys a longer address.
 // Layout: {MARKER}:1:{TYPE}:{domain}:{addr}:{pubkey}:{nonce}:{sig}
 function maxAddressLengthFor(domain, type = 'REG') {
-    const nonceLen = String(Math.floor(Date.now() / 1000)).length;
+    const nonceLen = String(nowSeconds()).length;
     const overhead =
         `${protocolMarker()}:1:${type}:`.length +
         (domain || '').length + 1 +   // domain + separator
@@ -774,14 +852,77 @@ function protocolMarker() {
     return kerriganNetwork === 'testnet' ? 'tKNS' : 'KNS';
 }
 
+// The registrar's clock minus this device's, in seconds, from the server_time that
+// fetchPaymentAddress() receives. Nonces are taken on the registrar's clock, so a device whose own
+// clock is off still signs requests the registrar takes (within a minute of its clock) and
+// commands the indexer takes. 0 until the registrar answered, or when it sends no time.
+let serverClockOffsetSec = 0;
+
+// Date.now() less performance.now() when that offset was measured. performance.now() does not
+// follow the device clock, so this moves when the device clock is set - a clock found behind and
+// corrected while the page is open, which left the offset to it in place and every nonce that far
+// ahead - or when the device slept, where performance.now() stands still in some browsers. null
+// until a server_time was measured.
+let clockMarkMs = null;
+// How far it may move before the offset is measured again: the two clocks drift apart by far less
+// while a page is open.
+const CLOCK_MOVE_MS = 2000;
+
+// Whether the device clock moved since serverClockOffsetSec was measured (see clockMarkMs).
+function deviceClockMoved() {
+    return clockMarkMs !== null && Math.abs(Date.now() - performance.now() - clockMarkMs) > CLOCK_MOVE_MS;
+}
+
+// Unix seconds on the registrar's clock, as near as this page can tell.
+function nowSeconds() {
+    return Math.floor(Date.now() / 1000 + serverClockOffsetSec);
+}
+
+// How far a command's nonce may run ahead of its block's time: the indexer's
+// Protocol::NONCE_FUTURE_TOLERANCE.
+const NONCE_FUTURE_TOLERANCE_SEC = 300;
+const NONCE_WAIT_ERROR = 'Nonce wait';
+
+// An error the registrar answered with (its error_message): the one kind of error a list shows under
+// its search box. Anything else - no answer, one that is not JSON, a fault of this page - is shown
+// as the list's own failure, not as its raw text.
+class RegistrarError extends Error {}
+
+// The greatest nonce this page signed a command with, per name, so that a second command on a
+// name in the same second, or before the first one is indexed, still carries a greater one.
+const lastSignedNonce = new Map();
+
+// The nonce for a command on `fullDomain`: the time, but greater than the name's stored nonce
+// (check's `nonce`: a device clock behind, or a listing signed a few minutes ahead) and than the
+// last one this page signed for the name. A command whose nonce is not greater is refused after
+// it was paid for, and refunded. Throws NONCE_WAIT_ERROR when even that one runs further ahead
+// of the time than the indexer takes, and on any failure of the request.
+async function commandNonce(fullDomain) {
+    const response = await fetch(`${API_BASE_URL}/v1.0/check/${fullDomain}`, { method: 'GET', cache: 'no-store' });
+    const data = await response.json();
+    if (!response.ok || data?.error || typeof data?.response !== 'object' || data.response === null) {
+        throw new Error("Failed to read the name's nonce");
+    }
+    // A registrar too old to send it leaves the time and this page's own nonces to go by.
+    const stored = Number.isInteger(data.response.nonce) && data.response.nonce > 0 ? data.response.nonce : 0;
+    const now = nowSeconds();
+    const nonce = Math.max(now, stored + 1, (lastSignedNonce.get(fullDomain) ?? 0) + 1);
+    if (nonce > now + NONCE_FUTURE_TOLERANCE_SEC) {
+        throw new Error(NONCE_WAIT_ERROR);
+    }
+    return nonce;
+}
+
 // Pass maxLength = null to skip the length check (used for balance withdrawals, which do not
-// embed the address in a memo and so are not bound by the memo budget).
-function isValidKerriganAddress(addr, maxLength) {
+// embed the address in a memo and so are not bound by the memo budget). `network` is the page's
+// own unless given: fetchPaymentAddress() checks the registrar's address against the network it
+// reports before adopting that network.
+function isValidKerriganAddress(addr, maxLength, network = kerriganNetwork) {
     if (!addr || typeof addr !== 'string') return false;
     const cleanAddr = addr.trim();
     if (maxLength !== null && cleanAddr.length > maxLength) return false;
 
-    const rules = KERRIGAN_ADDRESS_RULES[kerriganNetwork];
+    const rules = KERRIGAN_ADDRESS_RULES[network];
     if (cleanAddr.length !== rules.len) return false;
 
     // Bech32m checksums are case-insensitive, so the uppercase spelling of an address
@@ -937,8 +1078,20 @@ btnNextToPayment.addEventListener('click', () => {
     const proceedToPayment = async () => {
         const fullDomain = currentRegistrationDomain;
         const pubKey = walletSession.getPublicKey();
-        const nonce = Math.floor(Date.now() / 1000);
         const type = currentTransactionType || "REG";
+
+        // The registrar's answer first: it sets the network, and with it the memo's marker (signed
+        // before it, a testnet command would carry the mainnet one and could not even be refunded),
+        // and the clock the nonce is taken on.
+        let nonce;
+        try {
+            await fillPaymentAddress();
+            nonce = await commandNonce(fullDomain);
+        } catch (err) {
+            console.error("Cannot prepare the command:", err);
+            showErrorAlert(err.message === NONCE_WAIT_ERROR ? t('errors.nonce_wait') : t('errors.request_failed'));
+            return;
+        }
         
         let baseMemo = '';
         if (type === 'REG' || type === 'BUY' || type === 'UPD') {
@@ -952,15 +1105,15 @@ btnNextToPayment.addEventListener('click', () => {
         } else if (type === 'LST') {
             const enteredPrice = document.getElementById('desiredPriceInput').value.trim();
             const priceFloat = parseFloat(enteredPrice);
-            const priceZat = Math.round(priceFloat * SATOSHIS_PER_KRGN);
+            const priceSat = Math.round(priceFloat * SATOSHIS_PER_KRGN);
             // Refuse to sign a price that cannot be represented exactly: an unsafe integer
             // would stringify imprecisely (or in exponential notation) inside the memo.
-            if (!(priceFloat > 0) || priceFloat > MAX_KRGN_AMOUNT || !Number.isSafeInteger(priceZat)) {
+            if (!(priceFloat > 0) || priceFloat > MAX_KRGN_AMOUNT || !Number.isSafeInteger(priceSat)) {
                 console.error("Refusing to build memo: listing price out of representable range:", enteredPrice);
                 showErrorAlert(t('address.price_error'));
                 return;
             }
-            baseMemo = `${protocolMarker()}:1:LST:${fullDomain}:${pubKey}:${priceZat}:${nonce}`;
+            baseMemo = `${protocolMarker()}:1:LST:${fullDomain}:${pubKey}:${priceSat}:${nonce}`;
         }
 
         // Fail closed rather than emit a memo the wallet would reject or silently truncate.
@@ -975,6 +1128,7 @@ btnNextToPayment.addEventListener('click', () => {
             const sigHex = await walletSession.sign(baseMemo);
             const fullMemo = `${baseMemo}:${sigHex}`;
             payMemoInput.value = fullMemo;
+            lastSignedNonce.set(fullDomain, nonce);
 
             document.getElementById('payAmount').value = currentRegistrationPrice;
             
@@ -1181,6 +1335,10 @@ let countdownInterval;
 let currentTxId = null;
 let secondsRemaining = 30;
 let isPolling = false;
+// Counts the payments watched on this page: each "I paid" click and each reset of the flow moves
+// it on. A poll still in flight from an earlier payment then drops its answer, so it can neither
+// take that payment's transaction for the new one nor hold off the new one's first check.
+let pollGeneration = 0;
 
 function updateStatusUI(heading, description, showSpinner = true, type = 'normal') {
     statusHeading.textContent = heading;
@@ -1216,6 +1374,7 @@ function formatTime(totalSeconds) {
 async function pollTransactionStatus() {
     if (isPolling) return; // avoid overlapping with a still in-flight poll (immediate re-check vs. the 30s interval)
     isPolling = true;
+    const generation = pollGeneration;
     secondsRemaining = 30;
     statusCountdownText.innerHTML = tSafe('status.next_check', { seconds: secondsRemaining });
 
@@ -1235,6 +1394,9 @@ async function pollTransactionStatus() {
         });
         
         const data = await response.json();
+
+        // Asked for an earlier payment: the answer is not this one's.
+        if (generation !== pollGeneration) return;
 
         if (!data.response || Object.keys(data.response).length === 0) return;
 
@@ -1307,7 +1469,8 @@ async function pollTransactionStatus() {
     } catch (err) {
         console.error("Polling error:", err);
     } finally {
-        isPolling = false;
+        // An earlier payment's poll ending leaves the flag to the poll of the one watched now.
+        if (generation === pollGeneration) isPolling = false;
     }
 }
 
@@ -1317,6 +1480,8 @@ iPaidBtn.addEventListener('click', () => {
     if (pollInterval) clearInterval(pollInterval);
     if (countdownInterval) clearInterval(countdownInterval);
 
+    pollGeneration++;
+    isPolling = false;
     currentTxId = null;
     updateStatusUI(t('status.scanning_title'), t('status.scanning_desc'));
     
@@ -1341,10 +1506,19 @@ iPaidBtn.addEventListener('click', () => {
 // Name Availability Search Logic
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const name = input.value.trim().toLowerCase();
     const zone = domainZoneSelect.value;
     const fullDomain = name + zone;
+    const generation = ++searchGeneration;
+    // Whether the name was edited, or the form reset, while it was asked about (see
+    // searchGeneration). The answer is then dropped, and with it what the area still holds from
+    // before the search, hidden since it was sent: its buttons would still take clicks.
+    const stale = () => {
+        if (generation === searchGeneration) return false;
+        if (resultMessage.style.opacity === '0') resultMessage.innerHTML = '';
+        return true;
+    };
 
     if (!name) return;
 
@@ -1373,32 +1547,30 @@ form.addEventListener('submit', async (e) => {
         if (localStorage.getItem('kerrigan_encrypted_account')) {
             response = await fetch(`${API_BASE_URL}/v1.0/check/${fullDomain}`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'text/plain' },
                 body: JSON.stringify({ with_pubkey: true })
             });
         } else {
             response = await fetch(`${API_BASE_URL}/v1.0/check/${fullDomain}`, {
                 method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
             });
         }
         const data = await response.json();
+
+        if (stale()) return;
 
         resultMessage.style.opacity = '1';
 
         // Standard API Error Handling
         if (data.error) {
-            const errMsg = (typeof data.error === 'object' && data.error.error_message) ? data.error.error_message : data.error;
-            showErrorAlert(errMsg);
+            showErrorAlert(apiErrorText(data.error, t('errors.request_failed')));
             resultMessage.style.opacity = '0';
             return;
         }
         
         if (data.response && data.response.exists === true) {
             if (data.response.price && data.response.price !== "0" && data.response.price !== 0) {
-                const priceZat = parseFloat(data.response.price);
-                const priceZec = priceZat / 100000000;
-                const priceFormatted = parseFloat(priceZec.toFixed(8)).toString();
+                const priceFormatted = formatSats(data.response.price);
                 const price = priceFormatted;
                 const responsePubkey = data.response.pubkey;
                 const myPubkey = getCachedPublicKey();
@@ -1471,9 +1643,7 @@ form.addEventListener('submit', async (e) => {
                 </div>
             `;
         } else if (data.response && data.response.exists === false) {
-            const priceZat = parseFloat(data.response.price) || 0;
-            const priceZec = priceZat / 100000000;
-            const priceFormatted = parseFloat(priceZec.toFixed(8)).toString();
+            const priceFormatted = formatSats(data.response.price || 0);
             const price = priceFormatted;
             resultMessage.innerHTML = `
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full p-3 mt-4 rounded-xl bg-green-500/10 border border-green-500/20 gap-4">
@@ -1510,6 +1680,7 @@ form.addEventListener('submit', async (e) => {
         }
     } catch (err) {
         console.error("API Check Error:", err);
+        if (stale()) return;
         btn.disabled = false;
         btnText.textContent = t('search.btn');
         resultMessage.style.opacity = '1';
@@ -1541,10 +1712,15 @@ input.addEventListener('input', () => {
         input.value = val;
     }
 
+    // A search still in flight drops its answer (see searchGeneration).
+    searchGeneration++;
+
     if (resultMessage.style.opacity !== '0') {
         resultMessage.style.opacity = '0';
+        // Emptied once faded out (hidden, its buttons still take clicks), unless an answer was
+        // shown meanwhile: a search sent within the fade, whose answer this blanked as well.
         setTimeout(() => {
-            resultMessage.innerHTML = '';
+            if (resultMessage.style.opacity === '0') resultMessage.innerHTML = '';
         }, 300);
     }
     setActiveSlide(slide1, 'translateX(0)');
@@ -1720,7 +1896,8 @@ function openDropdown() {
 }
 
 function checkAuthState() {
-    if (localStorage.getItem('kerrigan_encrypted_account')) {
+    // Run at load too: without storage (storageAvailable) there is no account here.
+    if (storageAvailable && localStorage.getItem('kerrigan_encrypted_account')) {
         authControlsGuest.classList.add('hidden');
         
         if (walletSession.isUnlocked()) {
@@ -1766,6 +1943,51 @@ menuLockBtn.addEventListener('click', () => {
     resetUIState();
     resetModalViews();
 });
+
+// --- Idle lock ---
+// An unlocked account locks itself after this long without a click, a key, a scroll or a touch:
+// the key leaves memory, as with Lock in the menu. Unlike that Lock, only the key goes. A payment
+// being watched keeps being watched, and a list or a typed name stays; the next action that
+// signs asks for the password first, as after any lock. The account dialog is closed, since it
+// may show the seed phrase or hold a half-typed password, and the history, which is fetched
+// signed page by page, gives way to the start screen.
+const IDLE_LOCK_MS = 15 * 60 * 1000;
+let lastActivityAt = Date.now();
+
+function lockIfIdle() {
+    // The wall clock rather than performance.now(), which in some browsers stands still while the
+    // computer sleeps. A clock put back - set right after the "check your clock" message, say -
+    // left the last activity in the future and the lock as late as the clock was moved: the time
+    // is counted from now then.
+    const now = Date.now();
+    if (now < lastActivityAt) lastActivityAt = now;
+    if (!walletSession.isUnlocked() || now - lastActivityAt < IDLE_LOCK_MS) return;
+    walletSession.lock();
+    checkAuthState();
+    if (currentActiveTab === 'my_transactions') {
+        switchTab('register');
+    }
+    if (!modalOverlay.classList.contains('hidden')) {
+        closeModal();
+        pendingAction = null;
+    }
+}
+
+// The check comes before the activity is counted, and in the capture phase, before any handler
+// of the page. Timers stop while a computer sleeps and are slowed in a hidden tab, so the first
+// click after a long absence may be what finds the account idle: it locks first, and the click
+// then meets a locked account, which asks for the password.
+['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(type => {
+    window.addEventListener(type, () => {
+        lockIfIdle();
+        lastActivityAt = Date.now();
+    }, { capture: true, passive: true });
+});
+// Coming back to the tab is not activity: it only gets the check done before anything is seen.
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') lockIfIdle();
+});
+setInterval(lockIfIdle, 30 * 1000);
 
 function openModal() {
     modalOverlay.classList.remove('hidden');
@@ -1824,6 +2046,9 @@ function resetModalViews() {
         }
     });
     
+    // The phrase "Create" generated: it stayed in the hidden textarea for the page's lifetime, after
+    // the account was made, after Lock, the idle lock and Log Out. Every one of those comes here.
+    regSeedPhrase.value = '';
     regPassword1.value = '';
     regPassword2.value = '';
     regConfirmSaved.checked = false;
@@ -1869,8 +2094,8 @@ function validateChangePwdForm() {
     const p2 = changePwdNew2.value;
     let isValid = true;
     
-    if (p1.length > 0 && p1.length < 8) {
-        changePwdErrorMsg.textContent = t('auth_modal.btn_change_pwd_err_length');
+    if (p1.length > 0 && p1.length < MIN_NEW_PASSWORD_LENGTH) {
+        changePwdErrorMsg.textContent = t('auth_modal.btn_change_pwd_err_length', { min: MIN_NEW_PASSWORD_LENGTH });
         changePwdErrorMsg.classList.remove('hidden');
         isValid = false;
     } else if (p1 && p2 && p1 !== p2) {
@@ -1881,7 +2106,7 @@ function validateChangePwdForm() {
         changePwdErrorMsg.classList.add('hidden');
     }
 
-    if (!oldP || !p1 || p1.length < 8 || p1 !== p2) {
+    if (!oldP || !p1 || p1.length < MIN_NEW_PASSWORD_LENGTH || p1 !== p2) {
         isValid = false;
     }
 
@@ -1903,7 +2128,12 @@ doChangePwdBtn.addEventListener('click', async () => {
         
         const seed = await decryptSeed(encryptedDataStr, changePwdOld.value);
         const newEncryptedData = await encryptSeed(seed, changePwdNew1.value);
-        newEncryptedData.pubKeyHex = walletSession.getPublicKey();
+        // The key of the seed itself, not the session's: it is the same while the wallet is
+        // unlocked, and would be null while it is locked.
+        const derived = new SecureWalletSession();
+        await derived.unlock(seed);
+        newEncryptedData.pubKeyHex = derived.getPublicKey();
+        derived.lock();
 
         localStorage.setItem('kerrigan_encrypted_account', JSON.stringify(newEncryptedData));
         
@@ -1951,8 +2181,15 @@ doRevealSeedAuthBtn.addEventListener('click', async () => {
         const seed = await decryptSeed(encryptedDataStr, pwd);
         
         setTimeout(() => {
+            // The dialog closed meanwhile (closed by hand, Lock, the idle lock): the phrase is not
+            // put in a view nobody is looking at, where it stayed until the dialog was next opened.
+            if (viewRevealSeedAuth.classList.contains('hidden')) {
+                doRevealSeedAuthBtn.disabled = false;
+                revealSeedAuthBtnText.textContent = t('auth_modal.btn_next');
+                return;
+            }
             revealSeedTextarea.value = seed;
-            
+
             viewRevealSeedAuth.classList.add('hidden');
             viewRevealSeedAuth.classList.remove('flex');
             viewRevealSeedShow.classList.remove('hidden');
@@ -2075,8 +2312,8 @@ function validateRegistrationForm() {
     
     let isValid = true;
     
-    if (p1.length > 0 && p1.length < 8) {
-        regErrorMsg.textContent = t('auth_modal.btn_change_pwd_err_length');
+    if (p1.length > 0 && p1.length < MIN_NEW_PASSWORD_LENGTH) {
+        regErrorMsg.textContent = t('auth_modal.btn_change_pwd_err_length', { min: MIN_NEW_PASSWORD_LENGTH });
         regErrorMsg.classList.remove('hidden');
         isValid = false;
     } else if (p1 && p2 && p1 !== p2) {
@@ -2087,7 +2324,7 @@ function validateRegistrationForm() {
         regErrorMsg.classList.add('hidden');
     }
 
-    if (!p1 || p1.length < 8 || p1 !== p2 || !isChecked) {
+    if (!p1 || p1.length < MIN_NEW_PASSWORD_LENGTH || p1 !== p2 || !isChecked) {
         isValid = false;
     }
 
@@ -2101,7 +2338,7 @@ regConfirmSaved.addEventListener('change', validateRegistrationForm);
 regPassword1.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         e.preventDefault();
-        if (regPassword1.value.length >= 8) {
+        if (regPassword1.value.length >= MIN_NEW_PASSWORD_LENGTH) {
             if (!regPassword2.value || regPassword1.value !== regPassword2.value) {
                 regPassword2.focus();
             } else if (!doCreateAccountBtn.disabled) {
@@ -2147,6 +2384,14 @@ seedInputs[0].input.addEventListener('paste', (e) => {
     const words = text.trim().split(/\s+/).filter(w => w.length > 0);
     
     if (words.length > 0) {
+        // More words than any phrase has: not a phrase, or one with something else pasted along
+        // with it. Refused with the phrase error, where its first 24 words were taken as if they
+        // were the phrase. The boxes keep what they held; Next waits for them to be edited.
+        if (words.length > Math.max(...SEED_LENGTHS)) {
+            btnNextToImportPassword.disabled = true;
+            importSeedErrorMsg.classList.remove('hidden');
+            return;
+        }
         // A whole phrase decides how many boxes there are; part of one fills what is shown.
         if (SEED_LENGTHS.includes(words.length)) {
             setSeedLength(words.length);
@@ -2273,8 +2518,8 @@ function validateImportPasswordForm() {
     
     let isValid = true;
     
-    if (p1.length > 0 && p1.length < 8) {
-        importPwdErrorMsg.textContent = t('auth_modal.btn_change_pwd_err_length');
+    if (p1.length > 0 && p1.length < MIN_NEW_PASSWORD_LENGTH) {
+        importPwdErrorMsg.textContent = t('auth_modal.btn_change_pwd_err_length', { min: MIN_NEW_PASSWORD_LENGTH });
         importPwdErrorMsg.classList.remove('hidden');
         isValid = false;
     } else if (p1 && p2 && p1 !== p2) {
@@ -2285,7 +2530,7 @@ function validateImportPasswordForm() {
         importPwdErrorMsg.classList.add('hidden');
     }
 
-    if (!p1 || p1.length < 8 || p1 !== p2) {
+    if (!p1 || p1.length < MIN_NEW_PASSWORD_LENGTH || p1 !== p2) {
         isValid = false;
     }
 
@@ -2298,7 +2543,7 @@ importPassword2.addEventListener('input', validateImportPasswordForm);
 importPassword1.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         e.preventDefault();
-        if (importPassword1.value.length >= 8) {
+        if (importPassword1.value.length >= MIN_NEW_PASSWORD_LENGTH) {
             if (!importPassword2.value || importPassword1.value !== importPassword2.value) {
                 importPassword2.focus();
             } else if (!doImportAccountBtn.disabled) {
@@ -2453,8 +2698,11 @@ doUnlockBtn.addEventListener('click', async () => {
         await walletSession.unlock(seed);
         
         // Cache pubKeyHex if missing
+        // ... or put right one that is not this seed's key (a corrupt or hand-edited copy): the
+        // stored key is what my names, the history and the balance are asked for, and a request
+        // signed with the real key would be refused for it.
         const encryptedData = JSON.parse(encryptedDataStr);
-        if (!encryptedData.pubKeyHex) {
+        if (encryptedData.pubKeyHex !== walletSession.getPublicKey()) {
             encryptedData.pubKeyHex = walletSession.getPublicKey();
             localStorage.setItem('kerrigan_encrypted_account', JSON.stringify(encryptedData));
         }
@@ -2492,6 +2740,8 @@ unlockPassword.addEventListener('keypress', (e) => {
 function resetUIState() {
     // Reset search fields and validation states
     input.value = '';
+    // A search still in flight drops its answer (see searchGeneration).
+    searchGeneration++;
     if (resultMessage) {
         resultMessage.style.opacity = '0';
         resultMessage.innerHTML = '';
@@ -2506,6 +2756,8 @@ function resetUIState() {
     // Clear status intervals
     if (pollInterval) clearInterval(pollInterval);
     if (countdownInterval) clearInterval(countdownInterval);
+    // A poll still in flight drops its answer (see pollGeneration).
+    pollGeneration++;
     
     // Reset state & view
     currentTransactionType = "REG";
@@ -2542,6 +2794,10 @@ function resetUIState() {
     if (withdrawAddressErrorMsg) {
         withdrawAddressErrorMsg.classList.add('hidden');
     }
+    const withdrawPayAddressMsg = document.getElementById('withdrawPayAddressMsg');
+    if (withdrawPayAddressMsg) {
+        withdrawPayAddressMsg.classList.add('hidden');
+    }
     const withdrawBlock = document.getElementById('withdrawBlock');
     if (withdrawBlock) {
         withdrawBlock.classList.add('opacity-40', 'pointer-events-none');
@@ -2557,12 +2813,18 @@ function resetUIState() {
     setStep('check');
 }
 
+// Log Out deletes the encrypted key from this browser, and the names and the balance belong to that
+// key: one click, the button right next to Unlock, took them for good from anyone without the seed
+// phrase written down. So it asks first.
 const logoutHandler = () => {
-    localStorage.removeItem('kerrigan_encrypted_account');
-    walletSession.lock();
-    checkAuthState();
-    resetUIState();
-    resetModalViews();
+    closeDropdown();
+    showConfirm(t('auth_modal.logout_confirm_title'), t('auth_modal.logout_confirm_msg'), () => {
+        localStorage.removeItem('kerrigan_encrypted_account');
+        walletSession.lock();
+        checkAuthState();
+        resetUIState();
+        resetModalViews();
+    }, () => {});
 };
 
 headerLogoutBtn.addEventListener('click', logoutHandler);
@@ -2606,6 +2868,14 @@ let cachedPrices = null;
 // can retry rather than replaying the rejection forever.
 let cachedPayAddress = null;
 
+// The address the production registrar must serve: the protocol's published payment address (the
+// docs' introduction; the indexer's /v1.0/info `registrar_address`). An answer with any other one
+// is refused, so a change of the registrar alone cannot point payments elsewhere, and this file -
+// the one tools/verify.py checks against a release - shows where payments go. A new address is
+// therefore a release of this file as well. Other registrars (a testnet or a test setup) serve
+// their own. The onion mirror reaches the production registrar at ONION_REGISTRAR: held the same.
+const PRODUCTION_PAYMENT_ADDRESS = 'ks14uyfh9m64njntdtxsnt662utf2yxtvtnyzyh2v8d0nna7cngzd6eeht3x80689d973v0yvc2fkz';
+
 // The zones a name can be registered in, without the dot. The registrar serves them from
 // getPaymentAddress (see applyProtocolZones); this built-in list stands until it answers, and
 // for a registrar too old to send them.
@@ -2616,10 +2886,19 @@ let protocolZones = BUILTIN_ZONES;
 let apiMaxCount = Infinity;
 
 function fetchPaymentAddress() {
+    // The device clock moved since the registrar's was read: the offset to it no longer holds, and
+    // the answer is fetched again for a new one. Every signing awaits this first, so none signs on
+    // the old offset. Until the answer is in, the device clock is taken as it is.
+    if (cachedPayAddress && deviceClockMoved()) {
+        serverClockOffsetSec = 0;
+        clockMarkMs = null;
+        cachedPayAddress = null;
+    }
     if (cachedPayAddress) return cachedPayAddress;
 
     cachedPayAddress = (async () => {
-        const response = await fetch(`${API_BASE_URL}/v1.0/getPaymentAddress`);
+        // Never from a cache: the answer carries the registrar's clock.
+        const response = await fetch(`${API_BASE_URL}/v1.0/getPaymentAddress`, { cache: 'no-store' });
         if (!response.ok) throw new Error("Failed to fetch the payment address");
 
         const data = await response.json();
@@ -2629,13 +2908,28 @@ function fetchPaymentAddress() {
         // Adopt the network the registrar reports, so client-side address validation is
         // driven by the deployment rather than a hardcoded guess. An unrecognised value is
         // ignored rather than trusted: falling back to the mainnet default is safer than
-        // validating against rules nobody defined.
+        // validating against rules nobody defined. It is adopted only below, once the answer
+        // passed its checks: a refused answer leaves the rules the page had.
         const network = data?.response?.network;
+        let answerNetwork = kerriganNetwork;
         if (network === 'mainnet' || network === 'testnet') {
-            kerriganNetwork = network;
+            answerNetwork = network;
         } else if (network !== undefined) {
             console.warn(`Registrar reported an unknown network "${network}"; keeping ${kerriganNetwork}`);
         }
+
+        // The address users are told to pay is held to the rules of an address they type: the
+        // network's prefix and length, lowercase, a valid bech32m checksum, a shielded payload,
+        // and nothing around it. A mangled answer - a broken proxy, a misconfigured registrar -
+        // is refused before anyone copies it, where a payment to it would be lost.
+        if (address !== address.trim() || !isValidKerriganAddress(address, null, answerNetwork)) {
+            throw new Error("Invalid payment address format");
+        }
+        if ((API_BASE_URL === PRODUCTION_REGISTRAR || API_BASE_URL === ONION_REGISTRAR)
+            && address !== PRODUCTION_PAYMENT_ADDRESS) {
+            throw new Error("The payment address is not the published one");
+        }
+        kerriganNetwork = answerNetwork;
 
         // The confirmation counts the registrar actually waits for. Anything but a positive
         // integer is ignored, keeping the fallback.
@@ -2664,6 +2958,17 @@ function fetchPaymentAddress() {
             apiMaxCount = maxCount;
         }
 
+        // The registrar's clock, taken when the request reached it: the offset to it is off by the
+        // answer's way back and the whole second at most, so a gap of a few seconds is that noise
+        // and the device's clock stays. A registrar too old to send it leaves the offset at 0.
+        const serverTime = data?.response?.server_time;
+        if (Number.isInteger(serverTime) && serverTime > 0) {
+            const nowMs = Date.now();
+            const offset = serverTime - nowMs / 1000;
+            serverClockOffsetSec = Math.abs(offset) > 2 ? offset : 0;
+            clockMarkMs = nowMs - performance.now();
+        }
+
         return address;
     })().catch((err) => {
         cachedPayAddress = null;
@@ -2674,7 +2979,9 @@ function fetchPaymentAddress() {
 }
 
 // Every payment panel - registration, marketplace purchase, ultimatum - reuses the same
-// #payAddress field, so filling it once at startup covers all of them.
+// #payAddress field. It is filled at startup, and again by each step that leads to a payment
+// panel (fillPaymentAddress()): filled at startup only, it stayed empty after a request there
+// that failed, while the payment itself went ahead, and only the QR code showed where to pay.
 //
 // The request is issued immediately, in parallel with localization; only the failure
 // message waits on it, since t() falls back to the raw key when no language is loaded yet.
@@ -2691,6 +2998,16 @@ async function initPaymentAddress(localizationReady) {
     }
 }
 
+// The payment address (fetchPaymentAddress()), put in the #payAddress field as well. A step that
+// leads to a payment panel awaits this, not the fetch alone, so the panel shows where to pay
+// whether or not the request at startup went through.
+async function fillPaymentAddress() {
+    const address = await fetchPaymentAddress();
+    const addressField = document.getElementById('payAddress');
+    if (addressField) addressField.value = address;
+    return address;
+}
+
 // Invoked here rather than beside initLocalization() above: cachedPayAddress is a `let`,
 // so calling any earlier would read it inside its temporal dead zone and throw.
 initPaymentAddress(localizationReady);
@@ -2703,7 +3020,7 @@ async function fetchPrices() {
     try {
         const response = await fetch(`${API_BASE_URL}/v1.0/prices`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({ type: "upd" })
         });
         if (!response.ok) throw new Error("Failed to fetch prices");
@@ -2711,8 +3028,7 @@ async function fetchPrices() {
         if (data && data.response) {
             cachedPrices = {};
             for (const key in data.response) {
-                const satoshiVal = parseFloat(data.response[key]);
-                cachedPrices[key] = parseFloat((satoshiVal / 100000000).toFixed(8)).toString();
+                cachedPrices[key] = formatSats(data.response[key]);
             }
             cachedPricesFetchedAt = Date.now();
             return cachedPrices;
@@ -3059,7 +3375,7 @@ async function loadMarketplaceDomains(page, search = "") {
 
         const response = await fetch(`${API_BASE_URL}/v1.0/domains`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify(payload)
         });
 
@@ -3073,7 +3389,7 @@ async function loadMarketplaceDomains(page, search = "") {
         if (requestId !== marketRequestId) return; // a newer request has since superseded this one
 
         if (data && data.error && data.error.error_message) {
-            throw new Error(data.error.error_message);
+            throw new RegistrarError(data.error.error_message);
         }
 
         if (!response.ok) throw new Error("Network response was not OK");
@@ -3144,8 +3460,7 @@ async function loadMarketplaceDomains(page, search = "") {
             const safeDomain = escapeHtml(d.domain);
             const safeZoneName = escapeHtml(zoneName);
 
-            const priceZec = parseFloat(d.price) / 100000000;
-            const priceFormatted = parseFloat(priceZec.toFixed(8)).toString();
+            const priceFormatted = formatSats(d.price);
             const formattedPrice = priceFormatted;
 
             const isOwnDomain = userPubKey && d.pubkey && (d.pubkey.toLowerCase() === userPubKey.toLowerCase());
@@ -3232,7 +3547,7 @@ async function loadMarketplaceDomains(page, search = "") {
         marketLoading.classList.add('hidden');
         marketLoading.classList.remove('flex');
 
-        if (marketSearchError && err.message && err.message !== "Network response was not OK") {
+        if (marketSearchError && err instanceof RegistrarError && err.message) {
             marketSearchError.style.opacity = '1';
             marketSearchError.innerHTML = `
                 <div class="mt-2 flex w-full">
@@ -3269,7 +3584,9 @@ function handleBuyDomain(domain, price) {
         
         input.value = namePart;
         domainZoneSelect.value = zonePart;
-        
+        // A search still in flight drops its answer (see searchGeneration).
+        searchGeneration++;
+
         setActiveSlide(slideAddress, 'translateX(-100%)');
         setStep('check');
         
@@ -3286,9 +3603,19 @@ async function handleRemoveFromSale(domain, txPriceSats) {
         
         showConfirm(t('marketplace.remove_sale'), t('marketplace.remove_action_confirm'), () => {
             const proceedRemoval = async () => {
+                // As for the other commands (see proceedToPayment): the network and the clock
+                // first, and a nonce greater than the name's.
+                let nonce;
+                try {
+                    await fillPaymentAddress();
+                    nonce = await commandNonce(domain);
+                } catch (err) {
+                    console.error("Cannot prepare the removal:", err);
+                    showErrorAlert(err.message === NONCE_WAIT_ERROR ? t('errors.nonce_wait') : t('errors.request_failed'));
+                    return;
+                }
                 try {
                     const userPubKey = getCachedPublicKey();
-                    const nonce = Math.floor(Date.now() / 1000);
                     
                     // Memo format: KNS:1:ULT:{domain_name}:{pubkey}:{nonce}
                     const baseMemo = `${protocolMarker()}:1:ULT:${domain}:${userPubKey}:${nonce}`;
@@ -3299,6 +3626,7 @@ async function handleRemoveFromSale(domain, txPriceSats) {
                     
                     // Pre-fill Payment details (Slide 3)
                     payMemoInput.value = fullMemo;
+                    lastSignedNonce.set(domain, nonce);
                     document.getElementById('payAmount').value = determinedPrice;
                     
                     // Set transaction type
@@ -3815,7 +4143,7 @@ async function loadMyNamesList(page, search = "") {
 
         const response = await fetch(`${API_BASE_URL}/v1.0/domains`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify(payload)
         });
 
@@ -3829,7 +4157,7 @@ async function loadMyNamesList(page, search = "") {
         if (requestId !== myNamesRequestId) return; // a newer request has since superseded this one
 
         if (data && data.error && data.error.error_message) {
-            throw new Error(data.error.error_message);
+            throw new RegistrarError(data.error.error_message);
         }
 
         if (!response.ok) throw new Error("Failed to fetch my registered names");
@@ -3878,8 +4206,7 @@ async function loadMyNamesList(page, search = "") {
         grid.innerHTML = '';
         domains.forEach(item => {
             const isListed = item.price && item.price !== "0" && item.price !== 0;
-            const priceZec = isListed ? parseFloat(item.price) / 100000000 : null;
-            const formattedPrice = isListed ? parseFloat(priceZec.toFixed(8)).toString() : null;
+            const formattedPrice = isListed ? formatSats(item.price) : null;
             
             const itemEl = document.createElement('div');
             itemEl.className = 'market-card bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-5 flex flex-col justify-between gap-3 text-left';
@@ -4006,7 +4333,7 @@ async function loadMyNamesList(page, search = "") {
         loading.classList.add('hidden');
         loading.classList.remove('flex');
 
-        if (myNamesSearchError && err.message && err.message !== "Failed to fetch my registered names" && err.message !== "Network response was not OK") {
+        if (myNamesSearchError && err instanceof RegistrarError && err.message) {
             myNamesSearchError.style.opacity = '1';
             myNamesSearchError.innerHTML = `
                 <div class="mt-2 flex w-full">
@@ -4176,6 +4503,12 @@ function showErrorAlert(message) {
     showConfirm(t('confirm_modal.error_title') || 'Error', message, () => {}, null);
 }
 
+// The registrar takes a signed request - the history, a withdrawal - only within a minute of its
+// own clock, and refuses it otherwise with this text. The time in it is the device's, taken just
+// before the request is sent, so this nearly always means the device's clock is wrong, which
+// the user can put right where a bare "Request timeout" told them nothing.
+const REQUEST_TIMEOUT_ERROR = 'Request timeout';
+
 // --- MY TRANSACTIONS VIEW CONTROLLER ---
 
 let currentTransactionsPage = 1;
@@ -4304,12 +4637,16 @@ async function loadTransactionsList(page) {
             return;
         }
 
-        const count = TRANSACTIONS_PAGE_SIZE;
+        // Within the registrar's limit, as the other lists are: the count is signed, so a larger
+        // one is refused rather than cut down to the limit.
+        const count = Math.min(TRANSACTIONS_PAGE_SIZE, apiMaxCount);
         // Shaped like the withdrawal: the protocol marker (which carries the network, so a
         // testnet request is not one on mainnet), a version, an operation code the memo parser
         // does not know, and the time - the registrar takes it within a minute of its own
-        // clock, so a request seen once cannot be replayed later. Unix seconds.
-        const nonce = Math.floor(Date.now() / 1000);
+        // clock, so a request seen once cannot be replayed later. Unix seconds, on its clock: the
+        // registrar's answer brings the network (the marker) and the time.
+        await fetchPaymentAddress();
+        const nonce = nowSeconds();
         const msg = `${protocolMarker()}:1:TXS:${currentTransactionsTab}:${userPubKey}:${page}:${count}:${nonce}`;
 
         let signature = "";
@@ -4331,7 +4668,7 @@ async function loadTransactionsList(page) {
 
         const response = await fetch(`${API_BASE_URL}/v1.0/transactions`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify(payload)
         });
 
@@ -4374,7 +4711,9 @@ async function loadTransactionsList(page) {
         transactionsTableError.classList.remove('hidden');
         transactionsTableError.classList.add('flex');
 
-        showErrorAlert(err.message === "Signature failed" ? t('toasts.sign_failed') : t('errors.request_failed'));
+        showErrorAlert(err.message === "Signature failed" ? t('toasts.sign_failed')
+            : err.message === REQUEST_TIMEOUT_ERROR ? t('errors.clock_skew')
+            : t('errors.request_failed'));
     }
 }
 
@@ -4437,10 +4776,12 @@ function renderTransactionsTable(txList) {
                     statusText = t('transactions.status_rejected');
                     statusIcon = `<svg class="w-4 h-4 text-red-400 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
                     break;
-                default: statusText = String(item.status);
+                // An unknown code is shown as it came, as text: the cell is HTML.
+                default: statusText = escapeHtml(String(item.status));
             }
 
-            let confsText = String(item.confirmations || 0);
+            // A count only: anything else from the registrar reads as 0 rather than reaching the HTML.
+            let confsText = String(Number.isInteger(item.confirmations) && item.confirmations > 0 ? item.confirmations : 0);
             if (item.status === 0) {
                 confsText += ` / ${PAYMENT_CONFIRMATIONS}`;
             } else if (item.status === 7) {
@@ -4471,7 +4812,7 @@ function renderTransactionsTable(txList) {
                     <button class="txid-copy-btn text-purple-300 hover:text-white transition-colors underline font-mono select-none" data-txid="${safeFullTxId}">${safeTrimmedTxId}</button>
                 </td>
                 <td class="px-6 py-4">
-                    <button class="memo-show-btn bg-purple-600/20 hover:bg-purple-600/40 text-purple-200 hover:text-white font-bold py-1 px-3 rounded-lg text-xs transition-colors" data-memo="${escapeHtml(item.memo || '')}">Show</button>
+                    <button class="memo-show-btn bg-purple-600/20 hover:bg-purple-600/40 text-purple-200 hover:text-white font-bold py-1 px-3 rounded-lg text-xs transition-colors" data-memo="${escapeHtml(item.memo || '')}" data-i18n="transactions.show_memo">${escapeHtml(t('transactions.show_memo'))}</button>
                 </td>
             `;
 
@@ -4516,8 +4857,7 @@ function renderTransactionsTable(txList) {
 
             let amt = "0";
             if (item.amount) {
-                const amtZec = parseFloat(item.amount) / 100000000;
-                amt = parseFloat(amtZec.toFixed(8)).toString();
+                amt = formatSats(item.amount);
             }
 
             let feeVal = item.fee !== undefined ? String(item.fee).replace('%', '') : "";
@@ -4539,7 +4879,8 @@ function renderTransactionsTable(txList) {
                     statusText = t('transactions.status_error'); 
                     statusIcon = `<svg class="w-4 h-4 text-red-400 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
                     break;
-                default: statusText = String(item.status);
+                // An unknown code is shown as it came, as text: the cell is HTML.
+                default: statusText = escapeHtml(String(item.status));
             }
 
             const fullTxId = item.tx_id || "";
@@ -4670,21 +5011,37 @@ const balanceValueEl = document.getElementById('balanceValue');
 const withdrawBlock = document.getElementById('withdrawBlock');
 const withdrawAddressInput = document.getElementById('withdrawAddressInput');
 const withdrawAddressErrorMsg = document.getElementById('withdrawAddressErrorMsg');
+const withdrawPayAddressMsg = document.getElementById('withdrawPayAddressMsg');
 const withdrawBtn = document.getElementById('withdrawBtn');
 const withdrawFeeBlock = document.getElementById('withdrawFeeBlock');
 const withdrawPaidAmount = document.getElementById('withdrawPaidAmount');
 const withdrawMinMsg = document.getElementById('withdrawMinMsg');
 
-let currentBalanceAmount = 0;
+// The balance as the registrar served it, in whole satoshi: what a withdrawal asks for, exactly.
+let currentBalanceSats = 0;
 
-// What a withdrawal of `amount` KRGN pays out once the service fee is taken. An estimate for
-// display only - the registrar computes the real payout.
-function netAfterRefundFee(amount) {
+// What a withdrawal of `sats` satoshi pays out once the service fee is taken, in KRGN. An estimate
+// for display only - the registrar computes the real payout.
+function netAfterRefundFee(sats) {
     // In whole satoshi and rounded down, as the registrar pays it: rounding to the nearest showed
     // a satoshi more than arrives, e.g. 0.00100001 for a balance of 0.00105264, which pays 0.001.
-    const sats = Math.round(amount * SATOSHIS_PER_KRGN);
-    const net = Math.floor(sats * (100 - currentRefundFeePercent) / 100) / SATOSHIS_PER_KRGN;
-    return parseFloat(net.toFixed(8)).toString(); // remove trailing zeros reliably
+    // In BigInt for a whole fee, as the registrar's integer division: sats * 95 leaves the safe
+    // integers far below any balance's limit.
+    const kept = 100 - currentRefundFeePercent;
+    const net = Number.isInteger(kept)
+        ? BigInt(sats) * BigInt(kept) / 100n
+        : BigInt(Math.floor(sats * kept / 100));
+    return formatSats(net);
+}
+
+// The text of a registrar's error answer: its error_message, or the string it is. Anything else,
+// an object without one, is not shown as "[object Object]" but as `fallback`.
+function apiErrorText(error, fallback) {
+    if (typeof error === 'string' && error !== '') return error;
+    if (error && typeof error === 'object' && typeof error.error_message === 'string' && error.error_message !== '') {
+        return error.error_message;
+    }
+    return fallback;
 }
 
 // The label states the rate in words, so it is re-rendered whenever the served fee changes.
@@ -4732,30 +5089,20 @@ function closeBalanceModal() {
     }, 300);
 }
 
-function formatBalanceDisplay(balanceStr) {
-    const num = parseFloat(balanceStr);
-    if (isNaN(num)) return balanceStr;
-    if (num % 1 === 0) {
-        return num.toString();
-    }
-    let s = num.toFixed(8);
-    s = s.replace(/\.?0+$/, "");
-    return s;
-}
-
-function updateWithdrawBlockState(balance) {
-    const numericBalance = parseFloat(balance) || 0;
+// `sats`: the balance in whole satoshi.
+function updateWithdrawBlockState(sats) {
+    const balanceSats = Number.isSafeInteger(sats) ? sats : 0;
     // A balance below the minimum stays on the account until refunds add up to it: the registrar
     // refuses to pay it out, as each payout costs it a network fee.
-    const belowMinimum = numericBalance > 0 && numericBalance < currentMinWithdrawal;
+    const belowMinimum = balanceSats > 0 && balanceSats < currentMinWithdrawalSats;
     if (withdrawMinMsg) {
-        withdrawMinMsg.textContent = t('balance_modal.min_withdrawal', { amount: formatBalanceDisplay(currentMinWithdrawal) });
+        withdrawMinMsg.textContent = t('balance_modal.min_withdrawal', { amount: formatSats(currentMinWithdrawalSats) });
         withdrawMinMsg.classList.toggle('hidden', !belowMinimum);
     }
-    if (numericBalance > 0 && !belowMinimum) {
+    if (balanceSats > 0 && !belowMinimum) {
         withdrawBlock.classList.remove('opacity-40', 'pointer-events-none');
         if (withdrawFeeBlock && withdrawPaidAmount) {
-            withdrawPaidAmount.textContent = `~ ${netAfterRefundFee(numericBalance)} KRGN`;
+            withdrawPaidAmount.textContent = `~ ${netAfterRefundFee(balanceSats)} KRGN`;
             withdrawFeeBlock.classList.remove('hidden');
         }
     } else {
@@ -4781,9 +5128,7 @@ async function fetchUserBalance(showToast = false) {
     try {
         const response = await fetch(`${API_BASE_URL}/v1.0/balance`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({
                 action: "get",
                 pubkey: userPubKey
@@ -4792,8 +5137,7 @@ async function fetchUserBalance(showToast = false) {
         
         const data = await response.json();
         if (data.error) {
-            const errMsg = (typeof data.error === 'object' && data.error.error_message) ? data.error.error_message : data.error;
-            showErrorAlert(errMsg);
+            showErrorAlert(apiErrorText(data.error, t('errors.fetch_balance_failed')));
             balanceValueEl.textContent = t('confirm_modal.error_title') || "Error";
             updateWithdrawBlockState(0);
         } else if (data.response && data.response.balance !== undefined) {
@@ -4807,12 +5151,17 @@ async function fetchUserBalance(showToast = false) {
             }
             const minWithdrawal = parseInt(data.response.min_withdrawal, 10);
             if (Number.isSafeInteger(minWithdrawal) && minWithdrawal >= 0) {
-                currentMinWithdrawal = minWithdrawal / 100000000;
+                currentMinWithdrawalSats = minWithdrawal;
             }
-            currentBalanceAmount = parseFloat(data.response.balance) / 100000000;
-            const formatted = formatBalanceDisplay(currentBalanceAmount);
+            // Kept in whole satoshi, as served: a withdrawal asks for exactly this.
+            const balance = Number(data.response.balance);
+            if (!Number.isSafeInteger(balance) || balance < 0) {
+                throw new Error('Invalid balance: ' + data.response.balance);
+            }
+            currentBalanceSats = balance;
+            const formatted = formatSats(currentBalanceSats);
             balanceValueEl.textContent = formatted;
-            updateWithdrawBlockState(currentBalanceAmount);
+            updateWithdrawBlockState(currentBalanceSats);
             if (showToast) {
                 window.showToast(t('toasts.balance_updated', { amount: formatted }));
             }
@@ -4833,16 +5182,16 @@ function validateWithdrawInput() {
     const addr = withdrawAddressInput.value.trim();
     // Withdrawals are not embedded in a memo, so the memo budget does not constrain them
     const isValid = isValidKerriganAddress(addr, null);
-    
-    if (addr.length > 0 && !isValid) {
-        withdrawAddressErrorMsg.classList.remove('hidden');
-        withdrawAddressInput.classList.add('border-red-500');
-    } else {
-        withdrawAddressErrorMsg.classList.add('hidden');
-        withdrawAddressInput.classList.remove('border-red-500');
-    }
-    
-    const isBtnDisabled = !isValid || addr.length === 0;
+    // The payment address the registrar serves is the wallet payouts are sent from: it refuses a
+    // withdrawal to it (paid there, the money would never leave that wallet), so the page says
+    // why here rather than with a general error after the request.
+    const isPayAddress = isValid && addr === document.getElementById('payAddress')?.value.trim();
+
+    withdrawAddressErrorMsg.classList.toggle('hidden', !(addr.length > 0 && !isValid));
+    withdrawPayAddressMsg.classList.toggle('hidden', !isPayAddress);
+    withdrawAddressInput.classList.toggle('border-red-500', (addr.length > 0 && !isValid) || isPayAddress);
+
+    const isBtnDisabled = !isValid || addr.length === 0 || isPayAddress;
     withdrawBtn.disabled = isBtnDisabled;
     if (isBtnDisabled) {
         withdrawBtn.classList.add('opacity-50', 'pointer-events-none');
@@ -4851,7 +5200,13 @@ function validateWithdrawInput() {
     }
 }
 
+// Set from the first click until the request has an answer: a second click meanwhile would sign
+// and send a second withdrawal, refused as a duplicate after the first one went through.
+let withdrawInFlight = false;
+
 async function handleWithdraw() {
+    if (withdrawInFlight) return;
+
     const userPubKey = getCachedPublicKey();
     if (!userPubKey) {
         showErrorAlert(t('errors.not_logged_in'));
@@ -4859,7 +5214,7 @@ async function handleWithdraw() {
     }
     
     const address = withdrawAddressInput.value.trim();
-    if (!address || currentBalanceAmount < currentMinWithdrawal) return;
+    if (!address || currentBalanceSats <= 0 || currentBalanceSats < currentMinWithdrawalSats) return;
     
     // Check if wallet session is unlocked
     if (!walletSession.isUnlocked()) {
@@ -4867,35 +5222,51 @@ async function handleWithdraw() {
         return;
     }
     
-    const amountSatoshis = Math.round(parseFloat(currentBalanceAmount) * 100000000).toString();
-    const amount = amountSatoshis;
-    const nonce = Math.floor(Date.now() / 1000).toString();
-    
-    // Signed message: {MARKER}:1:WDR:{user_pubkey}:{address}:{amount}:{nonce}
-    //
-    // The marker/version/op head mirrors the memo commands and must match the registrar's
-    // PROTOCOL_MARKER . ':1:WDR:' exactly. WDR is deliberately NOT in the indexer's OP_LIST,
-    // so this string can never be mistaken for an on-chain command and vice versa.
-    //
-    // The prefix is what makes the artefact self-describing: this signature is the user's
-    // only evidence in a payout dispute, and without it the request is four anonymous
-    // colon-separated fields that name neither the service, the network nor the operation.
-    // Deriving the marker from the served network (rather than inlining it) is what stops a
-    // testnet-signed withdrawal from being replayable against mainnet.
-    const message = `${protocolMarker()}:1:WDR:${userPubKey}:${address}:${amount}:${nonce}`;
-    
+    withdrawInFlight = true;
     withdrawBtn.disabled = true;
     const originalBtnHTML = withdrawBtn.innerHTML;
     withdrawBtn.innerHTML = `<span class="loader"></span> ${t('balance_modal.btn_withdraw_processing')}`;
     
     try {
+        // The network (the marker) and the registrar's clock, which takes the nonce within a minute.
+        let payAddress;
+        try {
+            payAddress = await fetchPaymentAddress();
+        } catch (err) {
+            console.error("Payment address fetch failed:", err);
+            showErrorAlert(t('errors.request_failed'));
+            return;
+        }
+        // Checked here too: the field the validator compares with is empty until the
+        // registrar first answers.
+        if (address === payAddress) {
+            showErrorAlert(t('balance_modal.error_pay_address'));
+            return;
+        }
+
+        // The whole balance, in satoshi as the registrar served it.
+        const amountSats = currentBalanceSats;
+        const amount = String(amountSats);
+        const nonce = nowSeconds().toString();
+        
+        // Signed message: {MARKER}:1:WDR:{user_pubkey}:{address}:{amount}:{nonce}
+        //
+        // The marker/version/op head mirrors the memo commands and must match the registrar's
+        // PROTOCOL_MARKER . ':1:WDR:' exactly. WDR is deliberately NOT in the indexer's OP_LIST,
+        // so this string can never be mistaken for an on-chain command and vice versa.
+        //
+        // The prefix is what makes the artefact self-describing: this signature is the user's
+        // only evidence in a payout dispute, and without it the request is four anonymous
+        // colon-separated fields that name neither the service, the network nor the operation.
+        // Deriving the marker from the served network (rather than inlining it) is what stops a
+        // testnet-signed withdrawal from being replayable against mainnet.
+        const message = `${protocolMarker()}:1:WDR:${userPubKey}:${address}:${amount}:${nonce}`;
+        
         const signature = await walletSession.sign(message);
         
         const response = await fetch(`${API_BASE_URL}/v1.0/balance`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({
                 action: "withdraw",
                 pubkey: userPubKey,
@@ -4908,15 +5279,13 @@ async function handleWithdraw() {
         
         const data = await response.json();
         if (data.error) {
-            const errMsg = (typeof data.error === 'object' && data.error.error_message) ? data.error.error_message : data.error;
-            showErrorAlert(errMsg);
+            const errMsg = apiErrorText(data.error, t('errors.withdraw_unexpected_err'));
+            showErrorAlert(errMsg === REQUEST_TIMEOUT_ERROR ? t('errors.clock_skew') : errMsg);
         } else if (data.response === 1) {
-            const numericBalance = parseFloat(currentBalanceAmount) || 0; // KRGN, not the satoshi `amount` sent to the API
-            window.showToast(t('toasts.withdraw_success', { amount: `~ ${netAfterRefundFee(numericBalance)}` }));
+            window.showToast(t('toasts.withdraw_success', { amount: `~ ${netAfterRefundFee(amountSats)}` }));
             // Automatically refresh balance after withdrawal
             await fetchUserBalance(false);
             withdrawAddressInput.value = '';
-            validateWithdrawInput();
         } else {
             showErrorAlert(t('errors.withdraw_unexpected_err'));
         }
@@ -4924,8 +5293,11 @@ async function handleWithdraw() {
         console.error("Withdrawal signature/request failed:", e);
         showErrorAlert(t('errors.sign_or_req_failed'));
     } finally {
-        withdrawBtn.disabled = false;
+        withdrawInFlight = false;
         withdrawBtn.innerHTML = originalBtnHTML;
+        // Enabled again only for an address that is still there and valid (emptied after a
+        // withdrawal): the validator decides, as it does on every input.
+        validateWithdrawInput();
     }
 }
 
@@ -5121,7 +5493,7 @@ if (openOnboardingBtn) {
     });
 }
 
-// Auto-open onboarding if not done yet
-if (localStorage.getItem('kerrigan_onboarded') !== 'true') {
+// Auto-open onboarding if not done yet (not without storage: the preloader stays up then)
+if (storageAvailable && localStorage.getItem('kerrigan_onboarded') !== 'true') {
     openOnboarding();
 }

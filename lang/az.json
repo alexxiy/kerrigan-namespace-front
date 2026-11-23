@@ -155,13 +155,15 @@
         "placeholder_confirm_new_pwd": "Yeni Şifrəni Təsdiqləyin",
         "btn_change_pwd": "Parolun dəyişdirilməsi",
         "btn_change_pwd_saving": "Yadda saxlanılır...",
-        "btn_change_pwd_err_length": "Yeni parol ən azı 8 simvoldan ibarət olmalıdır",
+        "btn_change_pwd_err_length": "Yeni parol ən azı {min} simvoldan ibarət olmalıdır",
         "btn_change_pwd_err_match": "Yeni parollar uyğun gəlmir",
         "btn_change_pwd_err_incorrect": "Yanlış köhnə parol",
         "reveal_seed_title": "Toxum İfadəsini Açın",
         "reveal_seed_desc": "12 sözdən ibarət hesab əsas ifadəsini aşkar etmək üçün parolunuzu təsdiqləyin.",
         "reveal_seed_placeholder": "parol",
         "reveal_seed_err_incorrect": "Yanlış parol",
+        "logout_confirm_title": "Çıxış edilsin?",
+        "logout_confirm_msg": "Çıxış etdikdə hesabınız bu cihazdan silinir. Onu yenidən istifadə etmək üçün toxum ifadəniz lazım olacaq, ona görə də onun yazılı olduğuna əmin olun.",
         "reveal_seed_show_title": "Sizin Toxum İfadəniz",
         "reveal_seed_warning": "Toxum ifadənizi heç vaxt paylaşmayın. Bu ifadəyə girişi olan hər kəs bütün KNS Kimlik adlarınız üzərində tam nəzarətə malikdir.",
         "btn_done": "Bitdi"
@@ -249,10 +251,13 @@
     },
     "errors": {
         "request_failed": "Data sorğusu zamanı xəta baş verdi. Lütfən, sonra yenidən cəhd edin.",
+        "storage_blocked": "Brauzeriniz bu saytın yaddaşını bloklayır; pulqabı şifrələnmiş hesabınızı orada saxlayır. Bu sayt üçün sayt məlumatlarına (kukilərə) icazə verin, sonra səhifəni yenidən yükləyin.",
         "not_logged_in": "Daxil deyil",
         "withdraw_unexpected_err": "Çıxarma uğursuz oldu. Serverdən gözlənilməz cavab.",
         "fetch_balance_failed": "Balans əldə etmək alınmadı",
-        "sign_or_req_failed": "İmza və ya sorğu alınmadı"
+        "sign_or_req_failed": "İmza və ya sorğu alınmadı",
+        "clock_skew": "Cihazınızın saatı bir dəqiqədən çox səhv görünür. Lütfən, düzgün vaxtı qurun və yenidən cəhd edin.",
+        "nonce_wait": "Bu ad bir az əvvəl dəyişdirilib. Lütfən, bir neçə dəqiqə gözləyin və yenidən cəhd edin."
     },
     "onboarding": {
         "title1": "Necə işləyir",
@@ -282,6 +287,7 @@
         "label_address": "Zəhmət olmasa, pulu çıxarmaq üçün Qorunan Ünvanınızı daxil edin",
         "placeholder_address": "Kerrigan qorunan ünvanı ({prefix} ilə başlayır)",
         "error_address": "Yanlış Kerrigan qorunan ünvanı ('{prefix}' ilə başlamalıdır)",
+        "error_pay_address": "Bu, xidmətin ödəniş ünvanıdır, çıxarışlar buradan göndərilir. Öz ünvanınıza çıxarın.",
         "btn_withdraw": "geri çəkilmək",
         "btn_withdraw_processing": "Emal edilir...",
         "fee_label": "Xidmət haqqı ({fee}%) ilə ödənilməlidir:",
@@ -309,6 +315,7 @@
         "no_results": "Uyğun meyarlara heç bir əməliyyat tapılmadı.",
         "memo_title": "Əməliyyat Memo",
         "memo_content": "Memo məzmunu",
+        "show_memo": "Göstər",
         "close": "Bağlayın",
         "copy": "Kopyalayın",
         "copied": "Buferə kopyalandı!",

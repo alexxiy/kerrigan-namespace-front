@@ -155,13 +155,15 @@
         "placeholder_confirm_new_pwd": "새 비밀번호 확인",
         "btn_change_pwd": "비밀번호 변경",
         "btn_change_pwd_saving": "저장 중...",
-        "btn_change_pwd_err_length": "새 비밀번호는 8자 이상이어야 합니다.",
+        "btn_change_pwd_err_length": "새 비밀번호는 {min}자 이상이어야 합니다.",
         "btn_change_pwd_err_match": "새 비밀번호가 일치하지 않습니다.",
         "btn_change_pwd_err_incorrect": "잘못된 이전 비밀번호",
         "reveal_seed_title": "시드 문구 공개",
         "reveal_seed_desc": "비밀번호를 확인하여 12단어 계정 시드 문구를 확인하세요.",
         "reveal_seed_placeholder": "비밀번호",
         "reveal_seed_err_incorrect": "잘못된 비밀번호",
+        "logout_confirm_title": "로그아웃하시겠습니까?",
+        "logout_confirm_msg": "로그아웃하면 이 기기에서 계정이 삭제됩니다. 다시 사용하려면 시드 문구가 필요하므로 적어 두었는지 확인하세요.",
         "reveal_seed_show_title": "당신의 씨앗 문구",
         "reveal_seed_warning": "시드 문구를 절대 공유하지 마세요. 이 문구에 액세스할 수 있는 사람은 누구나 귀하의 모든 KNS ID 이름에 대한 모든 권한을 갖습니다.",
         "btn_done": "완료"
@@ -249,10 +251,13 @@
     },
     "errors": {
         "request_failed": "데이터를 요청하는 중에 오류가 발생했습니다. 나중에 다시 시도해 주세요.",
+        "storage_blocked": "브라우저가 이 사이트의 저장소를 차단하고 있습니다. 지갑은 암호화된 계정을 이곳에 보관합니다. 이 사이트의 사이트 데이터(쿠키)를 허용한 뒤 페이지를 새로고침하세요.",
         "not_logged_in": "로그인되지 않음",
         "withdraw_unexpected_err": "출금에 실패했습니다. 서버에서 예상치 못한 응답이 발생했습니다.",
         "fetch_balance_failed": "잔액을 가져오지 못했습니다.",
-        "sign_or_req_failed": "서명 또는 요청 실패"
+        "sign_or_req_failed": "서명 또는 요청 실패",
+        "clock_skew": "기기 시계가 1분 이상 어긋난 것 같습니다. 올바른 시간으로 맞춘 뒤 다시 시도해 주세요.",
+        "nonce_wait": "이 이름은 방금 변경되었습니다. 몇 분 기다린 뒤 다시 시도해 주세요."
     },
     "onboarding": {
         "title1": "작동 원리",
@@ -282,6 +287,7 @@
         "label_address": "자금을 인출하려면 보호 주소를 입력하세요.",
         "placeholder_address": "Kerrigan 보호 주소({prefix}로 시작)",
         "error_address": "잘못된 Kerrigan 보호 주소입니다('{prefix}'로 시작해야 합니다)",
+        "error_pay_address": "이 주소는 서비스의 결제 주소로, 출금이 이 주소에서 송금됩니다. 본인 소유의 주소로 출금하세요.",
         "btn_withdraw": "철수",
         "btn_withdraw_processing": "처리 중...",
         "fee_label": "서비스 수수료({fee}%)를 지불하려면:",
@@ -309,6 +315,7 @@
         "no_results": "기준과 일치하는 거래가 없습니다.",
         "memo_title": "거래 메모",
         "memo_content": "메모 내용",
+        "show_memo": "보기",
         "close": "닫기",
         "copy": "복사",
         "copied": "클립보드에 복사되었습니다!",
