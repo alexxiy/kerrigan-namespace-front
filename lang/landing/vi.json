@@ -10,7 +10,7 @@
         "title": "Chọn một tên khi nó còn trống"
     },
     "different": {
-        "c1_body": "Không có danh sách chờ, không xếp hàng, không thang giới thiệu và không có khối tên cao cấp nào giữ lại cho người trong cuộc. Sổ đăng ký bắt đầu trống rỗng. Mọi tên chưa đăng ký thuộc về người hỏi trước, và “trước” do chiều cao khối và vị trí quyết định — không phải chúng tôi.",
+        "c1_body": "Không có danh sách chờ, không xếp hàng, không thang giới thiệu và không có khối tên cao cấp nào giữ lại cho người trong cuộc. Sổ đăng ký mở ra trống rỗng. Mọi tên chưa đăng ký thuộc về người hỏi trước, và “trước” do chiều cao khối và vị trí quyết định — không phải chúng tôi.",
         "c1_title": "Không đăng ký trước",
         "c2_body": "Giao thức không có ngày hết hạn, không phí thường niên và không có khung thời gian điểm danh nào để bạn lỡ. Đăng ký một lần. Một cái tên chỉ rời khỏi quyền kiểm soát của bạn khi bạn ký lệnh chuyển hoặc bán — không có cơ chế nào, dù cho chúng tôi hay bất kỳ ai, để thu hồi nó.",
         "c2_title": "Không gia hạn. Tên vẫn là của bạn.",
@@ -67,7 +67,7 @@
     "hero": {
         "cta_register": "Đăng ký một tên",
         "cta_verify": "Cách bạn tự kiểm chứng",
-        "eyebrow": "Sắp ra mắt trên mainnet Kerrigan",
+        "eyebrow": "Đang chạy trên mainnet Kerrigan",
         "fact_custody": "<b>Không</b> giữ khóa của bạn",
         "fact_prereg": "<b>Không</b> đăng ký trước",
         "fact_renew": "<b>Không</b> gia hạn, không bao giờ",
@@ -118,7 +118,7 @@
     },
     "roadmap": {
         "eyebrow": "Sắp tới là gì",
-        "lede": "Giao thức đã hoàn chỉnh ở khía cạnh quan trọng nhất: tên hoạt động, và ai cũng kiểm chứng được sổ đăng ký. Những gì tiếp theo là để dùng chúng dễ hơn.",
+        "lede": "Giao thức đã chạy và đã hoàn chỉnh ở khía cạnh quan trọng nhất: tên hoạt động, và ai cũng kiểm chứng được sổ đăng ký. Những gì tiếp theo là để dùng chúng dễ hơn.",
         "r1_body": "Trình khám phá khối cho bạn xem giao dịch. Cái này sẽ cho bạn xem tên: mọi lần đăng ký, mọi lần đổi địa chỉ, mọi lần chuyển quyền sở hữu, mọi lần rao bán và bán xong — bày ra thành một dòng lịch sử tra cứu được mà bạn theo dõi không cần tự chạy node.",
         "r1_tag": "Đang phát triển",
         "r1_title": "Trình khám phá tên",

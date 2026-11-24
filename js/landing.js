@@ -26,7 +26,7 @@
   /* The version of this code, set by scripts/set-version.mjs: the ?v= of the catalogues, which
    * are cached for good. This file is served uncached, so it is always the one deployed. Not
    * read from version.json at start: that held every catalogue back by a round trip. */
-  var VERSION = '1.0.9';
+  var VERSION = '1.0.10';
   var strings = {};
   var fallback = {};
   var redrawHooks = [];

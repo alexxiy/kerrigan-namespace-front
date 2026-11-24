@@ -10,7 +10,7 @@
         "title": "Sichere dir einen Namen, solange er frei ist"
     },
     "different": {
-        "c1_body": "Es gibt keine Warteliste, keine Warteschlange, keine Empfehlungsleiter und keinen reservierten Block von Premium-Namen für Insider. Die Registry startet leer. Jeder nicht registrierte Name gehört dem, der zuerst fragt, und „zuerst“ entscheiden Blockhöhe und Position – nicht wir.",
+        "c1_body": "Es gibt keine Warteliste, keine Warteschlange, keine Empfehlungsleiter und keinen reservierten Block von Premium-Namen für Insider. Die Registry startete leer. Jeder nicht registrierte Name gehört dem, der zuerst fragt, und „zuerst“ entscheiden Blockhöhe und Position – nicht wir.",
         "c1_title": "Keine Vorregistrierung",
         "c2_body": "Im Protokoll gibt es kein Ablaufdatum, keine Jahresgebühr und kein Zeitfenster, das du verpassen kannst. Registriert wird einmal. Ein Name verlässt deine Kontrolle nur, wenn du einen Befehl zum Übertragen oder Verkaufen signierst – es gibt keinen Mechanismus, weder für uns noch für sonst jemanden, ihn zurückzuholen.",
         "c2_title": "Keine Verlängerungen. Er bleibt deiner.",
@@ -67,7 +67,7 @@
     "hero": {
         "cta_register": "Namen registrieren",
         "cta_verify": "Wie du es überprüfst",
-        "eyebrow": "Bald im Kerrigan-Mainnet",
+        "eyebrow": "Live im Kerrigan-Mainnet",
         "fact_custody": "<b>Keine</b> Verwahrung deiner Schlüssel",
         "fact_prereg": "<b>Keine</b> Vorregistrierung",
         "fact_renew": "<b>Keine</b> Verlängerungen, nie",
@@ -118,7 +118,7 @@
     },
     "roadmap": {
         "eyebrow": "Was als Nächstes kommt",
-        "lede": "Das Protokoll ist in dem Sinne fertig, auf den es ankommt: Namen funktionieren, und die Registry kann von jedem überprüft werden. Was jetzt folgt, dreht sich darum, sie leichter benutzbar zu machen.",
+        "lede": "Das Protokoll läuft und ist in dem Sinne fertig, auf den es ankommt: Namen funktionieren, und die Registry kann von jedem überprüft werden. Was jetzt folgt, dreht sich darum, sie leichter benutzbar zu machen.",
         "r1_body": "Ein Block-Explorer zeigt dir Transaktionen. Dieser zeigt dir Namen: jede Registrierung, jeden Adresswechsel, jeden Eigentümerwechsel, jedes Angebot und jeden Verkauf — als eine durchsuchbare Historie, der du folgen kannst, ohne selbst einen Node zu betreiben.",
         "r1_tag": "In Entwicklung",
         "r1_title": "Ein Namens-Explorer",

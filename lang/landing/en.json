@@ -10,7 +10,7 @@
         "title": "Pick a name while it's still unclaimed"
     },
     "different": {
-        "c1_body": "There is no waitlist, no queue, no referral ladder and no reserved block of premium names held back for insiders. The registry starts empty. Every unregistered name is available to whoever asks for it first, and \"first\" is decided by block height and position — not by us.",
+        "c1_body": "There is no waitlist, no queue, no referral ladder and no reserved block of premium names held back for insiders. The registry opened empty. Every unregistered name is available to whoever asks for it first, and \"first\" is decided by block height and position — not by us.",
         "c1_title": "No pre-registration",
         "c2_body": "There is no expiry date in the protocol, no annual fee and no check-in window you can miss. Registration is once. A name leaves your control only when you sign a command transferring or selling it — there is no mechanism, for us or anyone, to reclaim it.",
         "c2_title": "No renewals. It stays yours.",
@@ -67,7 +67,7 @@
     "hero": {
         "cta_register": "Register a name",
         "cta_verify": "How you can verify it",
-        "eyebrow": "Coming to Kerrigan mainnet",
+        "eyebrow": "Live on Kerrigan mainnet",
         "fact_custody": "<b>No</b> custody of your keys",
         "fact_prereg": "<b>No</b> pre-registration",
         "fact_renew": "<b>No</b> renewals, ever",
@@ -119,7 +119,7 @@
     "roadmap": {
         "eyebrow": "What's next",
         "title": "Where this goes from here",
-        "lede": "The protocol is finished in the sense that matters — names work, and the registry can be verified by anyone. What follows is about making them easier to use.",
+        "lede": "The protocol is live and finished in the sense that matters — names work, and the registry can be verified by anyone. What follows is about making them easier to use.",
         "r1_tag": "In development",
         "r1_title": "A names explorer",
         "r1_body": "A block explorer shows you transactions. This one will show you names: every registration, every address change, every transfer of ownership, every listing and sale — laid out as one searchable history you can follow without running a node yourself.",

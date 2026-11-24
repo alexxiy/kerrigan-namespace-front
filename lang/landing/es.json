@@ -10,7 +10,7 @@
         "title": "Elige un nombre mientras siga libre"
     },
     "different": {
-        "c1_body": "No hay lista de espera, ni cola, ni escalera de referidos, ni un bloque reservado de nombres premium guardado para los de dentro. El registro empieza vacío. Cada nombre libre es de quien lo pida primero, y «primero» lo deciden la altura del bloque y la posición, no nosotros.",
+        "c1_body": "No hay lista de espera, ni cola, ni escalera de referidos, ni un bloque reservado de nombres premium guardado para los de dentro. El registro empezó vacío. Cada nombre libre es de quien lo pida primero, y «primero» lo deciden la altura del bloque y la posición, no nosotros.",
         "c1_title": "Sin registro previo",
         "c2_body": "No hay fecha de caducidad en el protocolo, ni cuota anual, ni ventana de confirmación que puedas perder. El registro es una sola vez. Un nombre sale de tu control solo cuando firmas un comando para transferirlo o venderlo: no existe mecanismo, ni para nosotros ni para nadie, para reclamarlo.",
         "c2_title": "Sin renovaciones. Sigue siendo tuyo.",
@@ -67,7 +67,7 @@
     "hero": {
         "cta_register": "Registrar un nombre",
         "cta_verify": "Cómo puedes verificarlo",
-        "eyebrow": "Próximamente en la mainnet de Kerrigan",
+        "eyebrow": "En marcha en la mainnet de Kerrigan",
         "fact_custody": "<b>Sin</b> custodia de tus claves",
         "fact_prereg": "<b>Sin</b> registro previo",
         "fact_renew": "<b>Sin</b> renovaciones, nunca",
@@ -118,7 +118,7 @@
     },
     "roadmap": {
         "eyebrow": "Lo que viene",
-        "lede": "El protocolo está terminado en el sentido que importa: los nombres funcionan y cualquiera puede verificar el registro. Lo que sigue trata de hacerlos más fáciles de usar.",
+        "lede": "El protocolo está en marcha y terminado en el sentido que importa: los nombres funcionan y cualquiera puede verificar el registro. Lo que sigue trata de hacerlos más fáciles de usar.",
         "r1_body": "Un explorador de bloques te muestra transacciones. Este te mostrará nombres: cada registro, cada cambio de dirección, cada cambio de propiedad, cada publicación y cada venta, dispuestos como un único historial consultable que puedes seguir sin ejecutar un nodo.",
         "r1_tag": "En desarrollo",
         "r1_title": "Un explorador de nombres",

@@ -1,11 +1,11 @@
 // The libraries carry the version, as every asset of app.html does (scripts/set-version.mjs sets
 // both): /js/ is cached for good, so a release that changes one reaches a returning visitor with
 // the app.js that expects it, not when the cache happens to drop the old copy.
-import { generateMnemonic, validateMnemonic } from './vendor/bip39.js?v=1.0.9';
-import { wordlist } from './vendor/wordlist.js?v=1.0.9';
-import * as ed25519 from './vendor/ed25519.js?v=1.0.9';
-import { sha512 } from './vendor/hashes.js?v=1.0.9';
-import { bech32m } from './vendor/bech32.js?v=1.0.9';
+import { generateMnemonic, validateMnemonic } from './vendor/bip39.js?v=1.0.10';
+import { wordlist } from './vendor/wordlist.js?v=1.0.10';
+import * as ed25519 from './vendor/ed25519.js?v=1.0.10';
+import { sha512 } from './vendor/hashes.js?v=1.0.10';
+import { bech32m } from './vendor/bech32.js?v=1.0.10';
 
 // Set up the required hash function for the ed25519 library.
 // The library calls it with several arrays and every one of them must be hashed, so they are
@@ -47,7 +47,7 @@ let currentLanguageData = {};
 // version.json at start: that held the language files back by a round trip, and a version.json
 // newer than this code - a deploy under way - had the page take that version for its own, so it
 // never offered the reload.
-const APP_VERSION = "1.0.9";
+const APP_VERSION = "1.0.10";
 
 async function fetchLanguageFile(lang) {
     try {
@@ -1257,7 +1257,7 @@ function toHex(str) {
 }
 
 // The amount as a JSON number in plain decimal with at most 8 places. The price strings come
-// from Number.toString(), which writes a tiny marketplace price in exponent notation (1e-7).
+// from formatSats(), already plain decimal; anything that is not a positive number gives null.
 function toPlainKrgnAmount(amount) {
     const value = Number(amount);
     if (!Number.isFinite(value) || value <= 0) return null;

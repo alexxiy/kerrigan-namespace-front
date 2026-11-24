@@ -10,7 +10,7 @@
         "title": "Ad hələ boşdurkən götürün"
     },
     "different": {
-        "c1_body": "Gözləmə siyahısı, növbə, referal nərdivanı və ya içəridəkilər üçün saxlanılmış premium adlar bloku yoxdur. Reyestr boş açılır. Qeydiyyatdan keçməmiş hər ad ilk istəyənindir və «ilk» olmağı blok hündürlüyü ilə mövqe müəyyən edir — biz yox.",
+        "c1_body": "Gözləmə siyahısı, növbə, referal nərdivanı və ya içəridəkilər üçün saxlanılmış premium adlar bloku yoxdur. Reyestr boş açıldı. Qeydiyyatdan keçməmiş hər ad ilk istəyənindir və «ilk» olmağı blok hündürlüyü ilə mövqe müəyyən edir — biz yox.",
         "c1_title": "Ön qeydiyyat yoxdur",
         "c2_body": "Protokolda bitmə tarixi, illik haqq və ya buraxa biləcəyiniz təsdiq pəncərəsi yoxdur. Qeydiyyat bir dəfədir. Ad yalnız siz onu ötürmək və ya satmaq üçün əmr imzaladığınızda nəzarətinizdən çıxır — nə bizdə, nə də başqasında onu geri almaq mexanizmi var.",
         "c2_title": "Yeniləmə yoxdur. Sizin qalır.",
@@ -67,7 +67,7 @@
     "hero": {
         "cta_register": "Ad qeydiyyatı",
         "cta_verify": "Bunu necə yoxlayarsınız",
-        "eyebrow": "Tezliklə Kerrigan əsas şəbəkəsində",
+        "eyebrow": "Kerrigan əsas şəbəkəsində işləyir",
         "fact_custody": "Açarlarınızın saxlanması <b>yoxdur</b>",
         "fact_prereg": "Ön qeydiyyat <b>yoxdur</b>",
         "fact_renew": "Yeniləmə <b>yoxdur</b>, heç vaxt",
@@ -118,7 +118,7 @@
     },
     "roadmap": {
         "eyebrow": "Növbəti nə var",
-        "lede": "Protokol əhəmiyyətli mənada tamamlanıb: adlar işləyir və reyestri hər kəs yoxlaya bilər. Bundan sonrası onlardan istifadəni asanlaşdırmaqla bağlıdır.",
+        "lede": "Protokol işləyir və əhəmiyyətli mənada tamamlanıb: adlar işləyir və reyestri hər kəs yoxlaya bilər. Bundan sonrası onlardan istifadəni asanlaşdırmaqla bağlıdır.",
         "r1_body": "Blok araşdırıcısı sizə tranzaksiyaları göstərir. Bu isə adları göstərəcək: hər qeydiyyatı, hər ünvan dəyişikliyini, hər mülkiyyət ötürülməsini, hər elanı və hər satışı — öz node-unuzu işə salmadan izləyə biləcəyiniz vahid, axtarıla bilən tarixçə şəklində.",
         "r1_tag": "Hazırlanır",
         "r1_title": "Ad araşdırıcısı",

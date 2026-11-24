@@ -10,7 +10,7 @@
         "title": "Escolha um nome enquanto ainda está livre"
     },
     "different": {
-        "c1_body": "Não há lista de espera, fila, escada de indicações nem bloco reservado de nomes premium guardado para os de dentro. O registro começa vazio. Todo nome não registrado é de quem pedir primeiro, e “primeiro” é decidido pela altura do bloco e pela posição — não por nós.",
+        "c1_body": "Não há lista de espera, fila, escada de indicações nem bloco reservado de nomes premium guardado para os de dentro. O registro começou vazio. Todo nome não registrado é de quem pedir primeiro, e “primeiro” é decidido pela altura do bloco e pela posição — não por nós.",
         "c1_title": "Sem pré-registro",
         "c2_body": "Não há data de expiração no protocolo, taxa anual nem janela de confirmação que você possa perder. O registro é uma única vez. Um nome sai do seu controle apenas quando você assina um comando transferindo ou vendendo — não existe mecanismo, nem para nós nem para ninguém, de retomá-lo.",
         "c2_title": "Sem renovações. Continua seu.",
@@ -67,7 +67,7 @@
     "hero": {
         "cta_register": "Registrar um nome",
         "cta_verify": "Como você pode verificar",
-        "eyebrow": "Em breve na mainnet do Kerrigan",
+        "eyebrow": "No ar na mainnet do Kerrigan",
         "fact_custody": "<b>Sem</b> custódia das suas chaves",
         "fact_prereg": "<b>Sem</b> pré-registro",
         "fact_renew": "<b>Sem</b> renovações, nunca",
@@ -118,7 +118,7 @@
     },
     "roadmap": {
         "eyebrow": "O que vem a seguir",
-        "lede": "O protocolo está pronto no sentido que importa: os nomes funcionam e qualquer pessoa pode verificar o registro. O que vem a seguir é sobre torná-los mais fáceis de usar.",
+        "lede": "O protocolo está no ar e pronto no sentido que importa: os nomes funcionam e qualquer pessoa pode verificar o registro. O que vem a seguir é sobre torná-los mais fáceis de usar.",
         "r1_body": "Um explorador de blocos mostra transações. Este vai mostrar nomes: cada registro, cada troca de endereço, cada transferência de titularidade, cada anúncio e cada venda — dispostos como um histórico único e pesquisável que você acompanha sem rodar um nó.",
         "r1_tag": "Em desenvolvimento",
         "r1_title": "Um explorador de nomes",
